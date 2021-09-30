@@ -27,7 +27,7 @@
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る 
                 </v-btn>  
-                <v-spacer />
+                <!--<v-spacer />
                 <v-btn
                     dark
                     color="primary"
@@ -35,7 +35,7 @@
                 >
                     次に進む    
                     <v-icon>mdi-arrow-right</v-icon>
-                </v-btn>  
+                </v-btn>  -->
             </v-row>
         </v-card-text>
 
@@ -73,6 +73,7 @@ export default{
             }else{
                 this.path = "QueryBoltShape"
             }
+            this.accessNextPage();
         },
         accessNextPage(){
             if (this.path != ''){

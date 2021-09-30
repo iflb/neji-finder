@@ -162,7 +162,7 @@
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る    
                 </v-btn>  
-                <v-spacer />
+                <!--<v-spacer />
                 <v-btn
                     dark
                     color="primary"
@@ -170,7 +170,7 @@
                 >
                     次に進む 
                     <v-icon>mdi-arrow-right</v-icon>
-                </v-btn>  
+                </v-btn>  -->
             </v-row>
         </v-card-text>   
         <v-snackbar
@@ -425,6 +425,10 @@ export default{
                     if(!Object.keys(this.query).includes("頭部穴形状")){
                         this.pickedHoleShape = this.shape["頭部穴形状"];
                     }
+                    if(Object.keys(this.query).length == 3) this.accessNextPage();
+                    this.$nextTick(() => {
+                        this.$vuetify.goTo(document.body.scrollHeight);
+                    });
                 }
             )
             this.send_query();
