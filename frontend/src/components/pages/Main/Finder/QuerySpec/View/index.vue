@@ -134,6 +134,16 @@ export default{
             return _spec
         }
     },
+    watch: {
+        selectableSpec(specs) {
+            specs.forEach((spec,i) => {
+                if(spec.val.length==1) {
+                    this.models[i] = spec.val[0];
+                    this.makeQuery(spec.val[0],spec,i);
+                }
+            });
+        }
+    },
     created(){
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
