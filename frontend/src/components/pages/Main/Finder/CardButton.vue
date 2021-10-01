@@ -1,0 +1,46 @@
+<template>
+    <div>
+        <v-row v-if="headerIsOn" class="pt-5">
+            <v-col class="text-body-1">
+                {{headerTitle}}を選ぶ
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col 
+                v-for="item in inputItems" 
+                :key="item.src" 
+                cols="4" 
+                md="2" 
+                align="center"
+            >
+                <v-card
+                    @click="emitItem(item)"
+                    :color="item.backgroundColor"
+                    max-width="100"
+                >
+                    <v-img 
+                        class="imgOpacity"
+                        alt="item.name"
+                        contain
+                        :src="item.src" />
+                </v-card>
+                <span v-if="labelIsOn" class="text-h8 d-flex justify-center">{{item.name}}</span>
+            </v-col>
+        </v-row>
+    </div>
+</template>
+<script>
+export default{
+    props:["headerIsOn","headerTitle","inputItems","labelIsOn"],
+    methods:{
+        emitItem(item){
+            this.$emit('update-query', item);
+        }
+    }
+}
+</script>
+<style>
+.imgOpacity{
+    opacity: 0.75
+}
+</style>
