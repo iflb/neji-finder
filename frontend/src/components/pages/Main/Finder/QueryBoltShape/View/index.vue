@@ -3,17 +3,13 @@
         <v-card-title>おねじの形状を選ぶ</v-card-title>
         <v-card-text> 
             <v-container>
-                <v-row class="pb-5">
+                <v-row class="pb-1">
                     <v-col class="text-body-1">
                         頭部の形状を選ぶ
                     </v-col>
                 </v-row>
-                <carousel :per-page="3" :mouse-drag="false" pagination-color="#42A5F5">
-                    <slide 
-                        v-for="item in items.head" 
-                        :key="item.src" 
-                        align="center"
-                    >
+                <v-row>
+                    <v-col v-for="item in icons.head" :key="item.src" cols="4" md="2" align="center">
                         <v-card
                             @click="makeQuery(item)"
                             :color="item.backgroundColor"
@@ -26,24 +22,8 @@
                                 :src="item.src" />
                         </v-card>
                         <span class="text-h8 d-flex justify-center">{{item.name}}</span>
-                    </slide>
-                </carousel>
-                <!--<v-row>
-                    <v-col v-for="item in items.head" :key="item.src" cols="4" md="2" align="center">
-                        <v-card
-                            @click="makeQuery(item)"
-                            :color="item.backgroundColor"
-                            max-width="300"
-                        >
-                            <v-img 
-                                class="imgOpacity"
-                                alt="item.name"
-                                contain
-                                :src="item.src" />
-                        </v-card>
-                        <span class="text-h8 d-flex justify-center">{{item.name}}</span>
                     </v-col>
-                </v-row>-->
+                </v-row>
             </v-container>
 
             <v-slide-y-transition>
@@ -75,30 +55,6 @@
                         </slide>
                     </carousel>
                 </v-container>
-                <!--<v-container v-if="isPicked.head">
-                    <v-divider />
-                    <v-row class = "pt-5">
-                        <v-col class="text-body-1">
-                            おねじ先端の形状を選ぶ
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col v-for="item in selectableTip" :key="item.src" cols="4" md="2" align="center">
-                            <v-card
-                                @click="makeQuery(item)"
-                                :color="item.backgroundColor"
-                                max-width="300"
-                            >
-                                <v-img 
-                                    class="imgOpacity"
-                                    alt="item.name"
-                                    contain
-                                    :src="item.src" />
-                            </v-card>
-                            <span class="text-h8 d-flex justify-center">{{item.name}}</span>
-                        </v-col>
-                    </v-row>
-                </v-container>-->
             </v-slide-y-transition>
             <v-slide-y-transition>
                 <v-container v-if="isPicked.tip">   
@@ -128,27 +84,6 @@
                             <span class="text-h8 d-flex justify-center">{{item.name}}</span>
                         </slide>
                     </carousel>
-                    <!--<v-row class="pt-5">
-                        <v-col class="text-body-1">
-                            頭部穴の形状を選ぶ
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col v-for="item in selectableHoleShape" :key="item.src" cols="4" md="2" align="center">
-                            <v-card
-                                @click="makeQuery(item)"
-                                :color="item.backgroundColor"
-                                max-width="300"
-                            >
-                                <v-img 
-                                    class="imgOpacity"
-                                    alt="item.name"
-                                    contain
-                                    :src="item.src" />
-                            </v-card>
-                            <span class="text-h8 d-flex justify-center">{{item.name}}</span>
-                        </v-col>
-                    </v-row>-->
                 </v-container>
             </v-slide-y-transition>
 
@@ -162,15 +97,6 @@
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る    
                 </v-btn>  
-                <!--<v-spacer />
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="accessNextPage"
-                >
-                    次に進む 
-                    <v-icon>mdi-arrow-right</v-icon>
-                </v-btn>  -->
             </v-row>
         </v-card-text>   
         <v-snackbar
@@ -182,8 +108,8 @@
 </template>
 <script>
 import { Carousel, Slide } from 'vue-carousel'
-function changeBackgroundColor(pickedItem, items){
-    for (let item of items){
+function changeBackgroundColor(pickedItem, icons){
+    for (let item of icons){
         if(pickedItem.name !== item.name){
             item.backgroundColor = "#FFFFFF";
         }
@@ -196,7 +122,7 @@ export default{
         Slide
     },
     data: () => ({
-        items: {
+        icons: {
             head:[
                 { 
                     name: "円柱",
@@ -340,7 +266,7 @@ export default{
     computed:{
         selectableTip(){
             let _arr = [];
-            this.items.tip.forEach((item) => {
+            this.icons.tip.forEach((item) => {
                 if(this.pickedTip.includes(item.name)){
                     _arr.push(item);
                 }
@@ -349,7 +275,7 @@ export default{
         },
         selectableHoleShape(){
             let _arr = [];
-            this.items.hole_shape.forEach((item) => {
+            this.icons.hole_shape.forEach((item) => {
                 if(this.pickedHoleShape.includes(item.name)){
                     _arr.push(item);
                 }
@@ -371,28 +297,28 @@ export default{
             );
         },
         makeQuery(item){
-            if(this.items.head.includes(item)){
+            if(this.icons.head.includes(item)){
                 this.query = {};
                 for (let key in this.isPicked){
                     this.isPicked[key] = false;
                 }
                 this.query["頭部"] = item.name;
                 this.isPicked.head = true;
-                changeBackgroundColor(item, this.items.hole_shape);
-                changeBackgroundColor(item, this.items.tip);
-                changeBackgroundColor(item, this.items.head);
+                changeBackgroundColor(item, this.icons.hole_shape);
+                changeBackgroundColor(item, this.icons.tip);
+                changeBackgroundColor(item, this.icons.head);
                 this.send_query();
-            }else if(this.items.tip.includes(item)){
+            }else if(this.icons.tip.includes(item)){
                 delete this.query["おねじ先端"]
                 this.query["おねじ先端"] = item.name;
                 this.isPicked.tip = true;
-                changeBackgroundColor(item, this.items.tip);
+                changeBackgroundColor(item, this.icons.tip);
 
                 this.send_query();
-            }else if(this.items.hole_shape.includes(item)){
+            }else if(this.icons.hole_shape.includes(item)){
                 this.query["頭部穴形状"] = item.name;
                 this.isPicked.hole_shape = true;
-                changeBackgroundColor(item, this.items.hole_shape);
+                changeBackgroundColor(item, this.icons.hole_shape);
                 this.send_query();
             }
         },
@@ -433,7 +359,7 @@ export default{
             )
             this.send_query();
         });
-        console.log(this.items);
+        console.log(this.icons);
     },
     mounted(){
         this.$emit('add-step', 2);
