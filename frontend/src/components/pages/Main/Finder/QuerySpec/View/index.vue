@@ -135,11 +135,11 @@ export default{
         }
     },
     watch: {
-        selectableSpec(specs) {
+        selectableSpec(specs, oldSpecs) {
             specs.forEach((spec,i) => {
                 if(spec.val.length==1) {
                     this.models[i] = spec.val[0];
-                    this.makeQuery(spec.val[0],spec,i);
+                    if(oldSpecs.length && oldSpecs[i].val.length>1) this.makeQuery(spec.val[0],spec,i);
                 }
             });
         }
@@ -149,6 +149,7 @@ export default{
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
+                    console.log(data);
                     this.$set(this, 'rowSpec', 'spec' in data ? data.spec : {});
                     if(Object.keys(this.initialSpec).length == 0){
                         this.$set(this, 'initialSpec', 'spec' in data ? data.spec: {});
