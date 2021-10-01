@@ -77,15 +77,15 @@ export default{
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
                     console.log(data);
-                    this.$set(this, 'item', 'item' in data ? data.item : {});
-                    if(!Object.keys(data).includes("item")){
+                    this.$set(this, 'item', 'items' in data ? data.items[0] : {});
+                    if(!Object.keys(data).includes("items")){
                         this.isError = true;
                     }else{
                         this.isError = false;
+                        console.log(this.tableData);
                         let _jan = String(this.tableData[0].value);
                         this.path = require(`@/assets/productsImage/${_jan}.jpg`);
                     }
-                    console.log(this.path);
                 }
             )
             this.send_query();

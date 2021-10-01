@@ -2,23 +2,14 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title color="primary">ジャンルを決定する</v-card-title>
         <v-card-text> 
-            <v-row>
-                <v-col v-for="item in items" :key="item.src" cols="4" align="center">
-                    <v-card
-                        @click="chooseGenre(item)"
-                        :color="item.backgroundColor"
-                        max-width="300"
-                    >
-                        <v-img 
-                            class="imgOpacity"
-                            alt="item.name"
-                            contain
-                            :src="item.src" />
-                    </v-card>
-                    <span class="text-h6 d-flex justify-center">{{item.name}}</span>
-                </v-col>
-            </v-row>
-            <v-row> 
+            <card-button
+                :headerIsOn="false"
+                :inputItems="icons"
+                @update-query="chooseGenre"
+                :labelIsOn="true"
+            />
+            <v-divider />
+            <v-row class="pt-5"> 
                 <v-btn
                     dark
                     color="primary"
@@ -27,29 +18,18 @@
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る 
                 </v-btn>  
-                <!--<v-spacer />
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="accessNextPage"
-                >
-                    次に進む    
-                    <v-icon>mdi-arrow-right</v-icon>
-                </v-btn>  -->
             </v-row>
         </v-card-text>
-
-        <v-snackbar
-            v-model="snackbar"
-            timeout="2000"
-        >ジャンルを選択してください
-        </v-snackbar>
     </v-card>
 </template>
 <script>
+import CardButton from '../../CardButton'
 export default{
+    components:{
+        CardButton
+    },
     data: () => ({
-        items: [
+        icons: [
             { name: "おねじ", src: require("@/assets/icons/1_bolt.jpg"), backgroundColor: "#FFFFFF" },
             { name: "めねじ", src: require("@/assets/icons/2_nut.jpg"), backgroundColor: "#FFFFFF" },
             { name: "座金", src: require("@/assets/icons/3_washer.jpg"), backgroundColor: "#FFFFFF" },
@@ -63,7 +43,7 @@ export default{
         chooseGenre(clickedGenre){
             this.chosenGenre = clickedGenre.name;
             clickedGenre.backgroundColor = "#FFB300";
-            for (let item of this.items){
+            for (let item of this.icons){
                 if(item.name !== clickedGenre.name){
                     item.backgroundColor = "#FFFFFF";
                 }

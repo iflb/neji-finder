@@ -34,8 +34,8 @@ const routes = [
                 props:true
             },
             {
-                path: 'finder/query-bolt-spec',
-                component: () => import("@/components/pages/Main/Finder/QueryBoltSpec/View"),
+                path: 'finder/query-spec',
+                component: () => import("@/components/pages/Main/Finder/QuerySpec/View"),
                 name:"QuerySpec",
                 props:true
             },

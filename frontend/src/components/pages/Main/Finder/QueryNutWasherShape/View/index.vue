@@ -3,42 +3,11 @@
         <v-card-title>{{genre}}の形状を選ぶ</v-card-title>
         <v-card-text> 
             <v-container>
-                <carousel :per-page="3" :mouse-drag="false" pagination-color="#42A5F5">
-                    <slide 
-                        v-for="item in selectedItems" 
-                        :key="item.src" 
-                        align="center"
-                    >
-                        <v-card
-                            @click="makeQuery(item)"
-                            :color="item.backgroundColor"
-                            max-width="100"
-                        >
-                            <v-img 
-                                class="imgOpacity"
-                                alt="item.name"
-                                contain
-                                :src="item.src" />
-                        </v-card>
-                        <span class="text-h8 d-flex justify-center">{{item.name}}</span>
-                    </slide>
-                </carousel>
-                <!--<v-row>
-                    <v-col v-for="item in selectedItems" :key="item.src" cols="4" md="2" align="center">
-                        <v-card
-                            @click="makeQuery(item)"
-                            :color="item.backgroundColor"
-                            max-width="300"
-                        >
-                            <v-img 
-                                class="imgOpacity"
-                                alt="item.name"
-                                contain
-                                :src="item.src" />
-                        </v-card>
-                        <span class="text-h8 d-flex justify-center">{{item.name}}</span>
-                    </v-col>
-                </v-row>-->
+                <card-button
+                    :headerIsOn="false"
+                    :inputItems="selectedItems"
+                    @update-query="makeQuery"
+                />
             </v-container>
             <v-divider />
             <v-row class="pt-7"> 
@@ -50,15 +19,6 @@
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る    
                 </v-btn>  
-                <v-spacer />
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="accessNextPage"
-                >
-                    次に進む 
-                    <v-icon>mdi-arrow-right</v-icon>
-                </v-btn>  
             </v-row>
         </v-card-text>   
         <v-snackbar
@@ -69,9 +29,10 @@
     </v-card>
 </template>
 <script>
-import { Carousel, Slide } from 'vue-carousel'
-function changeBackgroundColor(pickedItem, items){
-    for (let item of items){
+import { nut_washer_icons } from '../../shape_profile.js'
+import CardButton from '../../CardButton' 
+function changeBackgroundColor(pickedItem, nut_washer_icons){
+    for (let item of nut_washer_icons){
         if(pickedItem.name !== item.name){
             item.backgroundColor = "#FFFFFF";
         }
@@ -80,96 +41,10 @@ function changeBackgroundColor(pickedItem, items){
 }
 export default{
     components:{
-        Carousel,
-        Slide
+        CardButton
     },
     data: () => ({
-        items: {
-            nut:[
-                { 
-                    name: "クリップ", 
-                    src: require("@/assets/icons/28_clip.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "フランジ", 
-                    src: require("@/assets/icons/29_flange.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "円筒",     
-                    src: require("@/assets/icons/30_cylinder.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "鬼目",
-                    src: require("@/assets/icons/31_insert.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "袋",
-                    src: require("@/assets/icons/32_fukuro.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "長方形",
-                    src: require("@/assets/icons/33_rectangle.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "爪付",
-                    src: require("@/assets/icons/34_itotsuki.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "輪",
-                    src: require("@/assets/icons/35_ring.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "六角",
-                    src: require("@/assets/icons/36_hexagon.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "六角・セット",
-                    src: require("@/assets/icons/37_hexagonset.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-            ],
-            washer:[
-                { 
-                    name: "U字",
-                    src: require("@/assets/icons/38_u.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "ウェーブ", 
-                    src: require("@/assets/icons/39_wave.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "テーパー", 
-                    src: require("@/assets/icons/40_taper.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name: "円",
-                    src: require("@/assets/icons/41_circle.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name:"球面",
-                    src: require("@/assets/icons/42_ball.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-                { 
-                    name:"四角",
-                    src: require("@/assets/icons/43_rectangle.jpg"), 
-                    backgroundColor: "#FFFFFF" 
-                },
-            ]
-        },
+        nut_washer_icons,
         isPicked: false,
         query: {},
         shape: {},
@@ -179,9 +54,9 @@ export default{
     computed:{
         selectedItems(){
             if (this.genre == "めねじ"){
-                return this.items.nut
+                return this.nut_washer_icons.nut
             }else if(this.genre == "座金"){
-                return this.items.washer
+                return this.nut_washer_icons.washer
             }else{
                 return 0
             }
@@ -200,16 +75,16 @@ export default{
             );
         },
         makeQuery(item){
-            if(this.items.nut.includes(item)){
+            if(this.nut_washer_icons.nut.includes(item)){
                 this.query = {};
                 this.query["ナット形状"] = item.name;
                 this.isPicked = true;
-                changeBackgroundColor(item, this.items.nut);
-            }else if(this.items.washer.includes(item)){
+                changeBackgroundColor(item, this.nut_washer_icons.nut);
+            }else if(this.nut_washer_icons.washer.includes(item)){
                 this.query = {};
                 this.query["座金形状"] = item.name;
                 this.isPicked = true;
-                changeBackgroundColor(item, this.items.washer);
+                changeBackgroundColor(item, this.nut_washer_icons.washer);
             }
             this.send_query();
         },
@@ -225,12 +100,18 @@ export default{
         }
     }, 
     created(){
+        console.log(this.nut_washer_icons);
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
+                    console.log(this.query)
                     this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
                     this.$set(this, 'shape', 'shape' in data ? data.shape : '');
+                    if(Object.keys(this.query).length === 1){
+                         console.log("hakka");
+                         this.accessNextPage();
+                    }
                 }
             )
             this.send_query();
