@@ -9,9 +9,9 @@ class Neji:
         '座金': ['座金形状']
     }
     SPEC = {
-        'おねじ': ['呼び径', '長さか厚み', '材質', '表面処理', '構成数クラス'],
-        'めねじ': ['呼び径', '材質', '表面処理', '構成数クラス'],
-        '座金': ['呼び径', '外径か幅', '長さか厚み', '材質', '表面処理', '構成数クラス']
+        'おねじ': ['中分類', '呼び径', '長さか厚み', '材質', '表面処理', '構成数クラス'],
+        'めねじ': ['中分類', '呼び径', '材質', '表面処理', '構成数クラス'],
+        '座金': ['中分類', '呼び径', '外径か幅', '長さか厚み', '材質', '表面処理', '構成数クラス']
     }
     
     def __init__(self, xlsx_path):
@@ -34,7 +34,7 @@ class Neji:
         if max([len(v) for v in shape.values()]) > 1:
             return {'genre':genre, 'query':selected, 'shape':shape}
         spec = {spec: df[spec].unique().tolist() for spec in Neji.SPEC[genre]}
-        if len(df) > 1:
-            return {'genre':genre, 'query':selected, 'shape':shape, 'spec':spec}
-        else:
-            return {'genre':genre, 'query':selected, 'shape':shape, 'spec':spec, 'item':df.iloc[0].to_dict()}
+        if len(df) <= 100:
+            return {'genre':genre, 'query':selected, 'shape':shape, 'spec':spec, 'items':df.to_dict('records')}
+        #else:
+        #    return {'genre':genre, 'query':selected, 'shape':shape, 'spec':spec, 'item':df.iloc[0].to_dict()}
