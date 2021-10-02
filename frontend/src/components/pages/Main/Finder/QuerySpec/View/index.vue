@@ -83,7 +83,7 @@
                 </v-btn>  
                 <v-spacer />
                 <v-btn
-                    dark
+                    :dark="!buttonDisabled"
                     :disabled="buttonDisabled"
                     color="primary"
                     @click="accessNextPage"
