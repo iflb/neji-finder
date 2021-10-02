@@ -6,6 +6,7 @@
                 <card-button
                     :headerIsOn="false"
                     :inputItems="selectedItems"
+                    :labelIsOn="true"
                     @update-query="makeQuery"
                 />
             </v-container>

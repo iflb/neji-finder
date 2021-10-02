@@ -30,6 +30,16 @@
                 <v-btn
                     dark
                     color="primary"
+                    to="/main/finder/query-spec" 
+                >
+                    <v-icon>mdi-arrow-left</v-icon>
+                    前のページに戻る    
+                </v-btn>  
+            </v-row>
+            <v-row class="pt-7"> 
+                <v-btn
+                    dark
+                    color="primary"
                     to="/main/" 
                 >
                     <v-icon>mdi-arrow-left</v-icon>
