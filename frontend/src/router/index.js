@@ -40,6 +40,12 @@ const routes = [
                 props:true
             },
             {
+                path: 'finder/result-list',
+                component: () => import("@/components/pages/Main/Finder/ResultList/View"),
+                name:"ResultList",
+                props:true
+            },
+            {
                 path: 'finder/result',
                 component: () => import("@/components/pages/Main/Finder/Result/View"),
                 name:"FinderResult",

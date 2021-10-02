@@ -2,6 +2,11 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>{{genre}}の規格を選ぶ</v-card-title>
         <v-card-text> 
+            <v-btn
+                @click="resetQuery"
+            >
+                規格をリセットする
+            </v-btn>
             <card-button 
                 :headerIsOn="true"
                 headerTitle="材質"
@@ -62,7 +67,12 @@
                     />
             </v-slide-y-transition>
             <v-divider />
-            <v-row class="pt-7"> 
+            <v-row v-if="itemQuantity != 0" class="pt-5">
+                <v-col>
+                    該当商品数：{{itemQuantity}}個
+                </v-col>
+            </v-row>
+            <v-row class="pt-5"> 
                 <v-btn
                     dark
                     color="primary"
@@ -74,6 +84,7 @@
                 <v-spacer />
                 <v-btn
                     dark
+                    :disabled="buttonDisabled"
                     color="primary"
                     @click="accessNextPage"
                 >
@@ -132,12 +143,16 @@ export default{
         pickedNominal:[],
         pickedOuter:[],
         pickedThickness:[],
+        itemQuantity:0,
+        buttonDisabled:true,
+        currentItems:[],
 
     }),
     props:["duct","genre","shapeQuery"],
     methods: {
         send_query() {
-            const _query = Object.assign(this.shapeQuery,this.specQuery);
+            const _query = {}
+            Object.assign(_query, this.shapeQuery,this.specQuery);
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.NEJI,
@@ -151,7 +166,6 @@ export default{
                 changeBackgroundColor(item, this.icons.material);
                 this.send_query();
             }else if(this.icons.surface.includes(item)){
-                delete this.specQuery["表面処理"]
                 this.specQuery["表面処理"] = item.name;
                 changeBackgroundColor(item, this.icons.surface);
                 this.send_query();
@@ -173,20 +187,41 @@ export default{
                 this.send_query();
             }
         },
+        resetQuery(){
+            this.specQuery = {};
+            this.send_query();
+            changeBackgroundColor({ name: "" }, this.icons.material);
+            changeBackgroundColor({ name: "" }, this.icons.surface);
+            changeBackgroundColor({ name: "" }, this.icons.amount);
+            this.nominal.model="";
+            this.outer.model="";
+            this.thickness.model="";
+        },
         accessNextPage(){
-            let _query = Object.assign(this.shapeQuery, this.specQuery)
-            console.log(this.specQuery);
-            console.log(this.initialSpec);
-            if(Object.keys(this.specQuery).length == Object.keys(this.initialSpec).length - 1){
+            const _query = {}
+            Object.assign(_query, this.shapeQuery,this.specQuery)
+            if(this.itemQuantity == 1){
                 this.$router.push({
                     name: "FinderResult",
-                    params:{ 'totalQuery': _query, 'genre':this.genre }
+                    params:{ 'item': this.currentItems }
                 });
             }else{
-                this.snackbar =true;
+                this.$router.push({
+                    name: "ResultList",
+                    params:{ 'items': this.currentItems }
+                });
             }
         }
     }, 
+    watch:{
+        itemQuantity(){
+            if (this.itemQuantity != 0){
+                this.buttonDisabled = false;
+            }else{
+                this.buttonDisabled = true;
+            }
+        }
+    },
     computed:{
         selectableMaterial(){
             let _arr = [];
@@ -264,10 +299,10 @@ export default{
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
+                    console.log(data);
                     if(Object.keys(this.specQuery).length == 0){
                         this.initialSpec = data.spec
                     }
-                    console.log(data); 
                     if(!Object.keys(this.specQuery).includes("材質")){
                         this.pickedMaterial = data.spec["材質"];
                     }
@@ -292,6 +327,10 @@ export default{
                         }
                     }
     
+                    if(Object.keys(data).includes('items')){
+                        this.currentItems = data.items;
+                        this.itemQuantity = data.items.length;
+                    }
                 }
             )
             this.send_query();

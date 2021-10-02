@@ -8,7 +8,7 @@
         <v-row>
             <v-col 
                 v-for="item in inputItems" 
-                :key="item.src" 
+                :key="item.name" 
                 cols="4" 
                 md="2" 
                 align="center"
@@ -20,7 +20,6 @@
                 >
                     <v-img 
                         class="imgOpacity"
-                        alt="item.name"
                         contain
                         :src="item.src" />
                 </v-card>
