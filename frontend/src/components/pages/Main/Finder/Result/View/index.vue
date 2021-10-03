@@ -30,7 +30,7 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/finder/query-spec" 
+                    @click="backToPreviousPage"
                 >
                     <v-icon>mdi-arrow-left</v-icon>
                     前のページに戻る    
@@ -40,7 +40,7 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/" 
+                    @click="backToFirstPage"
                 >
                     <v-icon>mdi-arrow-left</v-icon>
                     最初のページに戻る    
@@ -54,7 +54,23 @@ export default{
     data: () => ({
         path:''
     }),
-    props:["item"],
+    props:["item","itemList"],
+    methods:{
+        backToPreviousPage(){
+            if(this.itemList.length != 0){
+                this.$emit( 'emit-component-name', 'result-list' );
+            }else{
+                this.$emit( 'emit-component-name', 'query-spec' );
+            }
+        },
+        backToFirstPage(){
+            this.$emit( 'emit-genre', "" );
+            this.$emit( 'emit-shape-query', {} );
+            this.$emit( 'emit-item-list', [] );
+            this.$emit( 'emit-item', [] );
+            this.$emit( 'emit-component-name', 'start' );
+        }
+    },
     computed:{
         tableData(){
             const _arr = Object.entries(this.item[0]).map(([key, value]) => ({key, value}));

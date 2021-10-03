@@ -76,7 +76,7 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/finder/query-genre" 
+                    @click="backToPreviousPage"
                 >
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る    
@@ -207,6 +207,16 @@ export default{
                 this.$emit( 'emit-item-list', this.currentItems );
                 this.$emit( 'emit-component-name', 'result-list' );
             }
+        },
+        backToPreviousPage(){
+            this.resetQuery();
+            this.$emit( 'emit-shape-query', {} );
+            if(['めねじ','座金'].includes(this.genre)){
+                this.$emit( 'emit-component-name', 'query-nut-washer-shape' );
+            }else{
+                this.$emit( 'emit-component-name', 'query-bolt-shape' );
+            }
+
         }
     }, 
     watch:{
@@ -290,12 +300,10 @@ export default{
             this.outer.image = this.icons.outer[0].src;
         }
 
-
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
-                    console.log(data);
                     if(Object.keys(this.specQuery).length == 0){
                         this.initialSpec = data.spec
                     }
@@ -327,12 +335,16 @@ export default{
                         this.currentItems = data.items;
                         this.itemQuantity = data.items.length;
                     }
+                    this.$nextTick(() => {
+                        this.$vuetify.goTo(document.body.scrollHeight);
+                    });
                 }
             )
             this.send_query();
         });
     },
     mounted(){
+        this.resetQuery();
         this.$emit('add-step', 3);
     }
 }

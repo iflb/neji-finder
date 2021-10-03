@@ -68,6 +68,7 @@
                     :shapeQuery="shapeQuery"
                     :itemList="itemList"
                     :item="item"
+                    @add-step="step = $event"
                     @emit-component-name="changeComponent"
                     @emit-genre="updateGenre"
                     @emit-shape-query="updateShapeQuery"

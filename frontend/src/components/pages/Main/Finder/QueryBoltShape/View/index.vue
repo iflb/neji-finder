@@ -40,7 +40,7 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/finder/query-genre" 
+                    @click="backToPreviousPage"
                 >
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る    
@@ -133,9 +133,19 @@ export default{
             }
         },
         accessNextPage(){
-            console.log(this.query);
+            changeBackgroundColor({ name: '' }, this.bolt_icons.hole_shape);
+            changeBackgroundColor({ name: '' }, this.bolt_icons.tip);
+            changeBackgroundColor({ name: '' }, this.bolt_icons.head);
             this.$emit( 'emit-shape-query', this.query );
             this.$emit( 'emit-component-name', 'query-spec' );
+        },
+        backToPreviousPage(){
+            changeBackgroundColor({ name: '' }, this.bolt_icons.hole_shape);
+            changeBackgroundColor({ name: '' }, this.bolt_icons.tip);
+            changeBackgroundColor({ name: '' }, this.bolt_icons.head);
+            this.query = {};
+            this.$emit( 'emit-shape-query', this.query );
+            this.$emit( 'emit-component-name', 'query-genre' );
         }
     }, 
     created(){
@@ -143,6 +153,7 @@ export default{
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
+                    console.log(data);
                     this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
                     this.$set(this, 'shape', 'shape' in data ? data.shape : '');
 
@@ -153,14 +164,14 @@ export default{
                         this.pickedHoleShape = this.shape["頭部穴形状"];
                     }
                     if(Object.keys(this.query).length === 3){
-                         console.log("hakka");
                          this.accessNextPage();
                     }
                     this.$nextTick(() => {
                         this.$vuetify.goTo(document.body.scrollHeight);
                     });
                 }
-            )
+            );
+            this.query = {};
             this.send_query();
         });
     },

@@ -13,7 +13,7 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/finder/query-genre" 
+                    @click="backToPreviousPage"
                 >
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る    
@@ -38,6 +38,9 @@ export default{
         accessNextPage(item){
             this.$emit( 'emit-item', [this.itemList[item.index]] );
             this.$emit( 'emit-component-name', 'result' );
+        },
+        backToPreviousPage(){
+            this.$emit( 'emit-component-name', 'query-spec' );
         }
     }, 
     watch:{
