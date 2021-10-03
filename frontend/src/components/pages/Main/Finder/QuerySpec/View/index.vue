@@ -201,15 +201,11 @@ export default{
             const _query = {}
             Object.assign(_query, this.shapeQuery,this.specQuery)
             if(this.itemQuantity == 1){
-                this.$router.push({
-                    name: "FinderResult",
-                    params:{ 'item': this.currentItems }
-                });
+                this.$emit( 'emit-item', this.currentItems );
+                this.$emit( 'emit-component-name', 'result' );
             }else{
-                this.$router.push({
-                    name: "ResultList",
-                    params:{ 'items': this.currentItems }
-                });
+                this.$emit( 'emit-item-list', this.currentItems );
+                this.$emit( 'emit-component-name', 'result-list' );
             }
         }
     }, 

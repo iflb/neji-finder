@@ -35,34 +35,17 @@ export default{
             { name: "座金", src: require("@/assets/icons/3_washer.jpg"), backgroundColor: "#FFFFFF" },
         ],
         chosenGenre: '',
-        path:'',
-        snackbar:false,
+        //path:'',
     }),
     props:["duct"],
     methods: {
         chooseGenre(clickedGenre){
             this.chosenGenre = clickedGenre.name;
-            clickedGenre.backgroundColor = "#FFB300";
-            for (let item of this.icons){
-                if(item.name !== clickedGenre.name){
-                    item.backgroundColor = "#FFFFFF";
-                }
-            }
+            this.$emit( 'emit-genre', this.chosenGenre );
             if(["めねじ","座金"].includes(this.chosenGenre)){
-                this.path = "QueryNutWasherShape"
+                this.$emit( 'emit-component-name', 'query-nut-washer-shape' );
             }else{
-                this.path = "QueryBoltShape"
-            }
-            this.accessNextPage();
-        },
-        accessNextPage(){
-            if (this.path != ''){
-                this.$router.push({
-                    name: this.path,
-                    params: {"genre":this.chosenGenre}
-                });
-            }else{
-                this.snackbar = true;
+                this.$emit( 'emit-component-name', 'query-bolt-shape' );
             }
         },
     }, 
