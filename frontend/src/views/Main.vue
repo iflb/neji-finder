@@ -61,20 +61,43 @@
                 :stepper="step"
             />    
             <v-scroll-y-reverse-transition>
-                <router-view 
+                <component
+                    :is="currentComponent"
                     :duct="duct"
-                    @add-step="step = $event"
+                    :genre="genre"
+                    :shapeQuery="shapeQuery"
+                    :itemList="itemList"
+                    :item="item"
+                    @emit-component-name="changeComponent"
+                    @emit-genre="updateGenre"
+                    @emit-shape-query="updateShapeQuery"
+                    @emit-item-list="updateItemList"
+                    @emit-item="updateItem"
                 />
             </v-scroll-y-reverse-transition>
         </v-main>
     </div>
 </template>
 <script>
-import Stepper from '@/components/ui/Stepper.vue'
+import Stepper from '@/components/ui/Stepper'
+import Start from '@/components/pages/Main/Finder/Start'
+import QueryGenre from '@/components/pages/Main/Finder/QueryGenre/View'
+import QueryBoltShape from '@/components/pages/Main/Finder/QueryBoltShape/View'
+import QueryNutWasherShape from '@/components/pages/Main/Finder/QueryNutWasherShape/View'
+import QuerySpec from '@/components/pages/Main/Finder/QuerySpec/View'
+import ResultList from '@/components/pages/Main/Finder/ResultList/View'
+import Result from '@/components/pages/Main/Finder/Result/View'
 import ducts from '@iflb/ducts-client'
 export default {
     components:{
-        Stepper
+        Stepper,
+        Start,
+        QueryGenre,
+        QueryBoltShape,
+        QueryNutWasherShape,
+        QuerySpec,
+        ResultList,
+        Result
     },
     data: () => ({
         duct:new ducts.Duct(),
@@ -83,12 +106,39 @@ export default {
             { to: "/main/finder", icon:"mdi-magnify", title: "メインページ" },
             { to: "/main/version-log", icon:"mdi-update", title: "システム更新状況" }
         ],
-        step:1
+        step:1,
+        currentComponent:'start',
+        genre:'',
+        shapeQuery:{},
+        itemList:[],
+        item:[]
     }),    
+    watch:{
+    },
     methods: {
         toggleDrawer(){
             this.drawerShown = !this.drawerShown;
-        }
+        },
+        changeComponent(componentName){
+            this.currentComponent = componentName;
+            console.log({"currentComponent": this.currentComponent});
+        },
+        updateGenre(genre){
+            this.genre = genre;
+            console.log({"genre": this.genre});
+        },
+        updateShapeQuery(query){
+            this.shapeQuery = query;
+            console.log({"currentShapeQuery": this.shapeQuery});
+        },
+        updateItemList(list){
+            this.itemList = list;
+            console.log({"currentItemList": this.itemList});
+        },
+        updateItem(item){
+            this.item = item;
+            console.log({"currentItem": this.item});
+        },
     }, 
     created(){
         this.duct.open("/ducts/wsd");  

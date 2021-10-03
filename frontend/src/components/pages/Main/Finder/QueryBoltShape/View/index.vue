@@ -134,10 +134,8 @@ export default{
         },
         accessNextPage(){
             console.log(this.query);
-            this.$router.push({
-                name: "QuerySpec",
-                params: { 'shapeQuery': this.query, 'genre': this.genre }
-            });
+            this.$emit( 'emit-shape-query', this.query );
+            this.$emit( 'emit-component-name', 'query-spec' );
         }
     }, 
     created(){

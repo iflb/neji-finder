@@ -6,7 +6,7 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/finder/query-genre" 
+                    @click="emitComponentName"
                 >
                     <v-icon>mdi-magnify</v-icon>
                     形状から検索
@@ -35,6 +35,11 @@
 </template>
 <script>
 export default {
+    methods:{
+        emitComponentName(){
+            this.$emit( 'emit-component-name', 'query-genre' );
+        }
+    },
     mounted(){
         this.$emit('add-step', 1);
     }

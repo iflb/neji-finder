@@ -5,7 +5,6 @@
         <v-card-text> 
             <card-button 
                 :headerIsOn="false"
-                headerTitle="材質"
                 :inputItems="selectableItems"
                 :labelIsOn="true"
                 @update-query="accessNextPage"
@@ -34,13 +33,11 @@ export default{
         pickedItem:[],
         itemQuantity:0
     }),
-    props:["items"],
+    props:["itemList"],
     methods: {
         accessNextPage(item){
-            this.$router.push({
-                name: "FinderResult",
-                params:{ 'item': [this.items[item.index]] }
-            });
+            this.$emit( 'emit-item', [this.itemList[item.index]] );
+            this.$emit( 'emit-component-name', 'result' );
         }
     }, 
     watch:{
@@ -49,7 +46,7 @@ export default{
         selectableItems(){
             let _arr = [];
             let _ind = 0;
-            this.items.forEach((item) =>{
+            this.itemList.forEach((item) =>{
                 let _path = "";
                 let _jan = String(item["JANコード"]);
                 try{
@@ -69,9 +66,9 @@ export default{
         },
     },
     created(){
-        console.log(this.items);
+        console.log(this.itemList);
         console.log(this.selectableItems);
-        this.itemQuantity = this.items.length;
+        this.itemQuantity = this.itemList.length;
     },
     mounted(){
         this.$emit('add-step', 4);

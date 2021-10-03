@@ -91,10 +91,8 @@ export default{
         },
         accessNextPage(){
             if(Object.keys(this.query).length == 1){
-                this.$router.push({
-                    name: "QuerySpec",
-                    params:{ 'shapeQuery': this.query, 'genre':this.genre }
-                });
+                this.$emit( 'emit-shape-query', this.query );
+                this.$emit( 'emit-component-name', 'query-spec' );
             }else{
                 this.snackbar =true;
             }
