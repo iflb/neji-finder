@@ -15,18 +15,13 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/finder/query-genre" 
+                    @click="backToPreviousPage"
                 >
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る    
                 </v-btn>  
             </v-row>
         </v-card-text>   
-        <v-snackbar
-            v-model="snackbar"
-            timeout="2000"
-        >選択されていない項目があります
-        </v-snackbar>
     </v-card>
 </template>
 <script>
@@ -49,7 +44,6 @@ export default{
         isPicked: false,
         query: {},
         shape: {},
-        snackbar: false
     }),
     props:["duct","genre"],
     computed:{
@@ -90,27 +84,32 @@ export default{
             this.send_query();
         },
         accessNextPage(){
-            if(Object.keys(this.query).length == 1){
-                this.$emit( 'emit-shape-query', this.query );
-                this.$emit( 'emit-component-name', 'query-spec' );
-            }else{
-                this.snackbar =true;
-            }
+            changeBackgroundColor({ name: '' }, this.nut_washer_icons.nut);
+            changeBackgroundColor({ name: '' }, this.nut_washer_icons.washer);
+            this.$emit( 'emit-shape-query', this.query );
+            this.query = {};
+            this.$emit( 'emit-component-name', 'query-spec' );
+        },
+        backToPreviousPage(){
+            changeBackgroundColor({ name: '' }, this.nut_washer_icons.nut);
+            changeBackgroundColor({ name: '' }, this.nut_washer_icons.washer);
+            this.query = {};
+            this.$emit( 'emit-component-name', 'query-genre' );
         }
     }, 
     created(){
-        console.log(this.nut_washer_icons);
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
-                    console.log(this.query)
                     this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
                     this.$set(this, 'shape', 'shape' in data ? data.shape : '');
                     if(Object.keys(this.query).length === 1){
-                         console.log("hakka");
                          this.accessNextPage();
                     }
+                    this.$nextTick(() => {
+                        this.$vuetify.goTo(document.body.scrollHeight);
+                    });
                 }
             )
             this.send_query();
