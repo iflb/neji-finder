@@ -3,7 +3,7 @@ import PIL
 import os
 import glob
 
-image_path = "./products"
+image_path = "./middle_classification"
 ##icon_path = "./icons"
 image_files = glob.glob(image_path + '/*')
 ##icon_files = glob.glob(icon_path + '/*')
