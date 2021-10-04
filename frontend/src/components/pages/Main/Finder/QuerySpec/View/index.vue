@@ -135,7 +135,15 @@ export default{
         specQuery:{},
         
         snackbar:false,
-        initialSpec:{},
+        initialSpec:{
+            "呼び径": [],
+            "表面処理": [],
+            "構成数クラス": [],
+            "中分類": [],
+            "材質": [],
+            "外径か幅": [],
+            "長さか厚み": [ ],
+        },
         nominal:{
             model:"",
             image:"",
@@ -330,6 +338,7 @@ export default{
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
+                    console.log('hoge');
                     if(Object.keys(this.specQuery).length == 0){
                         this.initialSpec = data.spec
                     }
@@ -371,7 +380,6 @@ export default{
         });
     },
     mounted(){
-        this.resetQuery();
         this.$emit('add-step', 3);
     }
 }
