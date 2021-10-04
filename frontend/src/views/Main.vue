@@ -29,7 +29,7 @@
                 <v-list-item
                     v-for="item in menuItems"
                     :key="item.title"
-                    :to="item.to"
+                    @click="changeComponent(item.to)"
                 >
                     <v-list-item-icon>
                         <v-icon>{{item.icon}}</v-icon>
@@ -104,8 +104,8 @@ export default {
         duct:new ducts.Duct(),
         drawerShown: false,
         menuItems: [
-            { to: "/main/finder", icon:"mdi-magnify", title: "メインページ" },
-            { to: "/main/version-log", icon:"mdi-update", title: "システム更新状況" }
+            { to: "start", icon:"mdi-magnify", title: "メインページ" },
+            { to: "version-log", icon:"mdi-update", title: "システム更新状況" }
         ],
         step:1,
         currentComponent:'start',
@@ -121,6 +121,9 @@ export default {
             this.drawerShown = !this.drawerShown;
         },
         changeComponent(componentName){
+            if(componentName == 'start'){
+                document.location.reload();
+            }  
             this.currentComponent = componentName;
             console.log({"currentComponent": this.currentComponent});
         },

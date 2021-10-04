@@ -13,7 +13,7 @@
                 <v-btn
                     dark
                     color="primary"
-                    to="/main/finder" 
+                    @click="backToPreviousPage" 
                 >
                     <v-icon>mdi-arrow-left</v-icon>
                     戻る 
@@ -48,6 +48,9 @@ export default{
                 this.$emit( 'emit-component-name', 'query-bolt-shape' );
             }
         },
+        backToPreviousPage(){
+            this.$emit( 'emit-component-name', 'start' );
+        }
     }, 
     mounted(){
         this.$emit('add-step',1)

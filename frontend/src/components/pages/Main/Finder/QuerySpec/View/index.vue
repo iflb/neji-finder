@@ -161,31 +161,25 @@ export default{
         },
         makeQuery(item){
             if(this.icons.material.includes(item)){
-                this.specQuery = {};
                 this.specQuery["材質"] = item.name;
                 changeBackgroundColor(item, this.icons.material);
-                this.send_query();
             }else if(this.icons.surface.includes(item)){
                 this.specQuery["表面処理"] = item.name;
                 changeBackgroundColor(item, this.icons.surface);
-                this.send_query();
             }else if(this.icons.amount.includes(item)){
                 this.specQuery["構成数クラス"] = item.name;
                 changeBackgroundColor(item, this.icons.amount);
-                this.send_query();
             }else if(this.initialSpec["呼び径"].includes(item.val) && item.name=="呼び径" ){
                 this.specQuery["呼び径"] = item.val;
                 this.nominal.model = item.val; 
-                this.send_query();
             }else if(this.outer.isNecessary && this.initialSpec["外径か幅"].includes(item.val) && item.name=="外径か幅" ){
                 this.specQuery["外径か幅"] = item.val;
                 this.outer.model = item.val; 
-                this.send_query();
             }else if(this.thickness.isNecessary && this.initialSpec["長さか厚み"].includes(item.val) && item.name=="長さか厚み"){
                 this.specQuery["長さか厚み"] = item.val;
                 this.thickness.model = item.val; 
-                this.send_query();
             }
+            this.send_query();
         },
         resetQuery(){
             this.specQuery = {};
@@ -207,6 +201,9 @@ export default{
                 this.$emit( 'emit-item-list', this.currentItems );
                 this.$emit( 'emit-component-name', 'result-list' );
             }
+            this.$nextTick(() => {
+                this.$vuetify.goTo(0);
+            });
         },
         backToPreviousPage(){
             this.resetQuery();
@@ -216,7 +213,9 @@ export default{
             }else{
                 this.$emit( 'emit-component-name', 'query-bolt-shape' );
             }
-
+            this.$nextTick(() => {
+                this.$vuetify.goTo(0);
+            });
         }
     }, 
     watch:{
@@ -335,9 +334,6 @@ export default{
                         this.currentItems = data.items;
                         this.itemQuantity = data.items.length;
                     }
-                    this.$nextTick(() => {
-                        this.$vuetify.goTo(document.body.scrollHeight);
-                    });
                 }
             )
             this.send_query();
