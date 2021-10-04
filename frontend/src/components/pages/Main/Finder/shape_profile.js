@@ -160,7 +160,7 @@ export const nut_washer_icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "長方形",
+            name: "四角・長方形",
             src: require("@/assets/icons/33_rectangle.jpg"), 
             backgroundColor: "#FFFFFF" 
         },

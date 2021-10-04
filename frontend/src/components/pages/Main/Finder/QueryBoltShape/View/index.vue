@@ -153,7 +153,6 @@ export default{
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
-                    console.log(data);
                     this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
                     this.$set(this, 'shape', 'shape' in data ? data.shape : '');
 
@@ -171,7 +170,6 @@ export default{
                     });
                 }
             );
-            this.query = {};
             this.send_query();
         });
     },

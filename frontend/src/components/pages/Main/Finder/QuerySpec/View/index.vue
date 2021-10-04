@@ -7,6 +7,15 @@
             >
                 規格をリセットする
             </v-btn>
+
+            <carousel-button
+               :headerIsOn="true"
+               headerTitle="中分類"
+               :inputItems="selectableMiddleClassification"
+               @update-query="makeQuery"
+               :labelIsOn="true"
+            />
+            <v-divider />
             <card-button 
                 :headerIsOn="true"
                 headerTitle="材質"
@@ -102,7 +111,10 @@
 </template>
 <script>
 import { icons } from '../../spec_profile.js'
+
+
 import CardButton from '../../CardButton'
+import CarouselButton from '../../CarouselButton'
 import DropDownMenu from '../../DropDownMenu'
 function changeBackgroundColor(pickedItem, icons){
     for (let item of icons){
@@ -115,7 +127,8 @@ function changeBackgroundColor(pickedItem, icons){
 export default{
     components:{
         CardButton,
-        DropDownMenu
+        DropDownMenu,
+        CarouselButton
     },
     data: () => ({
         icons,
@@ -137,6 +150,7 @@ export default{
             model:"",
             image:"",
         },
+        pickedMiddleClassification:[],
         pickedMaterial:[],
         pickedSurface:[],
         pickedAmount:[],
@@ -160,7 +174,10 @@ export default{
             );
         },
         makeQuery(item){
-            if(this.icons.material.includes(item)){
+            if(this.icons.middle_classification.includes(item)){
+                this.specQuery["中分類"] = item.name;
+                changeBackgroundColor(item, this.icons.middle_classification);
+            }else if(this.icons.material.includes(item)){
                 this.specQuery["材質"] = item.name;
                 changeBackgroundColor(item, this.icons.material);
             }else if(this.icons.surface.includes(item)){
@@ -184,6 +201,7 @@ export default{
         resetQuery(){
             this.specQuery = {};
             this.send_query();
+            changeBackgroundColor({ name: "" }, this.icons.middle_classification);
             changeBackgroundColor({ name: "" }, this.icons.material);
             changeBackgroundColor({ name: "" }, this.icons.surface);
             changeBackgroundColor({ name: "" }, this.icons.amount);
@@ -228,6 +246,15 @@ export default{
         }
     },
     computed:{
+        selectableMiddleClassification(){
+            let _arr = [];
+            this.icons.middle_classification.forEach((item) => {
+                if(this.pickedMiddleClassification.includes(item.name)){
+                    _arr.push(item);
+                }
+            });
+            return _arr
+        },
         selectableMaterial(){
             let _arr = [];
             this.icons.material.forEach((item) => {
@@ -305,6 +332,10 @@ export default{
                 (rid, eid, data) => {
                     if(Object.keys(this.specQuery).length == 0){
                         this.initialSpec = data.spec
+                    }
+
+                    if(!Object.keys(this.specQuery).includes("中分類")){
+                        this.pickedMiddleClassification = data.spec["中分類"];
                     }
                     if(!Object.keys(this.specQuery).includes("材質")){
                         this.pickedMaterial = data.spec["材質"];
