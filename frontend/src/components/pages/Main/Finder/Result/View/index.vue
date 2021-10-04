@@ -11,6 +11,7 @@
                 </v-col>
             </v-row>
             <v-divider />
+
             <v-simple-table>
                 <template v-slot:default>
                     <tbody>
@@ -25,26 +26,66 @@
                 </template>
             </v-simple-table>
 
-            <v-divider />
-            <v-row class="pt-7"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToPreviousPage"
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    前のページに戻る    
-                </v-btn>  
+            <v-row class="py-2"> 
+                <v-col>
+                    <v-dialog
+                        v-model="shopArea" 
+                        class="py-2"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                color="red lighten-1"
+                                dark
+                                v-bind="attrs"
+                                v-on="on"
+                            ><v-icon>mdi-map-marker</v-icon>商品の場所を表示
+                            </v-btn>
+                        </template>
+                        <v-card>
+                            <v-card-title>商品マップ</v-card-title>
+                            <v-card-text>
+                                <v-img
+                                    :src="require('@/assets/productsImage/map_example.jpg')"
+                                />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer />
+                                <v-btn
+                                    color="red lighten-1"
+                                    text
+                                    @click="shopArea = false"
+                                >閉じる
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-col>
             </v-row>
-            <v-row class="pt-7"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToFirstPage"
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    最初のページに戻る    
-                </v-btn>  
+
+            <v-divider />
+            <v-row class="pt-2 pb-0"> 
+                <v-col>
+                    <v-btn
+                        dark
+                        color="primary"
+                        @click="backToPreviousPage"
+                    >
+                        <v-icon>mdi-arrow-left</v-icon>
+                        前のページに戻る    
+                    </v-btn>
+                </v-col>  
+            </v-row>
+            <v-row class="pt-0 mt-0"> 
+                <v-col>
+                    <v-btn
+                        dark
+                        color="primary"
+                        @click="backToFirstPage"
+                    >
+                        <v-icon>mdi-arrow-left</v-icon>
+                        最初のページに戻る    
+                    </v-btn>
+                </v-col>  
             </v-row>
         </v-card-text>   
     </v-card>
@@ -52,7 +93,8 @@
 <script>
 export default{
     data: () => ({
-        path:''
+        path:'',
+        shopArea:false
     }),
     props:["item","itemList"],
     methods:{

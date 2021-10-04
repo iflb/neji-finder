@@ -27,6 +27,8 @@
                             v-on="on"
                             outlined
                             readonly
+                            append-icon="mdi-menu-down"
+                            dense
                         />
                     </template>
                     <v-container style="max-height: 200px" class="ma-0 pa-0">

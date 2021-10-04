@@ -38,9 +38,15 @@ export default{
         accessNextPage(item){
             this.$emit( 'emit-item', [this.itemList[item.index]] );
             this.$emit( 'emit-component-name', 'result' );
+            this.$nextTick(() => {
+                this.$vuetify.goTo(0);
+            });
         },
         backToPreviousPage(){
             this.$emit( 'emit-component-name', 'query-spec' );
+            this.$nextTick(() => {
+                this.$vuetify.goTo(0);
+            });
         }
     }, 
     watch:{
