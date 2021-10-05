@@ -164,10 +164,11 @@ export default{
                     }
                     if(Object.keys(this.query).length === 3){
                          this.accessNextPage();
+                    } else {
+                        this.$nextTick(() => {
+                            this.$vuetify.goTo(document.body.scrollHeight);
+                        });
                     }
-                    this.$nextTick(() => {
-                        this.$vuetify.goTo(document.body.scrollHeight);
-                    });
                 }
             );
             this.send_query();

@@ -350,6 +350,7 @@ export default{
         },
     },
     created(){
+        this.$vuetify.goTo(0);
         if(["おねじ","めねじ"].includes(this.genre)){
             this.outer.isNecessary = false;
             if(this.genre == "めねじ"){
