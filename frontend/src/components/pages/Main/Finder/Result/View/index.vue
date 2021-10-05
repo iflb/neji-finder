@@ -99,7 +99,7 @@ export default{
     props:["item","itemList"],
     methods:{
         backToPreviousPage(){
-            if(this.itemList.length != 0){
+            if(this.itemList.length != 1){
                 this.$emit( 'emit-component-name', 'result-list' );
             }else{
                 this.$emit( 'emit-component-name', 'query-spec' );
@@ -128,6 +128,7 @@ export default{
     },
     created(){
         console.log(this.tableData);
+        console.log(this.itemList);
         let _jan = String(this.tableData[0].value);
         try{
             this.path = require(`@/assets/productsImage/${_jan}.jpg`);

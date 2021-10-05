@@ -262,7 +262,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "U字角ワッシャー",
+            name: "Ｕ字角ワッシャー",
             //code: 011609,
             //src: require("@/assets/middle_classification/01011402070570_p.jpg"),
             src: require("@/assets/middle_classification/no_image.jpg"),
@@ -345,7 +345,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "ALC用ドリルねじ",
+            name: "ＡＬＣ用ドリルねじ",
             //code: 012407,
             src: require("@/assets/middle_classification/012407.jpg"),
             backgroundColor: "#FFFFFF" 
@@ -437,7 +437,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "Uナット",
+            name: "Ｕナット",
             //code: 011403,
             src: require("@/assets/middle_classification/4979874253163_br.jpg"),
             backgroundColor: "#FFFFFF" 
@@ -551,7 +551,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "YTナイロンナット",
+            name: "ＹＴナイロンナット",
             //code: 011408,
             src: require("@/assets/middle_classification/4979874741585_br.jpg"),
             backgroundColor: "#FFFFFF" 
@@ -617,7 +617,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "SW付ナット",
+            name: "ＳＷ付ナット",
             //code: 011412,
             src: require("@/assets/middle_classification/4979874759054_br.jpg"),
             backgroundColor: "#FFFFFF" 
