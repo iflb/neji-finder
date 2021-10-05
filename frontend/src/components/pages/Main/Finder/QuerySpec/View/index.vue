@@ -295,6 +295,9 @@ export default{
             }else{
                 this.buttonDisabled = true;
             }
+        },
+        selectableNominal(){
+            console.log(this.selectableNominal);
         }
     },
     computed:{
@@ -346,6 +349,7 @@ export default{
         selectableOuter(){
             let _arr = [];
             this.initialSpec["外径か幅"].forEach((item) => {
+                console.log(item);
                 if(this.pickedOuter.includes(item)){
                     _arr.push({ "name":"外径か幅", "val": item });
                 }
@@ -383,7 +387,7 @@ export default{
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
 
-                    if(Object.keys(data.query).length == 1){
+                    if([1,3].includes(Object.keys(data.query).length)){
                         this.initialSpec = data.spec
                     }
                     if(!Object.keys(this.currentSpecQuery).includes("中分類")){
