@@ -37,7 +37,7 @@
                         >
                             <v-list-item-group>
                                 <v-list-item
-                                    v-for="item in inputItems"
+                                    v-for="item in inputItemsSorted"
                                     :key="item.val"
                                     @click="emitItem(item)"
                                 >
@@ -58,9 +58,34 @@
 <script>
 export default{
     props:["headerTitle","imageSource","model","inputItems"],
+    computed: {
+        inputItemsSorted() {
+            return this.inputItems
+                .map((item) => ({ name: item.name, val: item.val, sortValue: this.convertToFloatOrLargeNumber(item.val) }))
+                .sort((a,b) => (a.sortValue>b.sortValue ? 1 : -1));
+        }
+    },
     methods:{
+        convertToFloatOrLargeNumber(str) {
+            if(typeof(str)=='number') str = str.toString();
+            let _str = str.replace(/[０-９]/g, (s) => (String.fromCharCode(s.charCodeAt(0) - 0xFEE0)))
+                .replace('．', '.')
+                .replace('／', '/');
+            if(/^[0-9./]+$/.test(_str)) {
+                let nums = _str.split('/').map((c) => parseFloat(c));
+                if(nums.length==2) nums[0] /= nums[1];
+                return nums[0];
+            } else {
+                return 99999;
+            }
+        },
         emitItem(item){
             this.$emit('update-query', item);
+        }
+    },
+    watch: {
+        inputItemsSorted() {
+            console.log(this.inputItemsSorted);
         }
     }
 }
