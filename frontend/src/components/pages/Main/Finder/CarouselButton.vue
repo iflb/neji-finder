@@ -6,7 +6,7 @@
             </v-col>
         </v-row>
          <carousel 
-            :per-page="3" 
+            :per-page="['md','lg','xl'].includes($vuetify.breakpoint.name) ? numItemsForDesktop : numItemsForMobile" 
             :mouse-drag="false" 
             pagination-color="#42A5F5"
         >
@@ -40,6 +40,14 @@ export default{
         Slide
     },
     props:["headerIsOn","headerTitle","inputItems"],
+    computed: {
+        numItemsForMobile() {
+            return this.inputItems.length ? Math.min(3, this.inputItems.length) : 3;
+        },
+        numItemsForDesktop() {
+            return this.inputItems.length ? Math.min(5, this.inputItems.length) : 5;
+        },
+    },
     methods:{
         emitItem(item){
             this.$emit('update-query', item);
