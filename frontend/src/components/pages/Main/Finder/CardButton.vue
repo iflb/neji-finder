@@ -5,7 +5,7 @@
                 {{headerTitle}}を選ぶ
             </v-col>
         </v-row>
-        <v-row>
+        <v-row justify="center">
             <v-col 
                 v-for="item in inputItems" 
                 :key="item.name" 
