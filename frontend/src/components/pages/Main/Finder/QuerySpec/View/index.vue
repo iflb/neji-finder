@@ -4,12 +4,12 @@
         <v-card-text> 
             <v-row v-if="itemQuantity != 0" class="pt-5">
                 <v-col>
-                    該当商品数：{{itemQuantity}}個
+                    <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
                 </v-col>
             </v-row>
             <v-row v-else class="pt-5">
                 <v-col>
-                    該当件数が多すぎます。絞り込んでください
+                    <span class="text-body-1">該当件数が多すぎます。絞り込んでください</span>
                 </v-col>
             </v-row>
             <v-row class="pt-5 pb-8"> 
@@ -40,11 +40,12 @@
             </v-btn>
 
             <carousel-button
-               :headerIsOn="true"
-               headerTitle="中分類"
-               :inputItems="selectableMiddleClassification"
-               @update-query="makeQuery"
-               :labelIsOn="true"
+                :headerIsOn="true"
+                headerTitle="中分類"
+                :inputItems="selectableMiddleClassification"
+                @update-query="makeQuery"
+                :labelIsOn="true"
+                class="mb-6"
             />
             <v-divider />
             <card-button 
@@ -53,6 +54,7 @@
                 :inputItems="selectableMaterial"
                 @update-query="makeQuery"
                 :labelIsOn="false"
+                class="mb-6"
             />
             <v-divider />
             <v-slide-y-transition>
@@ -62,6 +64,7 @@
                     :inputItems="selectableSurface"
                     @update-query="makeQuery"
                     :labelIsOn="false"
+                    class="mb-6"
                 />
             </v-slide-y-transition>
             <v-divider />
@@ -72,6 +75,7 @@
                     :inputItems="selectableAmount"
                     @update-query="makeQuery"
                     :labelIsOn="false"
+                    class="mb-6"
                 />
             </v-slide-y-transition>
             <v-divider />
@@ -82,6 +86,7 @@
                         :model="nominal.model"
                         :inputItems="selectableNominal"
                         @update-query="makeQuery"
+                        class="mb-6"
                     />
             </v-slide-y-transition>
             <v-divider />
@@ -93,6 +98,7 @@
                         :model="outer.model"
                         :inputItems="selectableOuter"
                         @update-query="makeQuery"
+                        class="mb-6"
                     />
             </v-slide-y-transition>
             <v-divider />
@@ -104,12 +110,18 @@
                         :model="thickness.model"
                         :inputItems="selectableThickness"
                         @update-query="makeQuery"
+                        class="mb-6"
                     />
             </v-slide-y-transition>
             <v-divider />
             <v-row v-if="itemQuantity != 0" class="pt-5">
                 <v-col>
-                    該当商品数：{{itemQuantity}}個
+                    <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
+                </v-col>
+            </v-row>
+            <v-row v-else class="pt-5">
+                <v-col>
+                    <span class="text-body-1">該当件数が多すぎます。絞り込んでください</span>
                 </v-col>
             </v-row>
             <v-row class="pt-5"> 
