@@ -117,7 +117,9 @@ export default{
         tableData(){
             const _arr = Object.entries(this.item[0]).map(([key, value]) => ({key, value}));
             let _arr2 = _arr.filter(item => { 
-                if(!isNaN(item.value) || typeof item.value === 'string'){
+                if(item.key == "画像"){
+                    return false
+                }else if(!isNaN(item.value) || typeof item.value === 'string'){
                     return true
                 }else{
                     return false

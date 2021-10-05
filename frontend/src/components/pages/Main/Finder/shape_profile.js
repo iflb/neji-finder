@@ -191,16 +191,16 @@ export const nut_washer_icons = {
             src: require("@/assets/icons/38_u.jpg"), 
             backgroundColor: "#FFFFFF" 
         },
-        { 
-            name: "ウェーブ", 
-            src: require("@/assets/icons/39_wave.jpg"), 
-            backgroundColor: "#FFFFFF" 
-        },
-        { 
-            name: "テーパー", 
-            src: require("@/assets/icons/40_taper.jpg"), 
-            backgroundColor: "#FFFFFF" 
-        },
+        //{ 
+        //    name: "ウェーブ", 
+        //    src: require("@/assets/icons/39_wave.jpg"), 
+        //    backgroundColor: "#FFFFFF" 
+        //},
+        //{ 
+        //    name: "テーパー", 
+        //    src: require("@/assets/icons/40_taper.jpg"), 
+        //    backgroundColor: "#FFFFFF" 
+        //},
         { 
             name: "円",
             src: require("@/assets/icons/41_circle.jpg"), 
