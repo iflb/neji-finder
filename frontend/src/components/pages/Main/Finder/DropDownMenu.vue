@@ -86,6 +86,7 @@ export default{
     watch: {
         inputItemsSorted() {
             console.log(this.inputItemsSorted);
+
         }
     }
 }

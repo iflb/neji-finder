@@ -172,7 +172,6 @@ export default{
                             this.$vuetify.goTo(document.body.scrollHeight);
                         });
                     }
-                    console.log(this.query);
                 }
             );
             this.send_query();
