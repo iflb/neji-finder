@@ -128,7 +128,7 @@ export default {
                 document.location.reload();
             }  
             this.currentComponent = componentName;
-            console.log({"currentComponent": this.currentComponent});
+            //console.log({"currentComponent": this.currentComponent});
         },
         updateGenre(genre){
             this.genre = genre;
