@@ -2,6 +2,37 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>{{genre}}の規格を選ぶ</v-card-title>
         <v-card-text> 
+            <v-row v-if="itemQuantity != 0" class="pt-5">
+                <v-col>
+                    該当商品数：{{itemQuantity}}個
+                </v-col>
+            </v-row>
+            <v-row v-else class="pt-5">
+                <v-col>
+                    該当件数が多すぎます。絞り込んでください
+                </v-col>
+            </v-row>
+            <v-row class="pt-5 pb-8"> 
+                <v-btn
+                    dark
+                    color="primary"
+                    @click="backToPreviousPage"
+                >
+                    <v-icon>mdi-arrow-left</v-icon>
+                    戻る    
+                </v-btn>  
+                <v-spacer />
+                <v-btn
+                    :dark="!buttonDisabled"
+                    :disabled="buttonDisabled"
+                    color="primary"
+                    @click="accessNextPage"
+                >
+                    次に進む 
+                    <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>  
+            </v-row>
+
             <v-btn
                 @click="resetQuery"
             >
@@ -338,7 +369,6 @@ export default{
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
-                    console.log('hoge');
                     if(Object.keys(this.specQuery).length == 0){
                         this.initialSpec = data.spec
                     }
