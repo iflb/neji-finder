@@ -42,6 +42,7 @@ export default{
     data: () => ({
         nut_washer_icons,
         isPicked: false,
+        nextPage:true,
         query: {},
         shape: {},
     }),
@@ -59,7 +60,7 @@ export default{
     },
     methods: {
         send_query() {
-            let _query = '';
+            let _query = {};
             if (this.query){
                 _query = this.query;
             }
@@ -70,6 +71,7 @@ export default{
             );
         },
         makeQuery(item){
+            this.nextPage = true;
             if(this.nut_washer_icons.nut.includes(item)){
                 this.query = {};
                 this.query["ナット形状"] = item.name;
@@ -98,6 +100,8 @@ export default{
         }
     }, 
     created(){
+        this.nextPage = false;
+        console.log(this.nextPage);
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
@@ -105,7 +109,7 @@ export default{
                     console.log(data);
                     this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
                     this.$set(this, 'shape', 'shape' in data ? data.shape : '');
-                    if(Object.keys(this.query).length === 1){
+                    if(Object.keys(this.query).length === 1 && this.nextPage){
                          this.accessNextPage();
                     } else {
                         this.$nextTick(() => {

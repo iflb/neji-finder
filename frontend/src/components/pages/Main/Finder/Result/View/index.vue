@@ -103,7 +103,7 @@ export default{
     props:["item","itemList"],
     methods:{
         backToPreviousPage(){
-            if(this.itemList.length != 0){
+            if(this.itemList.length != 1){
                 this.$emit( 'emit-component-name', 'result-list' );
             }else{
                 this.$emit( 'emit-component-name', 'query-spec' );
@@ -121,7 +121,9 @@ export default{
         tableData(){
             const _arr = Object.entries(this.item[0]).map(([key, value]) => ({key, value}));
             let _arr2 = _arr.filter(item => { 
-                if(!isNaN(item.value) || typeof item.value === 'string'){
+                if(item.key == "画像"){
+                    return false
+                }else if(!isNaN(item.value) || typeof item.value === 'string'){
                     return true
                 }else{
                     return false
@@ -132,6 +134,7 @@ export default{
     },
     created(){
         console.log(this.tableData);
+        console.log(this.itemList);
         let _jan = String(this.tableData[0].value);
         try{
             this.path = require(`@/assets/productsImage/${_jan}.jpg`);

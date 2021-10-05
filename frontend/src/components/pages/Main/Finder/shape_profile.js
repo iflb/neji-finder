@@ -170,7 +170,7 @@ export const nut_washer_icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "輪",
+            name: "リング",
             src: require("@/assets/icons/35_ring.jpg"), 
             backgroundColor: "#FFFFFF" 
         },

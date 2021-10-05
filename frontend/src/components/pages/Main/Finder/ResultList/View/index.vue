@@ -64,7 +64,7 @@ export default{
                     _path = require(`@/assets/productsImage/no_image.jpg`);
                 }
                 _arr.push({
-                    name: item["品名"] + `(${item["JANコード"]})`,
+                    name: item["品名"] + `(サイズ：${item["サイズ"]}, 個数:${item["構成数"]})`,
                     src: _path,
                     backgroundColor: "#FFFFFF",
                     index: _ind
