@@ -7,7 +7,7 @@
         </v-row>
         <v-row>
             <v-col cols="6">
-                <v-card>
+                <v-card max-width="200" class="mx-auto">
                 <v-img
                     :src="imageSource"
                 />
