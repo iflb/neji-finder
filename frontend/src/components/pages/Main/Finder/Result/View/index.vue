@@ -8,7 +8,7 @@
                         :src="path"
                         max-width="400"
                     />
-                    <div v-if="this.item" class="text-h6">
+                    <div v-if="this.item" class="text-h6 my-4">
                         <span v-if="this.item[0]['店舗取り扱い']=='お取り寄せ'">店舗在庫あり</span>
                         <span v-else-if="this.item[0]['店舗取り扱い']=='〇'">店舗在庫なし</span>
                     </div>
@@ -135,6 +135,7 @@ export default{
     created(){
         console.log(this.tableData);
         console.log(this.itemList);
+        this.$vuetify.goTo(0);
         let _jan = String(this.tableData[0].value);
         try{
             this.path = require(`@/assets/productsImage/${_jan}.jpg`);

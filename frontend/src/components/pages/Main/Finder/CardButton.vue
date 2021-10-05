@@ -8,7 +8,7 @@
         <v-row justify="center">
             <v-col 
                 v-for="item in inputItems" 
-                :key="item.name" 
+                :key="item.jan" 
                 cols="4" 
                 md="2" 
                 align="center"
