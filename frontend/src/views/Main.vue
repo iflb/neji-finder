@@ -66,12 +66,14 @@
                     :duct="duct"
                     :genre="genre"
                     :shapeQuery="shapeQuery"
+                    :specQuery="specQuery"
                     :itemList="itemList"
                     :item="item"
                     @add-step="step = $event"
                     @emit-component-name="changeComponent"
                     @emit-genre="updateGenre"
                     @emit-shape-query="updateShapeQuery"
+                    @emit-spec-query="updateSpecQuery"
                     @emit-item-list="updateItemList"
                     @emit-item="updateItem"
                 />
@@ -111,6 +113,7 @@ export default {
         currentComponent:'start',
         genre:'',
         shapeQuery:{},
+        specQuery:{},
         itemList:[],
         item:[]
     }),    
@@ -125,7 +128,7 @@ export default {
                 document.location.reload();
             }  
             this.currentComponent = componentName;
-            console.log({"currentComponent": this.currentComponent});
+            //console.log({"currentComponent": this.currentComponent});
         },
         updateGenre(genre){
             this.genre = genre;
@@ -134,6 +137,10 @@ export default {
         updateShapeQuery(query){
             this.shapeQuery = query;
             console.log({"currentShapeQuery": this.shapeQuery});
+        },
+        updateSpecQuery(query){
+            this.specQuery = query;
+            console.log({"currentSpecQuery": this.specQuery});
         },
         updateItemList(list){
             this.itemList = list;

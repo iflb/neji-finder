@@ -73,8 +73,9 @@ export default{
         pickedHoleShape:[],
         query: {},
         shape: {},
+        nextPage:true,
     }),
-    props:["duct","genre"],
+    props:["duct","genre","shapeQuery"],
     computed:{
         selectableTip(){
             let _arr = [];
@@ -108,6 +109,7 @@ export default{
             );
         },
         makeQuery(item){
+            this.nextPage = true;
             if(this.bolt_icons.head.includes(item)){
                 this.query = {};
                 for (let key in this.isPicked){
@@ -149,6 +151,7 @@ export default{
         }
     }, 
     created(){
+        this.nextPage = false;
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
@@ -162,13 +165,14 @@ export default{
                     if(!Object.keys(this.query).includes("頭部穴形状")){
                         this.pickedHoleShape = this.shape["頭部穴形状"];
                     }
-                    if(Object.keys(this.query).length === 3){
+                    if(Object.keys(this.query).length === 3 && this.nextPage){
                          this.accessNextPage();
                     } else {
                         this.$nextTick(() => {
                             this.$vuetify.goTo(document.body.scrollHeight);
                         });
                     }
+                    console.log(this.query);
                 }
             );
             this.send_query();

@@ -7,8 +7,8 @@
         </v-row>
          <carousel 
             :per-page="['md','lg','xl'].includes($vuetify.breakpoint.name) ? numItemsForDesktop : numItemsForMobile" 
-            :mouse-drag="false" 
             pagination-color="#42A5F5"
+            :touchDrag="true"
         >
             <slide 
                 v-for="item in inputItems" 
