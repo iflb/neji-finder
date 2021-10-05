@@ -8,6 +8,10 @@
                         :src="path"
                         max-width="400"
                     />
+                    <div v-if="this.item" class="text-h6">
+                        <span v-if="this.item[0]['店舗取り扱い']=='お取り寄せ'">店舗在庫あり</span>
+                        <span v-else-if="this.item[0]['店舗取り扱い']=='〇'">店舗在庫なし</span>
+                    </div>
                 </v-col>
             </v-row>
             <v-divider />
@@ -26,7 +30,7 @@
                 </template>
             </v-simple-table>
 
-            <v-row class="py-2"> 
+            <!--<v-row class="py-2"> 
                 <v-col>
                     <v-dialog
                         v-model="shopArea" 
@@ -60,7 +64,7 @@
                         </v-card>
                     </v-dialog>
                 </v-col>
-            </v-row>
+            </v-row>-->
 
             <v-divider />
             <v-row class="pt-2 pb-0"> 
