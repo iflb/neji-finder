@@ -9,8 +9,8 @@
                         max-width="400"
                     />
                     <div v-if="this.item" class="text-h6 my-4">
-                        <span v-if="this.item[0]['店舗取り扱い']=='お取り寄せ'">店舗在庫あり</span>
-                        <span v-else-if="this.item[0]['店舗取り扱い']=='〇'">店舗在庫なし</span>
+                        <span v-if="this.item[0]['店舗取り扱い']=='お取り寄せ'">店舗在庫なし</span>
+                        <span v-else-if="this.item[0]['店舗取り扱い']=='〇'">店舗在庫あり</span>
                     </div>
                 </v-col>
             </v-row>
