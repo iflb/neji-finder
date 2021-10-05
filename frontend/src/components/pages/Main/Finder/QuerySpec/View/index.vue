@@ -81,6 +81,11 @@
                     該当商品数：{{itemQuantity}}個
                 </v-col>
             </v-row>
+            <v-row v-else class="pt-5">
+                <v-col>
+                    100件以上該当します
+                </v-col>
+            </v-row>
             <v-row class="pt-5"> 
                 <v-btn
                     dark
@@ -132,7 +137,7 @@ export default{
     },
     data: () => ({
         icons,
-        specQuery:{},
+        currentSpecQuery:{},
         
         snackbar:false,
         initialSpec:{
@@ -168,13 +173,13 @@ export default{
         itemQuantity:0,
         buttonDisabled:true,
         currentItems:[],
-
+        data:{}
     }),
-    props:["duct","genre","shapeQuery"],
+    props:["duct","genre","shapeQuery","specQuery"],
     methods: {
         send_query() {
             const _query = {}
-            Object.assign(_query, this.shapeQuery,this.specQuery);
+            Object.assign(_query, this.shapeQuery,this.currentSpecQuery);
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.NEJI,
@@ -183,31 +188,31 @@ export default{
         },
         makeQuery(item){
             if(this.icons.middle_classification.includes(item)){
-                this.specQuery["中分類"] = item.name;
+                this.currentSpecQuery["中分類"] = item.name;
                 changeBackgroundColor(item, this.icons.middle_classification);
             }else if(this.icons.material.includes(item)){
-                this.specQuery["材質"] = item.name;
+                this.currentSpecQuery["材質"] = item.name;
                 changeBackgroundColor(item, this.icons.material);
             }else if(this.icons.surface.includes(item)){
-                this.specQuery["表面処理"] = item.name;
+                this.currentSpecQuery["表面処理"] = item.name;
                 changeBackgroundColor(item, this.icons.surface);
             }else if(this.icons.amount.includes(item)){
-                this.specQuery["構成数クラス"] = item.name;
+                this.currentSpecQuery["構成数クラス"] = item.name;
                 changeBackgroundColor(item, this.icons.amount);
             }else if(this.initialSpec["呼び径"].includes(item.val) && item.name=="呼び径" ){
-                this.specQuery["呼び径"] = item.val;
+                this.currentSpecQuery["呼び径"] = item.val;
                 this.nominal.model = item.val; 
             }else if(this.outer.isNecessary && this.initialSpec["外径か幅"].includes(item.val) && item.name=="外径か幅" ){
-                this.specQuery["外径か幅"] = item.val;
-                this.outer.model = item.val; 
+                this.currentSpecQuery["外径か幅"] = item.val;
+                this.outer.model = this.currentSpecQuery["外径か幅"];
             }else if(this.thickness.isNecessary && this.initialSpec["長さか厚み"].includes(item.val) && item.name=="長さか厚み"){
-                this.specQuery["長さか厚み"] = item.val;
-                this.thickness.model = item.val; 
+                this.currentSpecQuery["長さか厚み"] = item.val;
+                this.thickness.model = this.currentSpecQuery["長さか厚み"]; 
             }
             this.send_query();
         },
         resetQuery(){
-            this.specQuery = {};
+            this.currentSpecQuery = {};
             this.send_query();
             changeBackgroundColor({ name: "" }, this.icons.middle_classification);
             changeBackgroundColor({ name: "" }, this.icons.material);
@@ -219,12 +224,13 @@ export default{
         },
         accessNextPage(){
             const _query = {}
-            Object.assign(_query, this.shapeQuery,this.specQuery)
+            Object.assign(_query, this.shapeQuery,this.currentSpecQuery)
+            this.$emit( 'emit-spec-query', this.currentSpecQuery );
+            this.$emit( 'emit-item-list', this.currentItems );
             if(this.itemQuantity == 1){
                 this.$emit( 'emit-item', this.currentItems );
                 this.$emit( 'emit-component-name', 'result' );
             }else{
-                this.$emit( 'emit-item-list', this.currentItems );
                 this.$emit( 'emit-component-name', 'result-list' );
             }
             this.$nextTick(() => {
@@ -333,54 +339,55 @@ export default{
             this.nominal.image = this.icons.nominal[2].src;
             this.outer.image = this.icons.outer[0].src;
         }
-
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
-                    console.log('hoge');
-                    if(Object.keys(this.specQuery).length == 0){
+
+                    if(Object.keys(data.query).length == 1){
                         this.initialSpec = data.spec
                     }
-
-                    if(!Object.keys(this.specQuery).includes("中分類")){
+                    console.log(this.currentSpecQuery)
+                    console.log(data);
+                    console.log(this.initialSpec);
+                    if(!Object.keys(this.currentSpecQuery).includes("中分類")){
                         this.pickedMiddleClassification = data.spec["中分類"];
                     }
-                    if(!Object.keys(this.specQuery).includes("材質")){
+
+                    if(!Object.keys(this.currentSpecQuery).includes("材質")){
                         this.pickedMaterial = data.spec["材質"];
                     }
-                    if(!Object.keys(this.specQuery).includes("表面処理")){
+                    if(!Object.keys(this.currentSpecQuery).includes("表面処理")){
                         this.pickedSurface = data.spec["表面処理"];
                     }
-                    if(!Object.keys(this.specQuery).includes("構成数クラス")){
+                    if(!Object.keys(this.currentSpecQuery).includes("構成数クラス")){
                         this.pickedAmount = data.spec["構成数クラス"];
                     }
-                    if(!Object.keys(this.specQuery).includes("呼び径")){
+                    if(!Object.keys(this.currentSpecQuery).includes("呼び径")){
                         this.pickedNominal = data.spec["呼び径"];
                     }
 
                     if(["おねじ","座金"].includes(this.genre)){
-                        if(!Object.keys(this.specQuery).includes("長さか厚み")){
+                        if(!Object.keys(this.currentSpecQuery).includes("長さか厚み")){
                             this.pickedThickness = data.spec["長さか厚み"];
                         }
                     }
                     if(["座金"].includes(this.genre)){
-                        if(!Object.keys(this.specQuery).includes("外径か幅")){
+                        if(!Object.keys(this.currentSpecQuery).includes("外径か幅")){
                             this.pickedOuter = data.spec["外径か幅"];
                         }
                     }
-    
                     if(Object.keys(data).includes('items')){
                         this.currentItems = data.items;
                         this.itemQuantity = data.items.length;
                     }
                 }
             )
-            this.send_query();
+            this.resetQuery();
         });
     },
     mounted(){
         this.$emit('add-step', 3);
-    }
+    },
 }
 </script>
