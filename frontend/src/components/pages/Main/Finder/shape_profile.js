@@ -100,7 +100,7 @@ export const bolt_icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "すり割り（ー）",
+            name: "すり割り（－）",
             src: require("@/assets/icons/18_suriwari.jpg"), 
             backgroundColor: "#FFFFFF" 
         },

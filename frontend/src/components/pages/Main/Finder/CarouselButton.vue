@@ -16,6 +16,7 @@
                 align="center"
             >
                 <v-card
+                    class="d-flex align-center justify-center"
                     @click="emitItem(item)"
                     :color="item.backgroundColor"
                     max-width="100"

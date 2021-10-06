@@ -182,7 +182,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "ワンサイドなべ子ねじ",
+            name: "ワンサイドなべ小ねじ",
             //code: 010903,
             src: require("@/assets/middle_classification/01011105012900_p.jpg"),
             backgroundColor: "#FFFFFF" 
@@ -206,7 +206,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "８.８六角ボルト",
+            name: "８．８六角ボルト",
             //code: 010303,
             src: require("@/assets/middle_classification/01011204071790_p.jpg"),
             backgroundColor: "#FFFFFF" 
@@ -298,8 +298,7 @@ export const icons = {
         { 
             name: "キーパーワッシャー",
             //code: 011612,
-            //src: require("@/assets/middle_classification/01011403076440_p.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/011612.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -385,13 +384,13 @@ export const icons = {
         { 
             name: "スリムねじ",
             //code: 012702,
-            src: require("@/assets/middle_classification/4944825405380_br.jpg"),
+            src: require("@/assets/middle_classification/4979874458322_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "木用ねじ（コーススレッド）",
             //code: 012701,
-            src: require("@/assets/middle_classification/4968534012493_br.jpg"),
+            src: require("@/assets/middle_classification/4979874459046_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -427,25 +426,25 @@ export const icons = {
         { 
             name: "さら木ねじ",
             //code: 012602,
-            src: require("@/assets/middle_classification/4979874216618_br.jpg"),
+            src: require("@/assets/middle_classification/4979874457370_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "球面座金",
             //code: 011616,
-            src: require("@/assets/middle_classification/4979874227645_br.jpg"),
+            src: require("@/assets/middle_classification/011616.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "Ｕナット",
             //code: 011403,
-            src: require("@/assets/middle_classification/4979874253163_br.jpg"),
+            src: require("@/assets/middle_classification/4979874740342_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "デッキ用",
             //code: 012705,
-            src: require("@/assets/middle_classification/4979874293299_br.jpg"),
+            src: require("@/assets/middle_classification/012702.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -463,19 +462,19 @@ export const icons = {
         { 
             name: "ハンガーボルト",
             //code: 012610,
-            src: require("@/assets/middle_classification/4979874418524_br.jpg"),
+            src: require("@/assets/middle_classification/4979874227485_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "丸木ねじ",
             //code: 012601,
-            src: require("@/assets/middle_classification/4979874418562_br.jpg"),
+            src: require("@/assets/middle_classification/4979874456953_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "ジョイントボルト",
             //code: 012606,
-            src: require("@/assets/middle_classification/4979874418586_br.jpg"),
+            src: require("@/assets/middle_classification/4979874418524_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -505,7 +504,7 @@ export const icons = {
         { 
             name: "さら小ねじ",
             //code: 010802,
-            src: require("@/assets/middle_classification/4979874458926_br.jpg"),
+            src: require("@/assets/middle_classification/4979874823427_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -559,7 +558,7 @@ export const icons = {
         { 
             name: "くさびナット",
             //code: 011401,
-            src: require("@/assets/middle_classification/4979874741592_br.jpg"),
+            src: require("@/assets/middle_classification/4979874870773_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -577,25 +576,25 @@ export const icons = {
         { 
             name: "六角コーチ",
             //code: 012605,
-            src: require("@/assets/middle_classification/4979874741790_br.jpg"),
+            src: require("@/assets/middle_classification/4979874733214_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "なべ小ねじ",
             //code: 010801,
-            src: require("@/assets/middle_classification/4979874745033_br.jpg"),
+            src: require("@/assets/middle_classification/4979874823298_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "六角アプセット",
             //code: 010814,
-            src: require("@/assets/middle_classification/4979874750334_br.jpg"),
+            src: require("@/assets/middle_classification/4979874835550_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "六角アプセット組込みねじ",
             //code: 010815,
-            src: require("@/assets/middle_classification/4979874750419_br.jpg"),
+            src: require("@/assets/middle_classification/4979874835499_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -625,7 +624,7 @@ export const icons = {
         { 
             name: "コンパネ用",
             //code: 012704,
-            src: require("@/assets/middle_classification/4979874759528_br.jpg"),
+            src: require("@/assets/middle_classification/4979874459145_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -667,43 +666,43 @@ export const icons = {
         { 
             name: "歯付座金",
             //code: 011703,
-            src: require("@/assets/middle_classification/4979874784896_br.jpg"),
+            src: require("@/assets/middle_classification/4979874759528_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "ノルトロックワッシャー",
             //code: 011701,
-            src: require("@/assets/middle_classification/4979874784919_br.jpg"),
+            src: require("@/assets/middle_classification/4979874870889_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "六角ナット",
             //code: 011301,
-            src: require("@/assets/middle_classification/4979874790330_br.jpg"),
+            src: require("@/assets/middle_classification/4979874735072_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "小形六角ナット",
             //code: 011302,
-            src: require("@/assets/middle_classification/4979874803245_br.jpg"),
+            src: require("@/assets/middle_classification/4979874790330_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "１０.９六角ボルト",
             //code: 010302,
-            src: require("@/assets/middle_classification/4979874804136_br.jpg"),
+            src: require("@/assets/middle_classification/010302.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "ハードロックナット",
             //code: 011402,
-            src: require("@/assets/middle_classification/4979874805348_br.jpg"),
+            src: require("@/assets/middle_classification/4979874834904_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "リングロックナット",
             //code: 011405,
-            src: require("@/assets/middle_classification/4979874805386_br.jpg"),
+            src: require("@/assets/middle_classification/4979874784926_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -715,7 +714,7 @@ export const icons = {
         { 
             name: "トラス小ねじ",
             //code: 010803,
-            src: require("@/assets/middle_classification/4979874809520_br.jpg"),
+            src: require("@/assets/middle_classification/4979874808516_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -733,7 +732,7 @@ export const icons = {
         { 
             name: "なべ組込みねじ",
             //code: 010809,
-            src: require("@/assets/middle_classification/4979874821768_br.jpg"),
+            src: require("@/assets/middle_classification/010809.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -745,13 +744,13 @@ export const icons = {
         { 
             name: "ロール連結ねじ",
             //code: 012708,
-            src: require("@/assets/middle_classification/4979874831392_br.jpg"),
+            src: require("@/assets/middle_classification/012708.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "軽天用",
             //code: 012707,
-            src: require("@/assets/middle_classification/4979874831408_br.jpg"),
+            src: require("@/assets/middle_classification/4979874455598_br.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -785,7 +784,7 @@ export const icons = {
             backgroundColor: "#FFFFFF" 
         },
         { 
-            name: "１２.９六角ボルト",
+            name: "１２．９六角ボルト",
             //code: 010301,
             src: require("@/assets/middle_classification/no_image.jpg"),
             backgroundColor: "#FFFFFF" 
