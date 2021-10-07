@@ -73,6 +73,11 @@ export default{
         pickedHoleShape:[],
         query: {},
         shape: {},
+        shapeKey: {
+            'head': '頭部', 
+            'tip': 'おねじ先端', 
+            'hole_shape': '頭部穴形状'
+        },
         nextPage:true,
     }),
     props:["duct","genre","shapeQuery"],
@@ -110,43 +115,41 @@ export default{
         },
         makeQuery(item){
             this.nextPage = true;
-            if(this.bolt_icons.head.includes(item)){
-                this.query = {};
-                for (let key in this.isPicked){
-                    this.isPicked[key] = false;
+            for(let _key in this.shapeKey){
+                const _shapeType = this.bolt_icons[_key];
+                if(_shapeType.includes(item)){
+                    if(_key === 'head'){
+                        this.query = {};
+                        for (let _key in this.isPicked){
+                            this.isPicked[_key] = false;
+                        }
+                        for (let _key in this.shapeKey){
+                            changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
+                        }
+                    }else{
+                        changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
+                    }
+                    this.isPicked[_key] = true;
+                    this.query[this.shapeKey[_key]] = item.name;
+                    this.send_query();
                 }
-                this.query["頭部"] = item.name;
-                this.isPicked.head = true;
-                changeBackgroundColor(item, this.bolt_icons.hole_shape);
-                changeBackgroundColor(item, this.bolt_icons.tip);
-                changeBackgroundColor(item, this.bolt_icons.head);
-                this.send_query();
-            }else if(this.bolt_icons.tip.includes(item)){
-                this.query["おねじ先端"] = item.name;
-                this.isPicked.tip = true;
-                changeBackgroundColor(item, this.bolt_icons.tip);
-
-                this.send_query();
-            }else if(this.bolt_icons.hole_shape.includes(item)){
-                this.query["頭部穴形状"] = item.name;
-                this.isPicked.hole_shape = true;
-                changeBackgroundColor(item, this.bolt_icons.hole_shape);
-                this.send_query();
             }
         },
         accessNextPage(){
-            changeBackgroundColor({ name: '' }, this.bolt_icons.hole_shape);
-            changeBackgroundColor({ name: '' }, this.bolt_icons.tip);
-            changeBackgroundColor({ name: '' }, this.bolt_icons.head);
+            for (let _key in this.shapeKey){
+                changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
+            }
             this.$emit( 'emit-shape-query', this.query );
+            this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-spec' );
         },
         backToPreviousPage(){
-            changeBackgroundColor({ name: '' }, this.bolt_icons.hole_shape);
-            changeBackgroundColor({ name: '' }, this.bolt_icons.tip);
-            changeBackgroundColor({ name: '' }, this.bolt_icons.head);
+            for (let _key in this.shapeKey){
+                changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
+            }
             this.query = {};
             this.$emit( 'emit-shape-query', this.query );
+            this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-genre' );
         }
     }, 
@@ -165,9 +168,11 @@ export default{
                     if(!Object.keys(this.query).includes("頭部穴形状")){
                         this.pickedHoleShape = this.shape["頭部穴形状"];
                     }
+
                     if(Object.keys(this.query).length === 3 && this.nextPage){
+                         console.log('fired');
                          this.accessNextPage();
-                    } else {
+                    }else{
                         this.$nextTick(() => {
                             this.$vuetify.goTo(document.body.scrollHeight);
                         });

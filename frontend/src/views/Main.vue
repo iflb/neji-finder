@@ -72,6 +72,7 @@
                     @add-step="step = $event"
                     @emit-component-name="changeComponent"
                     @emit-genre="updateGenre"
+                    @emit-query="updateQuery"
                     @emit-shape-query="updateShapeQuery"
                     @emit-spec-query="updateSpecQuery"
                     @emit-item-list="updateItemList"
@@ -115,7 +116,8 @@ export default {
         shapeQuery:{},
         specQuery:{},
         itemList:[],
-        item:[]
+        item:[],
+        queryList:[{},{}],
     }),    
     watch:{
     },
@@ -128,11 +130,17 @@ export default {
                 document.location.reload();
             }  
             this.currentComponent = componentName;
-            //console.log({"currentComponent": this.currentComponent});
         },
         updateGenre(genre){
             this.genre = genre;
-            console.log({"genre": this.genre});
+        },
+        updateQuery(query){
+            if(['query-bolt-shape','query-nut-washer-shape'].includes(this.currentComponent)){
+                this.queryList[0] = query;
+            }else{
+                this.queryList[1] = query;
+            }
+            console.log(this.queryList)
         },
         updateShapeQuery(query){
             this.shapeQuery = query;

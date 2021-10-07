@@ -41,21 +41,15 @@ export default{
     },
     data: () => ({
         nut_washer_icons,
-        isPicked: false,
         nextPage:true,
         query: {},
         shape: {},
+        genreEng:''
     }),
     props:["duct","genre"],
     computed:{
         selectedItems(){
-            if (this.genre == "めねじ"){
-                return this.nut_washer_icons.nut
-            }else if(this.genre == "座金"){
-                return this.nut_washer_icons.washer
-            }else{
-                return 0
-            }
+            return this.nut_washer_icons[this.genreEng]
         }
     },
     methods: {
@@ -71,53 +65,58 @@ export default{
             );
         },
         makeQuery(item){
-            this.nextPage = true;
-            if(this.nut_washer_icons.nut.includes(item)){
-                this.query = {};
-                this.query["ナット形状"] = item.name;
-                this.isPicked = true;
-                changeBackgroundColor(item, this.nut_washer_icons.nut);
-            }else if(this.nut_washer_icons.washer.includes(item)){
-                this.query = {};
-                this.query["座金形状"] = item.name;
-                this.isPicked = true;
-                changeBackgroundColor(item, this.nut_washer_icons.washer);
+            let _queryKey = '';
+            if(this.genreEng == 'nut'){
+                _queryKey = 'ナット形状'
+            }else if(this.genreEng == 'washer'){
+                _queryKey = '座金形状'
             }
+
+            this.nextPage = true;
+            this.query = {};
+            this.query[_queryKey] = item.name;
+            changeBackgroundColor(item, this.nut_washer_icons[this.genreEng]);
+
             this.send_query();
         },
         accessNextPage(){
-            changeBackgroundColor({ name: '' }, this.nut_washer_icons.nut);
-            changeBackgroundColor({ name: '' }, this.nut_washer_icons.washer);
+            changeBackgroundColor({ name: '' }, this.nut_washer_icons[this.genreEng]);
             this.$emit( 'emit-shape-query', this.query );
+            this.$emit( 'emite-query', this.query );
             this.query = {};
             this.$emit( 'emit-component-name', 'query-spec' );
         },
         backToPreviousPage(){
-            changeBackgroundColor({ name: '' }, this.nut_washer_icons.nut);
-            changeBackgroundColor({ name: '' }, this.nut_washer_icons.washer);
+            changeBackgroundColor({ name: '' }, this.nut_washer_icons[this.genreEng]);
             this.query = {};
             this.$emit( 'emit-component-name', 'query-genre' );
         }
     }, 
     created(){
         this.nextPage = false;
-        console.log(this.nextPage);
+
+        if (this.genre == "めねじ"){
+            this.genreEng = 'nut';
+        }else if(this.genre == "座金"){
+            this.genreEng = 'washer';
+        }
+
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
-                    console.log(data);
                     this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
                     this.$set(this, 'shape', 'shape' in data ? data.shape : '');
+
                     if(Object.keys(this.query).length === 1 && this.nextPage){
                          this.accessNextPage();
-                    } else {
+                    }else{
                         this.$nextTick(() => {
                             this.$vuetify.goTo(document.body.scrollHeight);
                         });
                     }
                 }
-            )
+            );
             this.send_query();
         });
     },
