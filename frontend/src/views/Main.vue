@@ -65,16 +65,14 @@
                     :is="currentComponent"
                     :duct="duct"
                     :genre="genre"
-                    :shapeQuery="shapeQuery"
-                    :specQuery="specQuery"
+                    :shapeQuery="queryList[0]"
+                    :totalQuery="queryList[1]"
                     :itemList="itemList"
                     :item="item"
                     @add-step="step = $event"
                     @emit-component-name="changeComponent"
                     @emit-genre="updateGenre"
                     @emit-query="updateQuery"
-                    @emit-shape-query="updateShapeQuery"
-                    @emit-spec-query="updateSpecQuery"
                     @emit-item-list="updateItemList"
                     @emit-item="updateItem"
                 />
@@ -114,7 +112,6 @@ export default {
         currentComponent:'start',
         genre:'',
         shapeQuery:{},
-        specQuery:{},
         itemList:[],
         item:[],
         queryList:[{},{}],
@@ -137,6 +134,7 @@ export default {
         updateQuery(query){
             if(['query-bolt-shape','query-nut-washer-shape'].includes(this.currentComponent)){
                 this.queryList[0] = query;
+                this.queryList[1] = query;
             }else{
                 this.queryList[1] = query;
             }

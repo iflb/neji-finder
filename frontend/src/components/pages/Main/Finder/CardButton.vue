@@ -1,8 +1,10 @@
 <template>
     <div>
-        <v-row v-if="headerIsOn" class="pt-5">
-            <v-col class="text-body-1">
-                {{headerTitle}}を選ぶ
+        <v-row v-if="headerIsOn" class="pt-3">
+            <v-col>
+                <v-card dark flat color="#424242">
+                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}を選ぶ</span>
+                </v-card>
             </v-col>
         </v-row>
         <v-row justify="center">

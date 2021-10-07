@@ -8,25 +8,21 @@
                 @update-query="chooseGenre"
                 :labelIsOn="true"
             />
-            <v-divider />
-            <v-row class="pt-5"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToPreviousPage" 
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    戻る 
-                </v-btn>  
-            </v-row>
+            <v-divider class="pt-3"/>
+            <page-transition-button 
+                :nextIsNecessary="false"
+                @click-back="backToPreviousPage"
+            />
         </v-card-text>
     </v-card>
 </template>
 <script>
 import CardButton from '../../CardButton'
+import PageTransitionButton from '../../PageTransitionButton'
 export default{
     components:{
-        CardButton
+        CardButton,
+        PageTransitionButton
     },
     data: () => ({
         icons: [
@@ -35,7 +31,6 @@ export default{
             { name: "座金", src: require("@/assets/icons/3_washer.jpg"), backgroundColor: "#FFFFFF" },
         ],
         chosenGenre: '',
-        //path:'',
     }),
     props:["duct"],
     methods: {
