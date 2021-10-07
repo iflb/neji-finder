@@ -83,11 +83,10 @@ export default{
             this.$emit('update-query', item);
         }
     },
-    watch: {
-        inputItemsSorted() {
-            console.log(this.inputItemsSorted);
-
-        }
-    }
+    //watch: {
+    //    inputItemsSorted() {
+    //        console.log(this.inputItemsSorted);
+    //    }
+    //}
 }
 </script>
