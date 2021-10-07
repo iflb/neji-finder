@@ -2,31 +2,24 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>{{genre}}の形状を選ぶ</v-card-title>
         <v-card-text> 
-            <v-container>
-                <card-button
-                    :headerIsOn="false"
-                    :inputItems="selectedItems"
-                    :labelIsOn="true"
-                    @update-query="makeQuery"
-                />
-            </v-container>
-            <v-divider />
-            <v-row class="pt-7"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToPreviousPage"
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    戻る    
-                </v-btn>  
-            </v-row>
+            <card-button
+                :headerIsOn="false"
+                :inputItems="selectedItems"
+                :labelIsOn="true"
+                @update-query="makeQuery"
+            />
+            <v-divider class="pt-3"/>
+            <page-transition-button 
+                :nextIsNecessary="false"
+                @click-back="backToPreviousPage"
+            />
         </v-card-text>   
     </v-card>
 </template>
 <script>
 import { nut_washer_icons } from '../../shape_profile.js'
 import CardButton from '../../CardButton' 
+import PageTransitionButton from '../../PageTransitionButton'
 function changeBackgroundColor(pickedItem, nut_washer_icons){
     for (let item of nut_washer_icons){
         if(pickedItem.name !== item.name){
@@ -37,13 +30,13 @@ function changeBackgroundColor(pickedItem, nut_washer_icons){
 }
 export default{
     components:{
-        CardButton
+        CardButton,
+        PageTransitionButton
     },
     data: () => ({
         nut_washer_icons,
         nextPage:true,
         query: {},
-        shape: {},
         genreEng:''
     }),
     props:["duct","genre"],
@@ -55,9 +48,8 @@ export default{
     methods: {
         send_query() {
             let _query = {};
-            if (this.query){
-                _query = this.query;
-            }
+            if (this.query) _query = this.query;
+            
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.NEJI,
@@ -81,8 +73,7 @@ export default{
         },
         accessNextPage(){
             changeBackgroundColor({ name: '' }, this.nut_washer_icons[this.genreEng]);
-            this.$emit( 'emit-shape-query', this.query );
-            this.$emit( 'emite-query', this.query );
+            this.$emit( 'emit-query', this.query );
             this.query = {};
             this.$emit( 'emit-component-name', 'query-spec' );
         },
@@ -106,7 +97,6 @@ export default{
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
                     this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
-                    this.$set(this, 'shape', 'shape' in data ? data.shape : '');
 
                     if(Object.keys(this.query).length === 1 && this.nextPage){
                          this.accessNextPage();

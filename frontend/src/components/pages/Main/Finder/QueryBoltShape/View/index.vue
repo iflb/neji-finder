@@ -2,19 +2,16 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>おねじの形状を選ぶ</v-card-title>
         <v-card-text> 
-            <v-container>
-                <card-button 
-                    :headerIsOn="true"
-                    headerTitle="頭部の形状"
-                    :inputItems="bolt_icons.head"
-                    @update-query="makeQuery"
-                    :labelIsOn="true"
-                />
-            </v-container>
+            <card-button 
+                :headerIsOn="true"
+                headerTitle="頭部の形状"
+                :inputItems="bolt_icons.head"
+                @update-query="makeQuery"
+                :labelIsOn="true"
+            />
 
             <v-slide-y-transition>
                 <v-container v-if="isPicked.head">
-                    <v-divider />
                     <carousel-button
                        :headerIsOn="true"
                        headerTitle="おねじ先端の形状"
@@ -25,7 +22,6 @@
             </v-slide-y-transition>
             <v-slide-y-transition>
                 <v-container v-if="isPicked.tip">   
-                    <v-divider />
                     <carousel-button
                         :headerIsOn="true"
                         headerTitle="頭部穴の形状"
@@ -35,23 +31,18 @@
                 </v-container>
             </v-slide-y-transition>
 
-            <v-divider />
-            <v-row class="py-5"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToPreviousPage"
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    戻る    
-                </v-btn>  
-            </v-row>
+            <v-divider class="pt-3"/>
+            <page-transition-button 
+                :nextIsNecessary="false"
+                @click-back="backToPreviousPage"
+            />
         </v-card-text>   
     </v-card>
 </template>
 <script>
 import CardButton from '../../CardButton'
 import CarouselButton from '../../CarouselButton'
+import PageTransitionButton from '../../PageTransitionButton'
 import { bolt_icons } from '../../shape_profile.js'
 function changeBackgroundColor(pickedItem, icons){
     for (let item of icons){
@@ -64,7 +55,8 @@ function changeBackgroundColor(pickedItem, icons){
 export default{
     components:{
         CardButton,
-        CarouselButton
+        CarouselButton,
+        PageTransitionButton
     },
     data: () => ({
         bolt_icons,
@@ -139,7 +131,6 @@ export default{
             for (let _key in this.shapeKey){
                 changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
             }
-            this.$emit( 'emit-shape-query', this.query );
             this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-spec' );
         },
@@ -148,7 +139,6 @@ export default{
                 changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
             }
             this.query = {};
-            this.$emit( 'emit-shape-query', this.query );
             this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-genre' );
         }

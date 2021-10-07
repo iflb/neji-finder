@@ -9,25 +9,21 @@
                 :labelIsOn="true"
                 @update-query="accessNextPage"
             />
-            <v-row class="pt-5"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToPreviousPage"
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    戻る    
-                </v-btn>  
-                <v-spacer />
-            </v-row>
+            <v-divider class="pt-3"/>
+            <page-transition-button 
+                :nextIsNecessary="false"
+                @click-back="backToPreviousPage"
+            />
         </v-card-text>   
     </v-card>
 </template>
 <script>
 import CardButton from '../../CardButton'
+import PageTransitionButton from '../../PageTransitionButton'
 export default{
     components:{
         CardButton,
+        PageTransitionButton
     },
     data: () => ({
         pickedItem:[],
@@ -67,7 +63,8 @@ export default{
                     name: item["品名"] + `(サイズ：${item["サイズ"]}, 構成数:${item["構成数"]})`,
                     src: _path,
                     backgroundColor: "#FFFFFF",
-                    index: _ind
+                    index: _ind,
+                    jan: item["JANコード"]
                 })
                 _ind++;
             });
@@ -75,8 +72,6 @@ export default{
         },
     },
     created(){
-        console.log(this.itemList);
-        console.log(this.selectableItems);
         this.itemQuantity = this.itemList.length;
     },
     mounted(){

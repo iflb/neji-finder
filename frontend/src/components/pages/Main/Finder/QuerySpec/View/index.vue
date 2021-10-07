@@ -2,43 +2,30 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>{{genre}}の規格を選ぶ</v-card-title>
         <v-card-text> 
-            <v-row v-if="itemQuantity != 0" class="pt-5">
+            <v-row v-if="itemQuantity != 0">
                 <v-col>
                     <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
                 </v-col>
             </v-row>
-            <v-row v-else class="pt-5">
+            <v-row v-else>
                 <v-col>
                     <span class="text-body-1">該当件数が多すぎます。絞り込んでください</span>
                 </v-col>
             </v-row>
-            <v-row class="pt-5 pb-8"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToPreviousPage"
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    戻る    
-                </v-btn>  
-                <v-spacer />
-                <v-btn
-                    :dark="!buttonDisabled"
-                    :disabled="buttonDisabled"
-                    color="primary"
-                    @click="accessNextPage"
-                >
-                    次に進む 
-                    <v-icon>mdi-arrow-right</v-icon>
-                </v-btn>  
+            <page-transition-button 
+                :nextIsNecessary="true"
+                :buttonDisabled="buttonDisabled"
+                @click-back="backToPreviousPage"
+                @click-next="accessNextPage"
+            />
+            <v-row>
+                <v-col>
+                    <v-btn
+                        @click="resetQuery"
+                    >規格をリセットする
+                    </v-btn>
+                </v-col>
             </v-row>
-
-            <v-btn
-                @click="resetQuery"
-            >
-                規格をリセットする
-            </v-btn>
-
             <carousel-button
                 :headerIsOn="true"
                 headerTitle="中分類"
@@ -47,7 +34,6 @@
                 :labelIsOn="true"
                 class="mb-6"
             />
-            <v-divider />
             <card-button 
                 :headerIsOn="true"
                 headerTitle="材質"
@@ -56,109 +42,74 @@
                 :labelIsOn="false"
                 class="mb-6"
             />
+            <card-button 
+                :headerIsOn="true"
+                headerTitle="表面処理"
+                :inputItems="selectableSurface"
+                @update-query="makeQuery"
+                :labelIsOn="false"
+                class="mb-6"
+            />
+            <card-button 
+                :headerIsOn="true"
+                headerTitle="構成数クラス"
+                :inputItems="selectableAmount"
+                @update-query="makeQuery"
+                :labelIsOn="false"
+                class="mb-6"
+            />
+            <drop-down-menu
+                headerTitle="呼び径"
+                :imageSource="nominal.image"
+                :model="nominal.model"
+                :inputItems="selectableNominal"
+                @update-query="makeQuery"
+                class="mb-6"
+            />
+            <drop-down-menu
+                v-if="outer.isNecessary"
+                headerTitle="外径・幅"
+                :imageSource="outer.image"
+                :model="outer.model"
+                :inputItems="selectableOuter"
+                @update-query="makeQuery"
+                class="mb-6"
+            />
+            <drop-down-menu
+                v-if="thickness.isNecessary"
+                headerTitle="長さ・厚さ"
+                :imageSource="thickness.image"
+                :model="thickness.model"
+                :inputItems="selectableThickness"
+                @update-query="makeQuery"
+                class="mb-6"
+            />
             <v-divider />
-            <v-slide-y-transition>
-                <card-button 
-                    :headerIsOn="true"
-                    headerTitle="表面処理"
-                    :inputItems="selectableSurface"
-                    @update-query="makeQuery"
-                    :labelIsOn="false"
-                    class="mb-6"
-                />
-            </v-slide-y-transition>
-            <v-divider />
-            <v-slide-y-transition>
-                <card-button 
-                    :headerIsOn="true"
-                    headerTitle="構成数クラス"
-                    :inputItems="selectableAmount"
-                    @update-query="makeQuery"
-                    :labelIsOn="false"
-                    class="mb-6"
-                />
-            </v-slide-y-transition>
-            <v-divider />
-            <v-slide-y-transition>
-                    <drop-down-menu
-                        headerTitle="呼び径"
-                        :imageSource="nominal.image"
-                        :model="nominal.model"
-                        :inputItems="selectableNominal"
-                        @update-query="makeQuery"
-                        class="mb-6"
-                    />
-            </v-slide-y-transition>
-            <v-divider />
-            <v-slide-y-transition>
-                    <drop-down-menu
-                        v-if="outer.isNecessary"
-                        headerTitle="外径・幅"
-                        :imageSource="outer.image"
-                        :model="outer.model"
-                        :inputItems="selectableOuter"
-                        @update-query="makeQuery"
-                        class="mb-6"
-                    />
-            </v-slide-y-transition>
-            <v-divider />
-            <v-slide-y-transition>
-                    <drop-down-menu
-                        v-if="thickness.isNecessary"
-                        headerTitle="長さ・厚さ"
-                        :imageSource="thickness.image"
-                        :model="thickness.model"
-                        :inputItems="selectableThickness"
-                        @update-query="makeQuery"
-                        class="mb-6"
-                    />
-            </v-slide-y-transition>
-            <v-divider />
-            <v-row v-if="itemQuantity != 0" class="pt-5">
+            <v-row v-if="itemQuantity != 0" class="pt-3">
                 <v-col>
                     <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
                 </v-col>
             </v-row>
-            <v-row v-else class="pt-5">
+            <v-row v-else class="pt-3">
                 <v-col>
                     <span class="text-body-1">該当件数が多すぎます。絞り込んでください</span>
                 </v-col>
             </v-row>
-            <v-row class="pt-5"> 
-                <v-btn
-                    dark
-                    color="primary"
-                    @click="backToPreviousPage"
-                >
-                    <v-icon>mdi-arrow-left</v-icon>
-                    戻る    
-                </v-btn>  
-                <v-spacer />
-                <v-btn
-                    :dark="!buttonDisabled"
-                    :disabled="buttonDisabled"
-                    color="primary"
-                    @click="accessNextPage"
-                >
-                    次に進む 
-                    <v-icon>mdi-arrow-right</v-icon>
-                </v-btn>  
-            </v-row>
+            <page-transition-button 
+                :nextIsNecessary="true"
+                :buttonDisabled="buttonDisabled"
+                @click-back="backToPreviousPage"
+                @click-next="accessNextPage"
+            />
         </v-card-text>   
-        <v-snackbar
-            v-model="snackbar"
-            timeout="2000"
-        >選択されていない項目があります
-        </v-snackbar>
     </v-card>
 </template>
 <script>
 import { icons } from '../../spec_profile.js'
-
-
 import CardButton from '../../CardButton'
 import CarouselButton from '../../CarouselButton'
 import DropDownMenu from '../../DropDownMenu'
+import PageTransitionButton from '../../PageTransitionButton'
 function changeBackgroundColor(pickedItem, icons){
     for (let item of icons){
         if(pickedItem.name !== item.name){
@@ -171,12 +122,13 @@ export default{
     components:{
         CardButton,
         DropDownMenu,
-        CarouselButton
+        CarouselButton,
+        PageTransitionButton
     },
     data: () => ({
         icons,
-        currentSpecQuery:{},
-        
+        query:{},
+        specQuery:{}, 
         snackbar:false,
         initialSpec:{
             "呼び径": [],
@@ -185,7 +137,7 @@ export default{
             "中分類": [],
             "材質": [],
             "外径か幅": [],
-            "長さか厚み": [ ],
+            "長さか厚み": [],
         },
         nominal:{
             model:"",
@@ -213,11 +165,11 @@ export default{
         currentItems:[],
         data:{}
     }),
-    props:["duct","genre","shapeQuery","specQuery"],
+    props:["duct","genre","shapeQuery", "totalQuery"],
     methods: {
         send_query() {
             const _query = {}
-            Object.assign(_query, this.shapeQuery,this.currentSpecQuery);
+            Object.assign(_query, this.shapeQuery,this.specQuery);
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.NEJI,
@@ -226,31 +178,31 @@ export default{
         },
         makeQuery(item){
             if(this.icons.middle_classification.includes(item)){
-                this.currentSpecQuery["中分類"] = item.name;
+                this.specQuery["中分類"] = item.name;
                 changeBackgroundColor(item, this.icons.middle_classification);
             }else if(this.icons.material.includes(item)){
-                this.currentSpecQuery["材質"] = item.name;
+                this.specQuery["材質"] = item.name;
                 changeBackgroundColor(item, this.icons.material);
             }else if(this.icons.surface.includes(item)){
-                this.currentSpecQuery["表面処理"] = item.name;
+                this.specQuery["表面処理"] = item.name;
                 changeBackgroundColor(item, this.icons.surface);
             }else if(this.icons.amount.includes(item)){
-                this.currentSpecQuery["構成数クラス"] = item.name;
+                this.specQuery["構成数クラス"] = item.name;
                 changeBackgroundColor(item, this.icons.amount);
             }else if(this.initialSpec["呼び径"].includes(item.val) && item.name=="呼び径" ){
-                this.currentSpecQuery["呼び径"] = item.val;
+                this.specQuery["呼び径"] = item.val;
                 this.nominal.model = item.val; 
             }else if(this.outer.isNecessary && this.initialSpec["外径か幅"].includes(item.val) && item.name=="外径か幅" ){
-                this.currentSpecQuery["外径か幅"] = item.val;
-                this.outer.model = this.currentSpecQuery["外径か幅"];
+                this.specQuery["外径か幅"] = item.val;
+                this.outer.model = this.specQuery["外径か幅"];
             }else if(this.thickness.isNecessary && this.initialSpec["長さか厚み"].includes(item.val) && item.name=="長さか厚み"){
-                this.currentSpecQuery["長さか厚み"] = item.val;
-                this.thickness.model = this.currentSpecQuery["長さか厚み"]; 
+                this.specQuery["長さか厚み"] = item.val;
+                this.thickness.model = this.specQuery["長さか厚み"]; 
             }
             this.send_query();
         },
         resetQuery(){
-            this.currentSpecQuery = {};
+            this.specQuery = {};
             this.send_query();
             changeBackgroundColor({ name: "" }, this.icons.middle_classification);
             changeBackgroundColor({ name: "" }, this.icons.material);
@@ -262,8 +214,8 @@ export default{
         },
         accessNextPage(){
             const _query = {}
-            Object.assign(_query, this.shapeQuery,this.currentSpecQuery)
-            this.$emit( 'emit-spec-query', this.currentSpecQuery );
+            Object.assign(_query, this.shapeQuery,this.specQuery)
+            this.$emit( 'emit-query', _query );
             this.$emit( 'emit-item-list', this.currentItems );
             if(this.itemQuantity == 1){
                 this.$emit( 'emit-item', this.currentItems );
@@ -296,9 +248,6 @@ export default{
                 this.buttonDisabled = true;
             }
         },
-        selectableNominal(){
-            console.log(this.selectableNominal);
-        }
     },
     computed:{
         selectableMiddleClassification(){
@@ -349,7 +298,6 @@ export default{
         selectableOuter(){
             let _arr = [];
             this.initialSpec["外径か幅"].forEach((item) => {
-                console.log(item);
                 if(this.pickedOuter.includes(item)){
                     _arr.push({ "name":"外径か幅", "val": item });
                 }
@@ -382,6 +330,9 @@ export default{
             this.nominal.image = this.icons.nominal[2].src;
             this.outer.image = this.icons.outer[0].src;
         }
+
+        this.query = this.totalQuery;
+
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
@@ -390,30 +341,30 @@ export default{
                     if([1,3].includes(Object.keys(data.query).length)){
                         this.initialSpec = data.spec
                     }
-                    if(!Object.keys(this.currentSpecQuery).includes("中分類")){
+                    if(!Object.keys(this.specQuery).includes("中分類")){
                         this.pickedMiddleClassification = data.spec["中分類"];
                     }
 
-                    if(!Object.keys(this.currentSpecQuery).includes("材質")){
+                    if(!Object.keys(this.specQuery).includes("材質")){
                         this.pickedMaterial = data.spec["材質"];
                     }
-                    if(!Object.keys(this.currentSpecQuery).includes("表面処理")){
+                    if(!Object.keys(this.specQuery).includes("表面処理")){
                         this.pickedSurface = data.spec["表面処理"];
                     }
-                    if(!Object.keys(this.currentSpecQuery).includes("構成数クラス")){
+                    if(!Object.keys(this.specQuery).includes("構成数クラス")){
                         this.pickedAmount = data.spec["構成数クラス"];
                     }
-                    if(!Object.keys(this.currentSpecQuery).includes("呼び径")){
+                    if(!Object.keys(this.specQuery).includes("呼び径")){
                         this.pickedNominal = data.spec["呼び径"];
                     }
 
                     if(["おねじ","座金"].includes(this.genre)){
-                        if(!Object.keys(this.currentSpecQuery).includes("長さか厚み")){
+                        if(!Object.keys(this.specQuery).includes("長さか厚み")){
                             this.pickedThickness = data.spec["長さか厚み"];
                         }
                     }
                     if(["座金"].includes(this.genre)){
-                        if(!Object.keys(this.currentSpecQuery).includes("外径か幅")){
+                        if(!Object.keys(this.specQuery).includes("外径か幅")){
                             this.pickedOuter = data.spec["外径か幅"];
                         }
                     }
@@ -423,6 +374,13 @@ export default{
                     }
                 }
             )
+
+
+            //this.duct.send(
+            //    this.duct.nextRid(), 
+            //    this.duct.EVENT.NEJI,
+            //    {'genre': this.genre, 'query': this.totalQuery}
+            //);
             this.resetQuery();
         });
     },

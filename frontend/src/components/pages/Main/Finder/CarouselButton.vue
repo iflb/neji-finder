@@ -1,11 +1,13 @@
 <template>
     <div>
-        <v-row v-if="headerIsOn" class="py-5">
-            <v-col class="text-body-1">
-                {{headerTitle}}を選ぶ
+        <v-row v-if="headerIsOn" class="pb-6">
+            <v-col>
+                <v-card dark flat color="#424242">
+                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}を選ぶ</span>
+                </v-card>
             </v-col>
         </v-row>
-         <carousel 
+        <carousel 
             :per-page="['md','lg','xl'].includes($vuetify.breakpoint.name) ? numItemsForDesktop : numItemsForMobile" 
             pagination-color="#42A5F5"
             :touchDrag="true"
@@ -16,6 +18,7 @@
                 align="center"
             >
                 <v-card
+                    class="d-flex align-center justify-center"
                     @click="emitItem(item)"
                     :color="item.backgroundColor"
                     max-width="100"
