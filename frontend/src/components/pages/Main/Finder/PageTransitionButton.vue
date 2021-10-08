@@ -3,7 +3,7 @@
         <v-col>
             <v-btn
                 dark
-                color="primary"
+                color="indigo darken-1"
                 @click="$emit('click-back')"
             >
                 <v-icon>mdi-arrow-left</v-icon>
@@ -15,7 +15,7 @@
             <v-btn
                 :dark="!buttonDisabled"
                 :disabled="buttonDisabled"
-                color="primary"
+                color="indigo darken-1"
                 @click="$emit('click-next')"
             >
                 次に進む 
