@@ -21,6 +21,8 @@
             <v-row>
                 <v-col>
                     <v-btn
+                        color="red darken-1"
+                        dark
                         @click="resetQuery"
                     >規格をリセットする
                     </v-btn>
@@ -153,6 +155,12 @@ export default{
             model:"",
             image:"",
         },
+        carouselAndCard:{
+            middle_classification: '中分類',
+            material: '材質',
+            surface: '表面処理',
+            amount: '構成数クラス',
+        },
         pickedMiddleClassification:[],
         pickedMaterial:[],
         pickedSurface:[],
@@ -204,10 +212,13 @@ export default{
         resetQuery(){
             this.specQuery = {};
             this.send_query();
-            changeBackgroundColor({ name: "" }, this.icons.middle_classification);
-            changeBackgroundColor({ name: "" }, this.icons.material);
-            changeBackgroundColor({ name: "" }, this.icons.surface);
-            changeBackgroundColor({ name: "" }, this.icons.amount);
+            for(let _key of Object.keys(this.carouselAndCard)){
+                changeBackgroundColor({ name: "" }, this.icons[_key]);
+            }
+            //changeBackgroundColor({ name: "" }, this.icons.middle_classification);
+            //changeBackgroundColor({ name: "" }, this.icons.material);
+            //changeBackgroundColor({ name: "" }, this.icons.surface);
+            //changeBackgroundColor({ name: "" }, this.icons.amount);
             this.nominal.model="";
             this.outer.model="";
             this.thickness.model="";
@@ -371,7 +382,11 @@ export default{
                     if(Object.keys(data).includes('items')){
                         this.currentItems = data.items;
                         this.itemQuantity = data.items.length;
+                    }else{
+                        this.currentItems = [];
+                        this.itemQuantity = 0;
                     }
+                    console.log(data);
                 }
             )
 
