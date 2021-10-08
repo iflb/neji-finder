@@ -6,7 +6,7 @@
                 <v-col cols="10" md="8">
                     <v-btn
                         dark
-                        color="primary"
+                        color="indigo darken-1"
                         width="100%"
                         height="100px"
                         @click="emitComponentName"
@@ -17,7 +17,7 @@
                 </v-col>
                 <v-col cols="10" md="8">
                     <v-btn
-                        color="primary"
+                        color="indigo darken-1"
                         width="100%"
                         height="100px"
                         disabled
@@ -28,7 +28,7 @@
                 </v-col>
                 <v-col cols="10" md="8">
                     <v-btn
-                        color="primary"
+                        color="indigo darken-1"
                         width="100%"
                         height="100px"
                         disabled

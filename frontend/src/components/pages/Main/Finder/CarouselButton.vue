@@ -14,7 +14,7 @@
         >
             <slide 
                 v-for="item in inputItems" 
-                :key="item.src" 
+                :key="item.name" 
                 align="center"
             >
                 <v-card

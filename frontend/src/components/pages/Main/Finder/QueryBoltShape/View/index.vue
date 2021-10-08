@@ -118,8 +118,9 @@ export default{
                         for (let _key in this.shapeKey){
                             changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
                         }
+                        changeBackgroundColor( item, this.bolt_icons[_key] );
                     }else{
-                        changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
+                        changeBackgroundColor( item, this.bolt_icons[_key]);
                     }
                     this.isPicked[_key] = true;
                     this.query[this.shapeKey[_key]] = item.name;

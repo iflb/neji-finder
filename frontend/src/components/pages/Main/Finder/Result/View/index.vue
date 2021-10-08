@@ -15,21 +15,23 @@
                 </v-col>
             </v-row>
             <v-divider />
-
-            <v-simple-table>
-                <template v-slot:default>
-                    <tbody>
-                        <tr
-                            v-for="item in tableData"
-                            :key="item.key"
-                        >
-                            <td>{{item.key}}</td>
-                            <td>{{item.value}}</td>
-                        </tr>
-                    </tbody>
-                </template>
-            </v-simple-table>
-
+            <v-row class="pb-3">
+                <v-col>
+                    <v-simple-table>
+                        <template v-slot:default>
+                            <tbody>
+                                <tr
+                                    v-for="item in tableData"
+                                    :key="item.key"
+                                >
+                                    <td>{{item.key}}</td>
+                                    <td>{{item.value}}</td>
+                                </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table>
+                </v-col>
+            </v-row>
             <!--<v-row class="py-2"> 
                 <v-col>
                     <v-dialog
@@ -66,13 +68,14 @@
                 </v-col>
             </v-row>-->
 
-            <v-divider />
-            <v-row class="pt-2 pb-0"> 
+            <v-divider/>
+            <v-row class="pt-3 pb-0"> 
                 <v-col>
                     <v-btn
                         dark
-                        color="primary"
+                        color="indigo darken-1"
                         @click="backToPreviousPage"
+                        :width="['md','lg','xl'].includes($vuetify.breakpoint.name) ? '20%' : '60%'" 
                     >
                         <v-icon>mdi-arrow-left</v-icon>
                         前のページに戻る    
@@ -83,8 +86,9 @@
                 <v-col>
                     <v-btn
                         dark
-                        color="primary"
+                        color="indigo darken-1"
                         @click="backToFirstPage"
+                        :width="['md','lg','xl'].includes($vuetify.breakpoint.name) ? '20%' : '60%'" 
                     >
                         <v-icon>mdi-arrow-left</v-icon>
                         最初のページに戻る    
