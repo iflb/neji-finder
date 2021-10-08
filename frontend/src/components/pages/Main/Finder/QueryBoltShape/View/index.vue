@@ -161,7 +161,6 @@ export default{
                     }
 
                     if(Object.keys(this.query).length === 3 && this.nextPage){
-                         console.log('fired');
                          this.accessNextPage();
                     }else{
                         this.$nextTick(() => {
