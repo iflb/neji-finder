@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-card color="transparent" flat>
         <v-row class="pt-3">
             <v-col>
                 <v-card dark flat color="#424242">
@@ -55,7 +55,7 @@
                 </v-menu>
             </v-col>
         </v-row>
-    </div>
+    </v-card>
 </template>
 <script>
 export default{
