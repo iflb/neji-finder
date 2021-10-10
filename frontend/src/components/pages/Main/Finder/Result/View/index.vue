@@ -1,5 +1,5 @@
 <template>
-    <v-card tile class="pa-1 ma-1" color="grey lighten-3">
+    <v-card class="pa-1 ma-1" flat color="grey lighten-3">
         <v-card-title>商品検索結果</v-card-title>
         <v-card-text> 
             <v-row>
@@ -69,7 +69,7 @@
             </v-row>-->
 
             <v-divider/>
-            <v-row class="pt-3 pb-0"> 
+            <v-row class="pt-3 pb-0" v-if="itemList.length != 0"> 
                 <v-col>
                     <v-btn
                         dark
@@ -118,14 +118,14 @@ export default{
             this.$emit( 'emit-shape-query', {} );
             this.$emit( 'emit-item-list', [] );
             this.$emit( 'emit-item', [] );
-            this.$emit( 'emit-component-name', 'start' );
+            this.$emit( 'emit-component-name', 'start-screen' );
         }
     },
     computed:{
         tableData(){
             const _arr = Object.entries(this.item[0]).map(([key, value]) => ({key, value}));
             let _arr2 = _arr.filter(item => { 
-                if(item.key == "画像"){
+                if(item.key == "画像" || item.value == null){
                     return false
                 }else if(!isNaN(item.value) || typeof item.value === 'string'){
                     return true
@@ -137,14 +137,33 @@ export default{
         },
     },
     created(){
-        console.log(this.tableData);
-        console.log(this.itemList);
         this.$vuetify.goTo(0);
         let _jan = String(this.tableData[0].value);
         try{
             this.path = require(`@/assets/productsImage/${_jan}.jpg`);
         }catch{
             this.path = require(`@/assets/productsImage/no_image.jpg`);
+        }
+
+        const storagedItemsKey = Object.keys(window.localStorage).filter(key => key.includes('neji-product'));
+        const storagedItemsString = storagedItemsKey.map((key) => window.localStorage[key]);
+        let storagedItemsJSON = [];
+        for(let item of storagedItemsString){
+            storagedItemsJSON.push(JSON.parse(item));
+        }
+        if (!storagedItemsJSON.map(item => item.jan).includes(this.item[0]["JANコード"])){
+            let _index = 0;
+            const storagedItemsLength = storagedItemsKey.length;
+            if(storagedItemsLength != 0) _index = storagedItemsLength;
+            const _itemStoraging = {
+                name: this.item[0]["品名"] + `(サイズ：${this.item[0]["サイズ"]}, 構成数:${this.item[0]["構成数"]})`,
+                src: this.path,
+                backgroundColor: "#FFFFFF",
+                index: _index,
+                jan: this.item[0]["JANコード"],
+                data: this.item[0]
+            }
+            window.localStorage.setItem('neji-product' + String(_index), JSON.stringify(_itemStoraging));
         }
     },
     mounted(){

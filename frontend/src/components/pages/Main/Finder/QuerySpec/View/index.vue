@@ -1,5 +1,5 @@
 <template>
-    <v-card tile class="pa-1 ma-1" color="grey lighten-3">
+    <v-card tile class="pa-1 ma-1" flat color="grey lighten-3">
         <v-card-title>{{genre}}の規格を選ぶ</v-card-title>
         <v-card-text> 
             <v-row v-if="itemQuantity != 0">
@@ -215,10 +215,6 @@ export default{
             for(let _key of Object.keys(this.carouselAndCard)){
                 changeBackgroundColor({ name: "" }, this.icons[_key]);
             }
-            //changeBackgroundColor({ name: "" }, this.icons.middle_classification);
-            //changeBackgroundColor({ name: "" }, this.icons.material);
-            //changeBackgroundColor({ name: "" }, this.icons.surface);
-            //changeBackgroundColor({ name: "" }, this.icons.amount);
             this.nominal.model="";
             this.outer.model="";
             this.thickness.model="";
@@ -389,13 +385,6 @@ export default{
                     console.log(data);
                 }
             )
-
-
-            //this.duct.send(
-            //    this.duct.nextRid(), 
-            //    this.duct.EVENT.NEJI,
-            //    {'genre': this.genre, 'query': this.totalQuery}
-            //);
             this.resetQuery();
         });
     },

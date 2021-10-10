@@ -82,7 +82,7 @@
 </template>
 <script>
 import Stepper from '@/components/ui/Stepper'
-import Start from '@/components/pages/Main/Finder/Start'
+import StartScreen from '@/components/pages/Main/Finder/StartScreen/View'
 import QueryGenre from '@/components/pages/Main/Finder/QueryGenre/View'
 import QueryBoltShape from '@/components/pages/Main/Finder/QueryBoltShape/View'
 import QueryNutWasherShape from '@/components/pages/Main/Finder/QueryNutWasherShape/View'
@@ -93,7 +93,7 @@ import ducts from '@iflb/ducts-client'
 export default {
     components:{
         Stepper,
-        Start,
+        StartScreen,
         QueryGenre,
         QueryBoltShape,
         QueryNutWasherShape,
@@ -109,9 +109,8 @@ export default {
             { to: "version-log", icon:"mdi-update", title: "システム更新状況" }
         ],
         step:1,
-        currentComponent:'start',
+        currentComponent:'start-screen',
         genre:'',
-        shapeQuery:{},
         itemList:[],
         item:[],
         queryList:[{},{}],
@@ -123,7 +122,7 @@ export default {
             this.drawerShown = !this.drawerShown;
         },
         changeComponent(componentName){
-            if(componentName == 'start'){
+            if(componentName == 'start-screen'){
                 document.location.reload();
             }  
             this.currentComponent = componentName;
@@ -140,21 +139,11 @@ export default {
             }
             console.log(this.queryList)
         },
-        updateShapeQuery(query){
-            this.shapeQuery = query;
-            console.log({"currentShapeQuery": this.shapeQuery});
-        },
-        updateSpecQuery(query){
-            this.specQuery = query;
-            console.log({"currentSpecQuery": this.specQuery});
-        },
         updateItemList(list){
             this.itemList = list;
-            console.log({"currentItemList": this.itemList});
         },
         updateItem(item){
             this.item = item;
-            console.log({"currentItem": this.item});
         },
     }, 
     created(){

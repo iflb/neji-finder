@@ -1,5 +1,5 @@
 <template>
-    <v-card tile class="pa-1 ma-1" color="grey lighten-3">
+    <v-card tile class="pa-1 ma-1" flat color="grey lighten-3">
         <v-card-title color="primary">ジャンルを決定する</v-card-title>
         <v-card-text> 
             <card-button
@@ -26,9 +26,21 @@ export default{
     },
     data: () => ({
         icons: [
-            { name: "おねじ", src: require("@/assets/icons/1_bolt.jpg"), backgroundColor: "#FFFFFF" },
-            { name: "めねじ", src: require("@/assets/icons/2_nut.jpg"), backgroundColor: "#FFFFFF" },
-            { name: "座金", src: require("@/assets/icons/3_washer.jpg"), backgroundColor: "#FFFFFF" },
+            { 
+                name: "おねじ", 
+                src: require("@/assets/icons/1_bolt.jpg"), 
+                backgroundColor: "#FFFFFF" 
+            },
+            { 
+                name: "めねじ", 
+                src: require("@/assets/icons/2_nut.jpg"), 
+                backgroundColor: "#FFFFFF" 
+            },
+            { 
+                name: "座金", 
+                src: require("@/assets/icons/3_washer.jpg"), 
+                backgroundColor: "#FFFFFF" 
+            },
         ],
         chosenGenre: '',
     }),
@@ -44,7 +56,7 @@ export default{
             }
         },
         backToPreviousPage(){
-            this.$emit( 'emit-component-name', 'start' );
+            this.$emit( 'emit-component-name', 'start-screen' );
         }
     }, 
     mounted(){

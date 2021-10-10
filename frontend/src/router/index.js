@@ -15,7 +15,7 @@ const routes = [
         children: [
             {
                 path: 'finder',
-                component: () => import("@/components/pages/Main/Finder/Start"),
+                component: () => import("@/components/pages/Main/Finder/StartScreen/View"),
             },
             {
                 path: 'finder/query-genre',
