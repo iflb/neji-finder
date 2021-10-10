@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-card color="transparent" flat>
         <v-row v-if="headerIsOn" class="pt-3">
             <v-col>
                 <v-card dark flat color="#424242">
@@ -12,7 +12,6 @@
                 v-for="item in inputItems" 
                 :key="item.jan" 
                 cols="4" 
-                md="2" 
                 align="center"
             >
                 <v-card
@@ -29,7 +28,7 @@
                 <span v-if="labelIsOn" class="text-h8 d-flex justify-center">{{item.name}}</span>
             </v-col>
         </v-row>
-    </div>
+    </v-card>
 </template>
 <script>
 export default{

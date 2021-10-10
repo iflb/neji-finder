@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-row v-if="headerIsOn" class="pb-6">
+    <v-card color="transparent" flat>
+        <v-row v-if="headerIsOn" class="pt-3 mb-4">
             <v-col>
                 <v-card dark flat color="#424242">
                     <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}を選ぶ</span>
@@ -33,7 +33,7 @@
                 <span class="text-h8 d-flex justify-center">{{item.name}}</span>
             </slide>
         </carousel>
-    </div>
+    </v-card>
 </template>
 <script>
 import { Carousel, Slide } from 'vue-carousel'
