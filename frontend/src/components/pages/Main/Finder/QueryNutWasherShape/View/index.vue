@@ -1,5 +1,5 @@
 <template>
-    <v-card tile class="pa-1 ma-1" color="grey lighten-3">
+    <v-card tile class="pa-1 ma-1" flat color="grey lighten-3">
         <v-card-title>{{genre}}の形状を選ぶ</v-card-title>
         <v-card-text> 
             <card-button

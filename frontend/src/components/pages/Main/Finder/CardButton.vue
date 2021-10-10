@@ -19,6 +19,7 @@
                     @click="emitItem(item)"
                     :color="item.backgroundColor"
                     max-width="100"
+                    hover
                 >
                     <v-img 
                         class="imgOpacity"
