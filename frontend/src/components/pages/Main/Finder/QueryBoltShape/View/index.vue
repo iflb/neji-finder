@@ -2,35 +2,42 @@
     <v-card tile class="pa-1 ma-1" flat color="grey lighten-3">
         <v-card-title>おねじの形状を選ぶ</v-card-title>
         <v-card-text> 
-            <card-button 
-                :headerIsOn="true"
-                headerTitle="頭部の形状"
-                :inputItems="bolt_icons.head"
-                @update-query="makeQuery"
-                :labelIsOn="true"
-            />
-
-            <v-slide-y-transition>
-                <v-container v-if="isPicked.head">
-                    <carousel-button
-                       :headerIsOn="true"
-                       headerTitle="おねじ先端の形状"
-                       :inputItems="selectableTip"
-                       @update-query="makeQuery"
-                    />
-                </v-container>
-            </v-slide-y-transition>
-            <v-slide-y-transition>
-                <v-container v-if="isPicked.tip">   
-                    <carousel-button
+            <v-row>
+                <v-col cols="12" md="4">
+                    <card-button 
                         :headerIsOn="true"
-                        headerTitle="頭部穴の形状"
-                        :inputItems="selectableHoleShape"
+                        headerTitle="頭部の形状"
+                        :inputItems="bolt_icons.head"
                         @update-query="makeQuery"
+                        :labelIsOn="true"
+                        class="mb-6"
                     />
-                </v-container>
-            </v-slide-y-transition>
-
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-slide-y-transition>
+                        <carousel-button
+                           v-if="isPicked.head"
+                           :headerIsOn="true"
+                           headerTitle="おねじ先端の形状"
+                           :inputItems="selectableTip"
+                           @update-query="makeQuery"
+                           class="mb-6"
+                        />
+                    </v-slide-y-transition>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-slide-y-transition>
+                        <carousel-button
+                            v-if="isPicked.tip"
+                            :headerIsOn="true"
+                            headerTitle="頭部穴の形状"
+                            :inputItems="selectableHoleShape"
+                            @update-query="makeQuery"
+                            class="mb-6"
+                        />
+                    </v-slide-y-transition>
+                </v-col>
+            </v-row>
             <v-divider class="pt-3"/>
             <page-transition-button 
                 :nextIsNecessary="false"
@@ -163,9 +170,11 @@ export default{
                     if(Object.keys(this.query).length === 3 && this.nextPage){
                          this.accessNextPage();
                     }else{
-                        this.$nextTick(() => {
-                            this.$vuetify.goTo(document.body.scrollHeight);
-                        });
+                        if(!['md','lg','xl'].includes(this.$vuetify.breakpoint.name)){
+                            this.$nextTick(() => {
+                                this.$vuetify.goTo(document.body.scrollHeight);
+                            });
+                        }
                     }
                 }
             );
