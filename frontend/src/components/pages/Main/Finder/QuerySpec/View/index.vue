@@ -33,7 +33,7 @@
                     <carousel-button
                         :headerIsOn="true"
                         headerTitle="中分類"
-                        :inputItems="selectableMiddleClassification"
+                        :inputItems="selectableItems.middle_classification"
                         @update-query="makeQuery"
                         :labelIsOn="true"
                         class="mb-6"
@@ -43,7 +43,7 @@
                     <card-button 
                         :headerIsOn="true"
                         headerTitle="材質"
-                        :inputItems="selectableMaterial"
+                        :inputItems="selectableItems.material"
                         @update-query="makeQuery"
                         :labelIsOn="false"
                         class="mb-6"
@@ -53,7 +53,7 @@
                     <card-button 
                         :headerIsOn="true"
                         headerTitle="表面処理"
-                        :inputItems="selectableSurface"
+                        :inputItems="selectableItems.surface"
                         @update-query="makeQuery"
                         :labelIsOn="false"
                         class="mb-6"
@@ -63,7 +63,7 @@
                     <card-button 
                         :headerIsOn="true"
                         headerTitle="構成数クラス"
-                        :inputItems="selectableAmount"
+                        :inputItems="selectableItems.amount"
                         @update-query="makeQuery"
                         :labelIsOn="false"
                         class="mb-6"
@@ -74,7 +74,7 @@
                         headerTitle="呼び径"
                         :imageSource="nominal.image"
                         :model="nominal.model"
-                        :inputItems="selectableNominal"
+                        :inputItems="selectableItems.nominal"
                         @update-query="makeQuery"
                         class="mb-6"
                     />
@@ -85,7 +85,7 @@
                         headerTitle="外径・幅"
                         :imageSource="outer.image"
                         :model="outer.model"
-                        :inputItems="selectableOuter"
+                        :inputItems="selectableItems.outer"
                         @update-query="makeQuery"
                         class="mb-6"
                     />
@@ -96,7 +96,7 @@
                         headerTitle="長さ・厚さ"
                         :imageSource="thickness.image"
                         :model="thickness.model"
-                        :inputItems="selectableThickness"
+                        :inputItems="selectableItems.thickness"
                         @update-query="makeQuery"
                         class="mb-6"
                     />
@@ -145,15 +145,23 @@ export default{
     },
     data: () => ({
         icons,
-        query:{},
         specQuery:{}, 
         snackbar:false,
         initialSpec:{
-            "呼び径": [],
-            "表面処理": [],
-            "構成数クラス": [],
             "中分類": [],
             "材質": [],
+            "表面処理": [],
+            "構成数クラス": [],
+            "呼び径": [],
+            "外径か幅": [],
+            "長さか厚み": [],
+        },
+        selectableItemValues:{
+            "中分類": [],
+            "材質": [],
+            "表面処理": [],
+            "構成数クラス": [],
+            "呼び径": [],
             "外径か幅": [],
             "長さか厚み": [],
         },
@@ -171,25 +179,11 @@ export default{
             model:"",
             image:"",
         },
-        carouselAndCard:{
-            middle_classification: '中分類',
-            material: '材質',
-            surface: '表面処理',
-            amount: '構成数クラス',
-        },
-        pickedMiddleClassification:[],
-        pickedMaterial:[],
-        pickedSurface:[],
-        pickedAmount:[],
-        pickedNominal:[],
-        pickedOuter:[],
-        pickedThickness:[],
         itemQuantity:0,
         buttonDisabled:true,
         currentItems:[],
-        data:{}
     }),
-    props:["duct","genre","shapeQuery", "totalQuery"],
+    props:["duct","genre","shapeQuery"],
     methods: {
         send_query() {
             const _query = {}
@@ -226,9 +220,10 @@ export default{
             this.send_query();
         },
         resetQuery(){
+            const carouselAndCard = ['middle_classification', 'material', 'surface', 'amount'];
             this.specQuery = {};
             this.send_query();
-            for(let _key of Object.keys(this.carouselAndCard)){
+            for(let _key of carouselAndCard){
                 changeBackgroundColor({ name: "" }, this.icons[_key]);
             }
             this.nominal.model="";
@@ -273,68 +268,41 @@ export default{
         },
     },
     computed:{
-        selectableMiddleClassification(){
-            let _arr = [];
-            this.icons.middle_classification.forEach((item) => {
-                if(this.pickedMiddleClassification.includes(item.name)){
-                    _arr.push(item);
+        selectableItems(){
+            let _obj = {
+                "middle_classification": [],
+                "material": [],
+                "surface": [],
+                "amount": [],
+                "nominal": [],
+                "outer": [],
+                "thickness": [],
+            };
+            const _language = {
+                "中分類": 'middle_classification',
+                "材質": 'material',
+                "表面処理": 'surface',
+                "構成数クラス": 'amount',
+                "呼び径": 'nominal',
+                "外径か幅": 'outer',
+                "長さか厚み": 'thickness',
+            };
+
+            for(let _key in _language){
+                const _eng = _language[_key];
+                if(["中分類","材質","表面処理","構成数クラス"].includes(_key)){
+                    this.icons[_eng].forEach((item) => {
+                        if(this.selectableItemValues[_key].includes(item.name)) _obj[_eng].push(item);
+                    });
+                }else{
+                    if(typeof this.initialSpec[_key] != 'undefined'){
+                        this.initialSpec[_key].forEach((item) => {
+                            if(this.selectableItemValues[_key].includes(item)) _obj[_eng].push({ "name": _key, "val": item });
+                        });
+                    }
                 }
-            });
-            return _arr
-        },
-        selectableMaterial(){
-            let _arr = [];
-            this.icons.material.forEach((item) => {
-                if(this.pickedMaterial.includes(item.name)){
-                    _arr.push(item);
-                }
-            });
-            return _arr
-        },
-        selectableSurface(){
-            let _arr = [];
-            this.icons.surface.forEach((item) => {
-                if(this.pickedSurface.includes(item.name)){
-                    _arr.push(item);
-                }
-            });
-            return _arr
-        },
-        selectableAmount(){
-            let _arr = [];
-            this.icons.amount.forEach((item) => {
-                if(this.pickedAmount.includes(item.name)){
-                    _arr.push(item);
-                }
-            });
-            return _arr
-        },
-        selectableNominal(){
-            let _arr = [];
-            this.initialSpec["呼び径"].forEach((item) => {
-                if(this.pickedNominal.includes(item)){
-                    _arr.push({ "name":"呼び径", "val": item });
-                }
-            });
-            return _arr
-        },
-        selectableOuter(){
-            let _arr = [];
-            this.initialSpec["外径か幅"].forEach((item) => {
-                if(this.pickedOuter.includes(item)){
-                    _arr.push({ "name":"外径か幅", "val": item });
-                }
-            });
-            return _arr
-        },
-        selectableThickness(){
-            let _arr = [];
-            this.initialSpec["長さか厚み"].forEach((item) => {
-                if(this.pickedThickness.includes(item)){
-                    _arr.push({ "name":"長さか厚み", "val": item });
-                }
-            });
-            return _arr
+            }
+            return _obj
         },
     },
     created(){
@@ -353,44 +321,24 @@ export default{
             this.nominal.image = this.icons.nominal[2].src;
             this.outer.image = this.icons.outer[0].src;
         }
-
-        this.query = this.totalQuery;
-
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
                 this.duct.EVENT.NEJI,
                 (rid, eid, data) => {
+                    if([1,3].includes(Object.keys(data.query).length)) this.initialSpec = data.spec;
 
-                    if([1,3].includes(Object.keys(data.query).length)){
-                        this.initialSpec = data.spec
-                    }
-                    if(!Object.keys(this.specQuery).includes("中分類")){
-                        this.pickedMiddleClassification = data.spec["中分類"];
-                    }
-
-                    if(!Object.keys(this.specQuery).includes("材質")){
-                        this.pickedMaterial = data.spec["材質"];
-                    }
-                    if(!Object.keys(this.specQuery).includes("表面処理")){
-                        this.pickedSurface = data.spec["表面処理"];
-                    }
-                    if(!Object.keys(this.specQuery).includes("構成数クラス")){
-                        this.pickedAmount = data.spec["構成数クラス"];
-                    }
-                    if(!Object.keys(this.specQuery).includes("呼び径")){
-                        this.pickedNominal = data.spec["呼び径"];
-                    }
-
-                    if(["おねじ","座金"].includes(this.genre)){
-                        if(!Object.keys(this.specQuery).includes("長さか厚み")){
-                            this.pickedThickness = data.spec["長さか厚み"];
+                    for(let _key in this.selectableItemValues){
+                        if(!Object.keys(this.specQuery).includes(_key)){
+                            if(!["長さか厚み","外径か幅"].includes(_key)){
+                                this.selectableItemValues[_key] = data.spec[_key];
+                            }else if(_key == "長さか厚み"){
+                                if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                            }else{
+                                if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                            }
                         }
                     }
-                    if(["座金"].includes(this.genre)){
-                        if(!Object.keys(this.specQuery).includes("外径か幅")){
-                            this.pickedOuter = data.spec["外径か幅"];
-                        }
-                    }
+
                     if(Object.keys(data).includes('items')){
                         this.currentItems = data.items;
                         this.itemQuantity = data.items.length;
@@ -398,7 +346,6 @@ export default{
                         this.currentItems = [];
                         this.itemQuantity = 0;
                     }
-                    console.log(data);
                 }
             )
             this.resetQuery();

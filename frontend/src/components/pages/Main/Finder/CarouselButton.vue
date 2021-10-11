@@ -9,7 +9,8 @@
         </v-row>
         <carousel 
             :per-page="['md','lg','xl'].includes($vuetify.breakpoint.name) ? numItemsForDesktop : numItemsForMobile" 
-            pagination-color="#42A5F5"
+            pagination-color="#3949AB"
+            pagination-active-color="#E53935"
             :touchDrag="true"
         >
             <slide 

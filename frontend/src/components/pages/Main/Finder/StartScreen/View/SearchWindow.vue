@@ -1,5 +1,5 @@
 <template>
-    <v-card class="pa-1 mx-1 mb-4" flat color="grey lighten-3">
+    <v-card class="pa-1 mx-1 mb-4" color="grey lighten-3">
         <v-card-title>検索を開始する</v-card-title>
         <v-card-text> 
             <v-row class="d-flex justify-center pb-2" style="font-size:1.2em"> 
