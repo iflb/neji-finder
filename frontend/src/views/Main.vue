@@ -58,6 +58,7 @@
 
         <v-main>
             <stepper 
+                v-if="!['version-log'].includes(currentComponent)"
                 :stepper="step"
             />    
             <v-scroll-y-reverse-transition>
@@ -89,6 +90,7 @@ import QueryNutWasherShape from '@/components/pages/Main/Finder/QueryNutWasherSh
 import QuerySpec from '@/components/pages/Main/Finder/QuerySpec/View'
 import ResultList from '@/components/pages/Main/Finder/ResultList/View'
 import Result from '@/components/pages/Main/Finder/Result/View'
+import VersionLog from '@/components/pages/Main/VersionLog'
 import ducts from '@iflb/ducts-client'
 export default {
     components:{
@@ -99,13 +101,14 @@ export default {
         QueryNutWasherShape,
         QuerySpec,
         ResultList,
-        Result
+        Result,
+        VersionLog
     },
     data: () => ({
         duct:new ducts.Duct(),
         drawerShown: false,
         menuItems: [
-            { to: "start", icon:"mdi-magnify", title: "メインページ" },
+            { to: "start-screen", icon:"mdi-magnify", title: "メインページ" },
             { to: "version-log", icon:"mdi-update", title: "システム更新状況" }
         ],
         step:1,

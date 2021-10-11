@@ -1,5 +1,5 @@
 <template>
-    <v-card class="pa-1 mx-1 my-4" flat color="indigo lighten-3">
+    <v-card class="pa-1 mx-1 my-4" color="grey lighten-3">
         <v-card-title>最近閲覧した商品</v-card-title>
         <v-card-text> 
                 <carousel-button
