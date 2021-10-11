@@ -9,8 +9,8 @@
         </v-row>
         <carousel 
             :per-page="['md','lg','xl'].includes($vuetify.breakpoint.name) ? numItemsForDesktop : numItemsForMobile" 
-            pagination-color="#3949AB"
-            pagination-active-color="#E53935"
+            pagination-color="#E53935"
+            pagination-active-color="#3949AB"
             :touchDrag="true"
         >
             <slide 
@@ -49,7 +49,7 @@ export default{
             return this.inputItems.length ? Math.min(3, this.inputItems.length) : 3;
         },
         numItemsForDesktop() {
-            return this.inputItems.length ? Math.min(5, this.inputItems.length) : 5;
+            return this.inputItems.length ? Math.min(3, this.inputItems.length) : 3;
         },
     },
     methods:{
