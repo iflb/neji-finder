@@ -1,5 +1,5 @@
 <template>
-    <v-card class="pa-1 ma-1" flat color="grey lighten-3">
+    <v-card class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>商品検索結果</v-card-title>
         <v-card-text> 
             <v-row>
