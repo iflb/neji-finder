@@ -1,6 +1,6 @@
 
 <template>
-    <v-card tile class="pa-1 ma-1" color="grey lighten-3">
+    <v-card class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>該当商品一覧：{{itemQuantity}}個</v-card-title>
         <v-card-text> 
             <card-button 

@@ -57,27 +57,29 @@
         </v-navigation-drawer>
 
         <v-main>
-            <stepper 
-                v-if="!['version-log'].includes(currentComponent)"
-                :stepper="step"
-            />    
-            <v-scroll-y-reverse-transition>
-                <component
-                    :is="currentComponent"
-                    :duct="duct"
-                    :genre="genre"
-                    :shapeQuery="queryList[0]"
-                    :totalQuery="queryList[1]"
-                    :itemList="itemList"
-                    :item="item"
-                    @add-step="step = $event"
-                    @emit-component-name="changeComponent"
-                    @emit-genre="updateGenre"
-                    @emit-query="updateQuery"
-                    @emit-item-list="updateItemList"
-                    @emit-item="updateItem"
-                />
-            </v-scroll-y-reverse-transition>
+            <v-container>
+                <stepper 
+                    v-if="!['version-log'].includes(currentComponent)"
+                    :stepper="step"
+                />    
+                <v-scroll-y-reverse-transition>
+                    <component
+                        :is="currentComponent"
+                        :duct="duct"
+                        :genre="genre"
+                        :shapeQuery="queryList[0]"
+                        :totalQuery="queryList[1]"
+                        :itemList="itemList"
+                        :item="item"
+                        @add-step="step = $event"
+                        @emit-component-name="changeComponent"
+                        @emit-genre="updateGenre"
+                        @emit-query="updateQuery"
+                        @emit-item-list="updateItemList"
+                        @emit-item="updateItem"
+                    />
+                </v-scroll-y-reverse-transition>
+            </v-container>
         </v-main>
     </div>
 </template>
