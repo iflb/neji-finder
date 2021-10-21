@@ -250,36 +250,31 @@ export const icons = {
         { 
             name: "クリップナット",
             //code: 011520,
-            //src: require("@/assets/middle_classification/01011401082940_p.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/01011401082940_p.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "銅パッキン管用",
             //code: 011617,
-            //src: require("@/assets/middle_classification/01011402070550_p.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/01011402070550_p.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "Ｕ字角ワッシャー",
             //code: 011609,
-            //src: require("@/assets/middle_classification/01011402070570_p.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/01011402070570_p.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "ポリスライダワッシャー",
             //code: 011615,
-            //src: require("@/assets/middle_classification/01011402070600_p.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/01011402070600_p.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "シールワッシャー",
             //code: 011613,
-            //src: require("@/assets/middle_classification/01011402076120_p.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/01011402076120_p.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -291,8 +286,7 @@ export const icons = {
         { 
             name: "皿ばね座金",
             //code: 011803,
-            //src: require("@/assets/middle_classification/01011403076420_p.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/01011403076420_p.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
@@ -364,15 +358,13 @@ export const icons = {
         { 
             name: "ピン付さら小ねじ",
             //code: 010902,
-            //src: require("@/assets/middle_classification/10902.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/010902.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
             name: "ハイテンワッシャー",
             //code: 011606,
-            //src: require("@/assets/middle_classification/11606.jpg"),
-            src: require("@/assets/middle_classification/no_image.jpg"),
+            src: require("@/assets/middle_classification/011606.jpg"),
             backgroundColor: "#FFFFFF" 
         },
         { 
