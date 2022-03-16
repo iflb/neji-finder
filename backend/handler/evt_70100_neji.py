@@ -20,13 +20,8 @@ class Handler(EventHandler):
 
     def setup(self, handler_spec, manager):
         handler_spec.set_description('Neji Finder')
-        print(self.conf.xlsx_path.absolute());
-        try:
-            self.neji = manager.load_helper_module('helper_neji').Neji(self.conf.xlsx_path)
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-        print("hoge")
+        #self.neji = manager.load_helper_module('helper_neji').Neji(self.conf.xlsx_path)
+        self.neji = manager.load_helper_module('helper_neji').Neji()
         return handler_spec
 
     async def handle(self, event):

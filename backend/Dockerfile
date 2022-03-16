@@ -7,7 +7,7 @@ ARG SERVICE_NAME
 ENV SERVICE_NAME ${SERVICE_NAME}
 
 RUN apt-get update && \
-    apt-get install -y gcc gettext-base && \
+    apt-get install -y gcc gettext-base libopencv-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

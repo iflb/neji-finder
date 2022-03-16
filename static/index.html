@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./main.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/@iflb/ducts-client/dist/ducts.js"></script>
+    <script defer src="./main.js"></script>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <div id="app" class="wrapper">
+      <header>
+	<h1 class="title">{{ title }}</h1>
+      </header>
+      <section class="controller">
+	<div class="input">
+	  <select v-model="genre">
+	    <option disabled value="">ジャンル</option>
+	    <option v-for="option in genres" v-bind:value="option">
+	      {{ option }}
+	    </option>
+	  </select>
+	  <div><textarea class="query" v-model="query" v-on:keyup.enter="send_query" :placeholder="query_placeholder"> </textarea></div>
+	  <div><input type="button" value="send query" v-on:click="send_query" /></div>
+	</div>
+      </section>
+      <h2>クエリの例（ジャンルは"おねじ"）</h2>
+      <ul> 
+	<li>{"頭部":"さら","おねじ先端":"たいら"}
+	<li>{"頭部":"さら","おねじ先端":"たいら","頭部穴形状":"トルクス"}
+	<li>{"頭部":"さら","おねじ先端":"たいら","頭部穴形状":"トルクス","呼び径":"６","長さか厚み":"１５"}
+	<li>{"頭部":"さら","おねじ先端":"たいら","頭部穴形状":"トルクス","呼び径":"６","長さか厚み":"１５","表面処理":"表面処理なし","構成数クラス":"10個未満"}
+      </ul>
+      <section class="container">
+	<h2>取得データ</h2>
+	<ul>　
+	  <li class="shape">SHAPE: {{ shape }}</li>
+	  <li class="spec">SPEC: {{ spec }}</li>
+	  <li class="item">ITEM: {{ item }}</li>
+	</ul>
+	<h2>元データ</h2>
+	<pre>{{ response }}</pre>
+      </section>
+      <footer>
+	<span class="copy">{{ footer }}</span>
+      </footer>
+    </div>
+  </body>
+</html>
+
