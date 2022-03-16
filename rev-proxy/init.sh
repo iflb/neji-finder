@@ -17,8 +17,11 @@ if [ $ENABLE_SSL -eq 1 ] ; then
 fi
 
 if [ $DEV_ENABLE_SSL -eq 1 ] ; then
+<<<<<<< HEAD
     echo $DEV_DOMAIN_NAME
     echo $DEV_EMAIL
+=======
+>>>>>>> 5eb56ba050a70026a13458460be00bf067c2cd4f
     certbot --nginx -d ${DEV_DOMAIN_NAME} -m ${DEV_EMAIL} --agree-tos -n
     certbot renew
     nginx -s reload

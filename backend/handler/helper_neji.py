@@ -1,5 +1,6 @@
 import pandas as pd
 
+<<<<<<< HEAD
 import cv2
 import numpy as np
 
@@ -29,6 +30,8 @@ def config(loader):
 
 conf = configure_module(config)
 
+=======
+>>>>>>> 5eb56ba050a70026a13458460be00bf067c2cd4f
 class Neji:
     
     GENRE = ['おねじ', 'めねじ', '座金']
@@ -43,24 +46,39 @@ class Neji:
         '座金':   ['中分類', '呼び径', '外径か幅', '長さか厚み', '材質', '表面処理', '構成数クラス']
     }
     
+<<<<<<< HEAD
     def __init__(self):
         ##df = pd.read_excel(xlsx_path, header=2)
         df = pd.read_pickle(str(conf.path_neji_pkl))
+=======
+    def __init__(self, xlsx_path):
+        ##df = pd.read_excel(xlsx_path, header=2)
+        df = pd.read_pickle('neji.pkl')
+>>>>>>> 5eb56ba050a70026a13458460be00bf067c2cd4f
         
         df.rename(columns={'長さ・厚み':'長さか厚み', '外径・幅':'外径か幅'}, inplace=True)
         self.neji = {g : df[df['おねじ・めねじ・座金'] == g] for g in Neji.GENRE}
 
+<<<<<<< HEAD
     def find(self, genre, query):
         if not genre:
             return {'genres':Neji.GENRE}
         try:
             df = self.neji[genre].query('&'.join([' {} == "{}" '.format(k,v) for k,v in json.loads(query).items()])) if query else self.neji[genre]
+=======
+    def find(self, genre, **selected):
+        if not genre:
+            return {'genres':Neji.GENRE}
+        try:
+            df = self.neji[genre].query('&'.join([' {} == "{}" '.format(k,v) for k,v in selected.items()])) if selected else self.neji[genre]
+>>>>>>> 5eb56ba050a70026a13458460be00bf067c2cd4f
         except Exception as e:
             return {'genres':Neji.GENRE, 'error':str(e)}
         if len(df) == 0:
             return {'genres':Neji.GENRE}
         shape = {shape: df[shape].unique().tolist() for shape in Neji.SHAPE[genre]}
         if max([len(v) for v in shape.values()]) > 1:
+<<<<<<< HEAD
             return {'genre':genre, 'query':query, 'shape':shape}
         spec = {spec: df[spec].unique().tolist() for spec in Neji.SPEC[genre]}
         if len(df) <= 100:
@@ -191,3 +209,11 @@ async def write_image_for(sync_id, filename, data):
         await f.write(data)
 
         
+=======
+            return {'genre':genre, 'query':selected, 'shape':shape}
+        spec = {spec: df[spec].unique().tolist() for spec in Neji.SPEC[genre]}
+        if len(df) <= 100:
+            return {'genre':genre, 'query':selected, 'shape':shape, 'spec':spec, 'items':df.to_dict('records')}
+        else:
+            return {'genre':genre, 'query':selected, 'shape':shape, 'spec':spec }
+>>>>>>> 5eb56ba050a70026a13458460be00bf067c2cd4f
