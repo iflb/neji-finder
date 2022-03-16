@@ -13,7 +13,7 @@ RUN apt-get update && \
 
 COPY ./pyproject.toml .
 
-RUN pip install -U pip && pip install poetry && pip install opencv-python
+RUN pip install -U pip && pip install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
