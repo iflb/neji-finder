@@ -13,11 +13,8 @@ argh = "^0.26.2"
 pandas = "^1.3.3"
 openpyxl = "^3.0.9"
 
-<<<<<<< HEAD
 opencv-python = "*"
 
-=======
->>>>>>> 5eb56ba050a70026a13458460be00bf067c2cd4f
 [tool.poetry.dev-dependencies]
 
 [build-system]
