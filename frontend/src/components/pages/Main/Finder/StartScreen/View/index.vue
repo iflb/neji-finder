@@ -2,6 +2,7 @@
     <div>
         <search-window 
             @emit-component-name ='emitComponentName'
+            @emit-footer-component-name='emitFooterComponentName'
             @emit-item='emitItem'
         />
         <v-divider />
@@ -22,6 +23,9 @@ export default {
     methods:{
         emitComponentName(componentName){
             this.$emit( 'emit-component-name', componentName );
+        },
+        emitFooterComponentName(componentName){
+            this.$emit( 'emit-footer-component-name', componentName );
         },
         emitItem(item){
             this.$emit( 'emit-item', item );

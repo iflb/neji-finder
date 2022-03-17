@@ -11,8 +11,8 @@ duct.open("/ducts/wsd").then( (duct) => {
 		    vm.update_genres(data.genres);
 		}
 		vm.$set(vm, 'genre', 'genre' in data ? data.genre : '');
-		//vm.$set(vm, 'query', 'query' in data && Object.keys(data.query).length > 0 ? JSON.stringify(data.query) : '');
-		vm.$set(vm, 'query', 'query' in data ? data.query : '');
+		vm.$set(vm, 'query', 'query' in data && Object.keys(data.query).length > 0 ? JSON.stringify(data.query) : '');
+		//vm.$set(vm, 'query', 'query' in data ? data.query : '');
 		vm.$set(vm, 'item', 'item' in data ? JSON.stringify(data.item) : '');
 		vm.$set(vm, 'spec', 'spec' in data ? JSON.stringify(data.spec) : '');
 		vm.$set(vm, 'shape', 'shape' in data ? JSON.stringify(data.shape) : '');
@@ -94,13 +94,13 @@ var vm = new Vue({
 	    }
 	},
 	send_query: function () {
-	    //query = '';
-	    //if (this.query != '')
-	    //query = JSON.parse(this.query);
+	    let query = {};
+	    if (this.query != '')
+		query = JSON.parse(this.query);
 	    duct.send(
 		duct.nextRid(), 
 		duct.EVENT.SYNC_STATE_UPDATE,
-		{'sync_id': this.sync_id, 'genre': this.genre, 'query': this.query}
+		{'sync_id': this.sync_id, 'genre': this.genre, 'query': query}
 	    );
 	},
     },

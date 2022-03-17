@@ -183,15 +183,17 @@ export default{
         buttonDisabled:true,
         currentItems:[],
     }),
-    props:["duct","genre","shapeQuery"],
+    props:["duct","syncId","genre","shapeQuery"],
     methods: {
         send_query() {
+            if (this.syncId === null) return;
             const _query = {}
             Object.assign(_query, this.shapeQuery,this.specQuery);
+            console.log(_query);
             this.duct.send(
                 this.duct.nextRid(), 
-                this.duct.EVENT.NEJI,
-                {'genre': this.genre, 'query': _query}
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {'sync_id': this.syncId, 'genre': this.genre, 'query': _query},
             );
         },
         makeQuery(item){
@@ -321,38 +323,47 @@ export default{
             this.nominal.image = this.icons.nominal[2].src;
             this.outer.image = this.icons.outer[0].src;
         }
-        this.duct.invokeOnOpen(async () => {
-            this.duct.setEventHandler(
-                this.duct.EVENT.NEJI,
-                (rid, eid, data) => {
-                    if([1,3].includes(Object.keys(data.query).length)) this.initialSpec = data.spec;
+        this.$emit(
+            'register-page-specific-sync-manager-response-handler',
+            {
+                id: 'query-spec',
+                handler: (rid, eid, data) => {
+                    if (data.entry_type === 'StateEntry') {
+                        if([1,3].includes(Object.keys(data.query).length)) this.initialSpec = data.spec;
 
-                    for(let _key in this.selectableItemValues){
-                        if(!Object.keys(this.specQuery).includes(_key)){
-                            if(!["長さか厚み","外径か幅"].includes(_key)){
-                                this.selectableItemValues[_key] = data.spec[_key];
-                            }else if(_key == "長さか厚み"){
-                                if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
-                            }else{
-                                if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                        for(let _key in this.selectableItemValues){
+                            if(!Object.keys(this.specQuery).includes(_key)){
+                                if(!["長さか厚み","外径か幅"].includes(_key)){
+                                    this.selectableItemValues[_key] = data.spec[_key];
+                                }else if(_key == "長さか厚み"){
+                                    if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                                }else{
+                                    if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                                }
                             }
                         }
-                    }
 
-                    if(Object.keys(data).includes('items')){
-                        this.currentItems = data.items;
-                        this.itemQuantity = data.items.length;
-                    }else{
-                        this.currentItems = [];
-                        this.itemQuantity = 0;
+                        if(Object.keys(data).includes('items')){
+                            this.currentItems = data.items;
+                            this.itemQuantity = data.items.length;
+                        }else{
+                            this.currentItems = [];
+                            this.itemQuantity = 0;
+                        }
                     }
-                }
-            )
-            this.resetQuery();
-        });
+                },
+            },
+        );
+        this.duct.invokeOnOpen(this.resetQuery);
     },
     mounted(){
         this.$emit('add-step', 3);
+    },
+    destroyed(){
+        this.$emit(
+            'unregister-page-specific-sync-manager-response-handler',
+            { id: 'query-spec' },
+        );
     },
 }
 </script>

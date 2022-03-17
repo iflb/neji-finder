@@ -39,7 +39,7 @@ export default{
         query: {},
         genreEng:''
     }),
-    props:["duct","genre"],
+    props:["duct","syncId","genre"],
     computed:{
         selectedItems(){
             return this.nut_washer_icons[this.genreEng]
@@ -47,13 +47,14 @@ export default{
     },
     methods: {
         send_query() {
+            if (this.syncId === null) return;
             let _query = {};
             if (this.query) _query = this.query;
             
             this.duct.send(
                 this.duct.nextRid(), 
-                this.duct.EVENT.NEJI,
-                {'genre': this.genre, 'query': _query}
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {'sync_id': this.syncId, 'genre': this.genre, 'query': _query},
             );
         },
         makeQuery(item){
@@ -92,26 +93,35 @@ export default{
             this.genreEng = 'washer';
         }
 
-        this.duct.invokeOnOpen(async () => {
-            this.duct.setEventHandler(
-                this.duct.EVENT.NEJI,
-                (rid, eid, data) => {
-                    this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
+        this.$emit(
+            'register-page-specific-sync-manager-response-handler',
+            {
+                id: 'query-nut-washer-shape',
+                handler: (rid, eid, data) => {
+                    if (data.entry_type === 'StateEntry') {
+                        this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
 
-                    if(Object.keys(this.query).length === 1 && this.nextPage){
-                         this.accessNextPage();
-                    }else{
-                        this.$nextTick(() => {
-                            this.$vuetify.goTo(document.body.scrollHeight);
-                        });
+                        if(Object.keys(this.query).length === 1 && this.nextPage){
+                            this.accessNextPage();
+                        }else{
+                            this.$nextTick(() => {
+                                this.$vuetify.goTo(document.body.scrollHeight);
+                            });
+                        }
                     }
-                }
-            );
-            this.send_query();
-        });
+                },
+            }
+        );
+        this.duct.invokeOnOpen(this.send_query);
     },
     mounted(){
         this.$emit('add-step', 2);
-    }
+    },
+    destroyed(){
+        this.$emit(
+            'unregister-page-specific-sync-manager-response-handler',
+            { id: 'query-nut-washer-shape' },
+        );
+    },
 }
 </script>

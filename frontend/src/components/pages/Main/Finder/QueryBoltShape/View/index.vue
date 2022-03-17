@@ -79,7 +79,7 @@ export default{
         },
         nextPage:true,
     }),
-    props:["duct","genre","shapeQuery"],
+    props:["duct","syncId","genre","shapeQuery"],
     computed:{
         selectableTip(){
             let _arr = [];
@@ -102,14 +102,15 @@ export default{
     },
     methods: {
         send_query() {
-            let _query = '';
+            if (this.syncId === null) return;
+            let _query = {};
             if (this.query){
                 _query = this.query;
             }
             this.duct.send(
                 this.duct.nextRid(), 
-                this.duct.EVENT.NEJI,
-                {'genre': this.genre, 'query': _query}
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {'sync_id': this.syncId,'genre': this.genre, 'query': _query},
             );
         },
         makeQuery(item){
@@ -153,37 +154,46 @@ export default{
     }, 
     created(){
         this.nextPage = false;
-        this.duct.invokeOnOpen(async () => {
-            this.duct.setEventHandler(
-                this.duct.EVENT.NEJI,
-                (rid, eid, data) => {
-                    this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
-                    this.$set(this, 'shape', 'shape' in data ? data.shape : '');
+        this.$emit(
+            'register-page-specific-sync-manager-response-handler',
+            {
+                id: 'query-bolt-shape',
+                handler: (rid, eid, data) => {
+                    if (data.entry_type === 'StateEntry') {
+                        this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
+                        this.$set(this, 'shape', 'shape' in data ? data.shape : '');
 
-                    if(!Object.keys(this.query).includes("おねじ先端")){
-                        this.pickedTip = this.shape["おねじ先端"];
-                    }
-                    if(!Object.keys(this.query).includes("頭部穴形状")){
-                        this.pickedHoleShape = this.shape["頭部穴形状"];
-                    }
+                        if(!Object.keys(this.query).includes("おねじ先端")){
+                            this.pickedTip = this.shape["おねじ先端"];
+                        }
+                        if(!Object.keys(this.query).includes("頭部穴形状")){
+                            this.pickedHoleShape = this.shape["頭部穴形状"];
+                        }
 
-                    if(Object.keys(this.query).length === 3 && this.nextPage){
-                         this.accessNextPage();
-                    }else{
-                        if(!['md','lg','xl'].includes(this.$vuetify.breakpoint.name)){
-                            this.$nextTick(() => {
-                                this.$vuetify.goTo(document.body.scrollHeight);
-                            });
+                        if(Object.keys(this.query).length === 3 && this.nextPage){
+                            this.accessNextPage();
+                        }else{
+                            if(!['md','lg','xl'].includes(this.$vuetify.breakpoint.name)){
+                                this.$nextTick(() => {
+                                    this.$vuetify.goTo(document.body.scrollHeight);
+                                });
+                            }
                         }
                     }
-                }
-            );
-            this.send_query();
-        });
+                },
+            },
+        );
+        this.duct.invokeOnOpen(this.send_query);
     },
     mounted(){
         this.$emit('add-step', 2);
-    }
+    },
+    destroyed(){
+        this.$emit(
+            'unregister-page-specific-sync-manager-response-handler',
+            { id: 'query-bolt-shape' },
+        );
+    },
 }
 </script>
 

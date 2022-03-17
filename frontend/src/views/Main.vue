@@ -66,6 +66,7 @@
                     <component
                         :is="currentComponent"
                         :duct="duct"
+                        :syncId="syncId"
                         :genre="genre"
                         :shapeQuery="queryList[0]"
                         :totalQuery="queryList[1]"
@@ -77,6 +78,8 @@
                         @emit-query="updateQuery"
                         @emit-item-list="updateItemList"
                         @emit-item="updateItem"
+                        @register-page-specific-sync-manager-response-handler="registerPageSpecificSyncManagerResponseHandler"
+                        @unregister-page-specific-sync-manager-response-handler="unregisterPageSpecificSyncManagerResponseHandler"
                     />
                 </v-scroll-y-reverse-transition>
             </v-container>
@@ -115,6 +118,8 @@ export default {
         ],
         step:1,
         currentComponent:'start-screen',
+        pageSpecificSyncManagerResponseHandlers: {},
+        syncId: null,
         genre:'',
         itemList:[],
         item:[],
@@ -131,6 +136,12 @@ export default {
                 document.location.reload();
             }  
             this.currentComponent = componentName;
+        },
+        registerPageSpecificSyncManagerResponseHandler({ id, handler }) {
+            this.$set(this.pageSpecificSyncManagerResponseHandlers, id, handler);
+        },
+        unregisterPageSpecificSyncManagerResponseHandler({ id }) {
+            this.$delete(this.pageSpecificSyncManagerResponseHandlers, id);
         },
         updateGenre(genre){
             this.genre = genre;
@@ -152,7 +163,22 @@ export default {
         },
     }, 
     created(){
-        this.duct.open("/ducts/wsd");  
+        this.duct.invokeOnOpen(async () => {
+            this.duct.setEventHandler(
+                this.duct.EVENT.SYNC_MANAGER,
+                (rid, eid, data) => {
+                    if (data.entry_type === 'SyncStart') this.syncId = data.sync_id;
+                    for (let pageSpecificSyncManagerResponseHandler of Object.values(this.pageSpecificSyncManagerResponseHandlers)) {
+                        pageSpecificSyncManagerResponseHandler(rid, eid, data);
+                    }
+                }
+            );
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_MANAGER,
+            );
+        });
+        this.duct.open("/ducts/wsd"); 
     }
 }
 </script>

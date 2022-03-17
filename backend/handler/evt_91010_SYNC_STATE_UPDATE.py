@@ -1,5 +1,7 @@
 from ducts.spi import EventHandler
 
+import json
+
 from ifconf import configure_module, config_callback
 
 import logging
@@ -18,8 +20,7 @@ class Handler(EventHandler):
         sync_id = self.helper.SyncID(event.data['sync_id'])
         pubkey = self.helper.pubsub_key_for_sync(sync_id)
         streamkey = self.helper.stream_key_for_sync(sync_id)
-
-        entry = self.helper.StateEntry(event.data)
+        entry = self.helper.StateEntry({k:(v if type(v) is str else json.dumps(v)) for k,v in event.data.items() if v})
         entry.entry_type = self.helper.StateEntry.__name__
         await event.session.redis.xadd_and_publish(pubkey, streamkey, **entry)
 

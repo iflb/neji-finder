@@ -54,7 +54,7 @@ class Neji:
         if not genre:
             return {'genres':Neji.GENRE}
         try:
-            df = self.neji[genre].query('&'.join([' {} == "{}" '.format(k,v) for k,v in json.loads(query).items()])) if query else self.neji[genre]
+            df = self.neji[genre].query('&'.join([' {} == "{}" '.format(k,v) for k,v in query.items()])) if query else self.neji[genre]
         except Exception as e:
             return {'genres':Neji.GENRE, 'error':str(e)}
         if len(df) == 0:

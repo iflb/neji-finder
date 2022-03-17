@@ -1,5 +1,7 @@
 from ducts.spi import EventHandler
 
+import json
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -44,7 +46,10 @@ class Handler(EventHandler):
     async def handle_state_update_entry(self, event, sync_id, stream_id, kv):
         entry = self.helper.StateEntry(kv)
         entry.sync_id = sync_id.base64
-        entry.update(self.neji.find(entry.genre, entry.query))
+        query = {}
+        if entry.query is not None:
+            query = json.loads(entry.query)
+        entry.update(self.neji.find(entry.genre, query))
         return entry
 
     async def handle_warning_entry(self, event, sync_id, stream_id, kv):
