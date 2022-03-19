@@ -126,50 +126,47 @@ class DateHashID(metaclass=abc.ABCMeta):
 
 SyncID = DateHashID.define('SyncID', '%Y%m%d/%H')
 
-SyncStart = nameddict(
-    'SyncStart',
-    (
-        'sync_id',
-        'entry_type',
-    ))
-
 ImageEntry = nameddict(
     'ImageEntry',
     (
         'sync_id',
-        'entry_type',
         'filename',
         'score',
         'content_length',
         'content',
-    ))
-
-WarningEntry = nameddict(
-    'WarningEntry',
-    (
-        'sync_id',
-        'entry_type',
-        'message',
+        'error',
     ))
 
 StateEntry = nameddict(
     'StateEntry',
     (
         'sync_id',
-        'entry_type',
+        'updated',
         'genre',
         'query',
         'response',
     ))
 
-def pubsub_key_for_sync(sync_id):
-    return f'SYNC/SID={sync_id.hash_id}/PUBSUB'
+def stream_key_for_sync():
+    return f'SYNC/IDS'
 
-def stream_key_for_sync(sync_id):
-    return f'SYNC/SID={sync_id.hash_id}/STREAMS'
 
-def incr_key_for_sync(sync_id):
-    return f'SYNC/SID={sync_id.hash_id}/INCR'
+def pubsub_key_for_state(sync_id):
+    return f'SYNC/SID={sync_id.hash_id}/STATE/PUBSUB'
+
+def stream_key_for_state(sync_id):
+    return f'SYNC/SID={sync_id.hash_id}/STATE/STREAMS'
+
+
+def pubsub_key_for_img(sync_id):
+    return f'SYNC/SID={sync_id.hash_id}/IMG/PUBSUB'
+
+def stream_key_for_img(sync_id):
+    return f'SYNC/SID={sync_id.hash_id}/IMG/STREAMS'
+
+def incr_key_for_img(sync_id):
+    return f'SYNC/SID={sync_id.hash_id}/IMG/INCR'
+
 
 def calc_laplacian(data):
     buf = np.frombuffer(data, dtype=np.uint8)

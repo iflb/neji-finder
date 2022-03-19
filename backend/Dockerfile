@@ -10,9 +10,11 @@ RUN apt-get update && \
 
 COPY ./pyproject.toml ./poetry.lock* .
 
-RUN --mount=type=cache,target=/root/.cache/pip pip install -U pip && pip install poetry 
+#RUN --mount=type=cache,target=/root/.cache/pip pip install -U pip && pip install poetry 
+RUN pip install -U pip && pip install poetry 
 RUN poetry config virtualenvs.create false
-RUN --mount=type=cache,target=/root/.cache/pypoetry poetry install
+#RUN --mount=type=cache,target=/root/.cache/pypoetry poetry install
+RUN poetry install
 
 COPY ./ .
 

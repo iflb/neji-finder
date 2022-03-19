@@ -4,7 +4,8 @@ RUN apk add git python3 make g++
 
 WORKDIR /
 COPY package*.json .
-RUN --mount=type=cache,target=/root/.npm npm install
+#RUN --mount=type=cache,target=/root/.npm npm install
+RUN npm install
 
 ARG HOME
 WORKDIR $HOME

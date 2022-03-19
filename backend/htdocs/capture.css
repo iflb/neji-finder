@@ -1,0 +1,17 @@
+canvas, video{
+    border: 1px solid gray;
+}
+
+select{
+    border: 1px solid;
+    font-size: 30px;
+}
+
+img {
+    height: 200px;
+}
+
+#shutter {
+    width: 100%;
+    height: 100px;
+}

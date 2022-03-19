@@ -40,5 +40,4 @@ class Handler(EventHandler):
             return await call()
 
     async def find(self, genre = '', query = {}):
-        return self.neji.find(genre, **(query if isinstance(query, dict) else {}))
-    
+        return self.neji.find(genre, query if isinstance(query, dict) else {})
