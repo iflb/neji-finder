@@ -16,6 +16,7 @@ duct.open("/ducts/wsd").then( (duct) => {
 	duct.EVENT.SYNC_STATE_RECEIVE,
 	(rid, eid, data) => {
 	    console.log(data);
+	    vm.$set(vm, 'state_request_id', rid);
 	    vm.$set(vm, 'response', JSON.stringify(data, null, '\t'));
 	    //if ('genres' in data) {
 	    //vm.update_genres(data.genres);
@@ -126,6 +127,7 @@ var vm = new Vue({
 	response: '',
 	sync_id: '',
 	updated: '',
+	state_request_id: '',
     },
     watch: {
 	genre: function(val) {
@@ -149,6 +151,15 @@ var vm = new Vue({
 		duct.EVENT.SYNC_STATE_UPDATE,
 		{'sync_id': this.sync_id, 'genre': this.genre, 'query': query}
 	    );
+	},
+	send_cancel: function () {
+	    if (this.state_request_id) {
+		duct.send(
+		    duct.nextRid(), 
+		    duct.EVENT.SYNC_STATE_CANCEL,
+		    {'sync_id': this.sync_id, 'cancel_request_id': this.state_request_id}
+		);
+	    }
 	},
     },
     mounted: function() {

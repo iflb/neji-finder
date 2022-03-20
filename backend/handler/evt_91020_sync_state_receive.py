@@ -17,22 +17,22 @@ class Handler(EventHandler):
     
     async def handle(self, event):
         sync_id = self.helper.SyncID(event.data.get('sync_id'))
-        subkey = self.helper.pubsub_key_for_state(sync_id)
+        subkey = self.helper.psub_key_for_state(sync_id)
         streamkey = self.helper.stream_key_for_state(sync_id)
-        async for updated, stream_id, kv in self.psub_and_xlast_str(event.session.redis, subkey, streamkey):
+        async for updated, stream_id, kv in self.psub_and_xlast_str(event.session.redis, subkey, streamkey, event.session.request_id()):
             entry = self.helper.StateEntry(kv)
             entry.sync_id = sync_id.base64
             entry.updated = updated
             entry.update(self.neji.find(entry.genre, json.loads(entry.query) if entry.query else {}))
             yield entry
     
-    async def psub_and_xlast_str(self, redis, subkey, streamkey):
+    async def psub_and_xlast_str(self, redis, subkey, streamkey, rid):
         last_id, kv = await redis.xlast_str_with_id(streamkey)
         yield 0, last_id, kv
         pubsub_channel_iter = None
         while True:
             result = await redis.xlast_str_with_id(streamkey)
-            print('*********************{}'.format(result))
+            #print('*********************{}'.format(result))
             if result[0] > last_id:
                 last_id = result[0]
                 yield 1, result[0], result[1]
@@ -43,6 +43,12 @@ class Handler(EventHandler):
                     pubsub_channel_iter = type(pubsub_channel_iter).__aiter__(pubsub_channel_iter)
                 try:
                     ch, msg = await type(pubsub_channel_iter).__anext__(pubsub_channel_iter)
+                    ch = ch.decode('utf-8')
+                    if ch.endswith('CANCEL'):
+                        msg = int(msg.decode('utf-8'))
+                        if msg == rid:
+                            #print('sync state thread for rid:{} of sync:{} is cancelled'.format(rid, subkey))
+                            break
                 except StopAsyncIteration:
                     break
                 

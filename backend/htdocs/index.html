@@ -23,6 +23,7 @@
 	  </select>
 	  <div><textarea class="query" v-model="query" v-on:keyup.enter="send_query" :placeholder="query_placeholder"> </textarea></div>
 	  <div><input type="button" value="send query" v-on:click="send_query" /></div>
+	  <div><input type="button" value="cancel sync" v-on:click="send_cancel" /></div>
 	</div>
       </section>
       <h2>クエリの例（ジャンルは"おねじ"）</h2>

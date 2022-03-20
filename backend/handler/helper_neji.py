@@ -154,6 +154,12 @@ def stream_key_for_sync():
 def pubsub_key_for_state(sync_id):
     return f'SYNC/SID={sync_id.hash_id}/STATE/PUBSUB'
 
+def pubsub_key_for_state_cancel(sync_id):
+    return f'SYNC/SID={sync_id.hash_id}/STATE/CANCEL'
+
+def psub_key_for_state(sync_id):
+    return f'SYNC/SID={sync_id.hash_id}/STATE/*'
+
 def stream_key_for_state(sync_id):
     return f'SYNC/SID={sync_id.hash_id}/STATE/STREAMS'
 
