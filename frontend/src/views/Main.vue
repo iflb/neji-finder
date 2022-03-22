@@ -74,16 +74,30 @@
                         :item="item"
                         @add-step="step = $event"
                         @emit-component-name="changeComponent"
+                        @emit-footer-component-name="changeFooterComponent"
                         @emit-genre="updateGenre"
                         @emit-query="updateQuery"
                         @emit-item-list="updateItemList"
                         @emit-item="updateItem"
-                        @register-page-specific-sync-manager-response-handler="registerPageSpecificSyncManagerResponseHandler"
-                        @unregister-page-specific-sync-manager-response-handler="unregisterPageSpecificSyncManagerResponseHandler"
+                        @register-sync-state-receive-handler="registerSyncStateReceiveHandler"
+                        @unregister-sync-state-receive-handler="unregisterSyncStateReceiveHandler"
                     />
                 </v-scroll-y-reverse-transition>
             </v-container>
         </v-main>
+
+        <v-footer
+            app fixed
+            v-if="footerShown"
+        >
+            <component
+                :sync-id="syncId"
+                :duct="duct"
+                :is="currentFooterComponent"
+                @register-sync-image-receive-handler="registerSyncImageReceiveHandler"
+                @unregister-sync-image-receive-handler="unregisterSyncImageReceiveHandler"
+            />
+        </v-footer>
     </div>
 </template>
 <script>
@@ -95,8 +109,10 @@ import QueryNutWasherShape from '@/components/pages/Main/Finder/QueryNutWasherSh
 import QuerySpec from '@/components/pages/Main/Finder/QuerySpec/View'
 import ResultList from '@/components/pages/Main/Finder/ResultList/View'
 import Result from '@/components/pages/Main/Finder/Result/View'
+import AskForImageSearchSupport from '@/components/pages/Main/Finder/AskForImageSearchSupport/View'
 import VersionLog from '@/components/pages/Main/VersionLog'
 import ducts from '@iflb/ducts-client'
+import router from '@/router'
 export default {
     components:{
         Stepper,
@@ -105,20 +121,24 @@ export default {
         QueryBoltShape,
         QueryNutWasherShape,
         QuerySpec,
+        AskForImageSearchSupport,
         ResultList,
         Result,
-        VersionLog
+        VersionLog,
     },
     data: () => ({
         duct:new ducts.Duct(),
         drawerShown: false,
+        footerShown: false,
         menuItems: [
             { to: "start-screen", icon:"mdi-magnify", title: "メインページ" },
             { to: "version-log", icon:"mdi-update", title: "システム更新状況" }
         ],
         step:1,
         currentComponent:'start-screen',
-        pageSpecificSyncManagerResponseHandlers: {},
+        currentFooterComponent: null,
+        syncStateReceiveHandlers: {},
+        syncImageReceiveHandler: null,
         syncId: null,
         genre:'',
         itemList:[],
@@ -137,11 +157,38 @@ export default {
             }  
             this.currentComponent = componentName;
         },
-        registerPageSpecificSyncManagerResponseHandler({ id, handler }) {
-            this.$set(this.pageSpecificSyncManagerResponseHandlers, id, handler);
+        changeFooterComponent(componentName){
+            this.footerShown = (componentName !== null);
+            this.currentFooterComponent = componentName;
         },
-        unregisterPageSpecificSyncManagerResponseHandler({ id }) {
-            this.$delete(this.pageSpecificSyncManagerResponseHandlers, id);
+        registerSyncStateReceiveHandler({ rid, handler }) {
+            this.$set(this.syncStateReceiveHandlers, rid, handler);
+            this.duct.send(
+                rid, 
+                this.duct.EVENT.SYNC_STATE_RECEIVE,
+                {
+                    sync_id: this.syncId,
+                },
+            );
+        },
+        unregisterSyncStateReceiveHandler({ rid }) {
+            this.$delete(this.syncStateReceiveHandlers, rid);
+            this.duct.send(
+                rid, 
+                this.duct.EVENT.SYNC_STATE_CANCEL,
+                {
+                    sync_id: this.syncId,
+                    cancel_request_id: rid,
+                },
+            );
+        },
+        registerSyncImageReceiveHandler(handler) {
+            this.syncImageReceiveHandler = handler;
+            this.changeFooterComponent('ask-for-image-search-support');
+        },
+        unregisterSyncImageReceiveHandler() {
+            this.syncImageReceiveHandler = null;
+            this.changeFooterComponent(null);
         },
         updateGenre(genre){
             this.genre = genre;
@@ -163,22 +210,48 @@ export default {
         },
     }, 
     created(){
+        if (Object.keys(this.$route.query).includes('sync_id')) {
+            this.syncId = this.$route.query.sync_id;
+        } else {
+            this.duct.invokeOnOpen(async () => {
+                this.duct.setEventHandler(
+                    this.duct.EVENT.SYNC_INIT,
+                    async (rid, eid, data) => {
+                        this.syncId = data.sync_id;
+                        router.push({
+                            path: this.$route.path,
+                            query: { sync_id: data.sync_id },
+                        });
+                    }
+                );
+                this.duct.send(
+                    this.duct.nextRid(), 
+                    this.duct.EVENT.SYNC_INIT,
+                );
+            });
+        }
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
-                this.duct.EVENT.SYNC_MANAGER,
-                (rid, eid, data) => {
-                    if (data.entry_type === 'SyncStart') this.syncId = data.sync_id;
-                    for (let pageSpecificSyncManagerResponseHandler of Object.values(this.pageSpecificSyncManagerResponseHandlers)) {
-                        pageSpecificSyncManagerResponseHandler(rid, eid, data);
+                this.duct.EVENT.SYNC_STATE_RECEIVE,
+                async (rid, eid, data) => {
+                    for (let [ syncStateReceiveRequestId, syncStateReceiveHandler ] of Object.entries(this.syncStateReceiveHandlers)) {
+                        if (syncStateReceiveRequestId === String(rid)) {
+                            await syncStateReceiveHandler(rid, eid, data);
+                        }
                     }
                 }
             );
-            this.duct.send(
-                this.duct.nextRid(), 
-                this.duct.EVENT.SYNC_MANAGER,
+            this.duct.setEventHandler(
+                this.duct.EVENT.SYNC_IMAGE_RECEIVE,
+                async (rid, eid, data) => {
+                    await this.syncImageReceiveHandler(rid, eid, data);
+                }
             );
         });
         this.duct.open("/ducts/wsd"); 
-    }
+    },
+    destroyed() {
+        this.unregisterSyncImageReceiveHandler();
+    },
 }
 </script>

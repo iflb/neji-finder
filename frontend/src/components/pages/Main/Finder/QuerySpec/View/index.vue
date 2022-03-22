@@ -15,8 +15,8 @@
             <page-transition-button 
                 :nextIsNecessary="true"
                 :buttonDisabled="buttonDisabled"
-                @click-back="backToPreviousPage"
-                @click-next="accessNextPage"
+                @click-back="removeSpecQuery"
+                @click-next="fix_query"
             />
             <v-row>
                 <v-col>
@@ -31,6 +31,7 @@
             <v-row>
                 <v-col cols="12" md="4">
                     <carousel-button
+                        v-model="selectedMiddleClassificationName"
                         :headerIsOn="true"
                         headerTitle="中分類"
                         :inputItems="selectableItems.middle_classification"
@@ -41,6 +42,7 @@
                 </v-col>
                 <v-col cols="12" md="4">
                     <card-button 
+                        v-model="selectedMaterialName"
                         :headerIsOn="true"
                         headerTitle="材質"
                         :inputItems="selectableItems.material"
@@ -51,6 +53,7 @@
                 </v-col>
                 <v-col cols="12" md="4">
                     <card-button 
+                        v-model="selectedSurfaceName"
                         :headerIsOn="true"
                         headerTitle="表面処理"
                         :inputItems="selectableItems.surface"
@@ -61,6 +64,7 @@
                 </v-col>
                 <v-col cols="12" md="4">
                     <card-button 
+                        v-model="selectedAmountName"
                         :headerIsOn="true"
                         headerTitle="構成数クラス"
                         :inputItems="selectableItems.amount"
@@ -116,8 +120,8 @@
             <page-transition-button 
                 :nextIsNecessary="true"
                 :buttonDisabled="buttonDisabled"
-                @click-back="backToPreviousPage"
-                @click-next="accessNextPage"
+                @click-back="removeSpecQuery"
+                @click-next="fix_query"
             />
         </v-card-text>   
     </v-card>
@@ -145,6 +149,7 @@ export default{
     },
     data: () => ({
         icons,
+        syncStateReceiveRequestId: null,
         specQuery:{}, 
         snackbar:false,
         initialSpec:{
@@ -182,6 +187,10 @@ export default{
         itemQuantity:0,
         buttonDisabled:true,
         currentItems:[],
+        selectedMiddleClassificationName: null,
+        selectedMaterialName: null,
+        selectedSurfaceName: null,
+        selectedAmountName: null,
     }),
     props:["duct","syncId","genre","shapeQuery"],
     methods: {
@@ -189,11 +198,52 @@ export default{
             if (this.syncId === null) return;
             const _query = {}
             Object.assign(_query, this.shapeQuery,this.specQuery);
-            console.log(_query);
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
                 {'sync_id': this.syncId, 'genre': this.genre, 'query': _query},
+            );
+        },
+        fix_query() {
+            if (this.syncId === null) return;
+            const _query = {}
+            Object.assign(_query, this.shapeQuery, this.specQuery);
+            this.$emit( 'emit-query', _query );
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {'sync_id': this.syncId, 'genre': this.genre, 'query': _query, 'query_fixed': true },
+            );
+        },
+        removeSpecQuery(){
+            if (this.syncId === null) return;
+            this.$emit( 'emit-shape-query', {} );
+            let query = new Object(this.shapeQuery);
+            switch(this.genre){
+                case 'おねじ':
+                    if (Object.keys(query).includes('頭部穴形状')){
+                        delete query['頭部穴形状'];
+                    } else if (Object.keys(query).includes('おねじ先端')){
+                        delete query['おねじ先端'];
+                    } else if (Object.keys(query).includes('頭部')){
+                        delete query['頭部'];
+                    }
+                    break;
+                case 'めねじ':
+                    delete query['ナット形状'];
+                    break;
+                case '座金':
+                    delete query['座金形状'];
+                    break;
+            }
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {
+                    sync_id: this.syncId,
+                    genre: this.genre,
+                    query: query,
+                },
             );
         },
         makeQuery(item){
@@ -228,14 +278,10 @@ export default{
             for(let _key of carouselAndCard){
                 changeBackgroundColor({ name: "" }, this.icons[_key]);
             }
-            this.nominal.model="";
-            this.outer.model="";
-            this.thickness.model="";
         },
         accessNextPage(){
             const _query = {}
             Object.assign(_query, this.shapeQuery,this.specQuery)
-            this.$emit( 'emit-query', _query );
             this.$emit( 'emit-item-list', this.currentItems );
             if(this.itemQuantity == 1){
                 this.$emit( 'emit-item', this.currentItems );
@@ -248,8 +294,6 @@ export default{
             });
         },
         backToPreviousPage(){
-            this.resetQuery();
-            this.$emit( 'emit-shape-query', {} );
             if(['めねじ','座金'].includes(this.genre)){
                 this.$emit( 'emit-component-name', 'query-nut-washer-shape' );
             }else{
@@ -258,7 +302,83 @@ export default{
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);
             });
-        }
+        },
+        registerSyncStateReceiveHandler(){
+            this.$emit(
+                'register-sync-state-receive-handler',
+                {
+                    rid: this.syncStateReceiveRequestId,
+                    handler: (rid, eid, data) => {
+                        if(!Object.keys(data).includes('spec')){
+                            this.backToPreviousPage();
+                        }else{
+                            if (Object.keys(data).includes('query_fixed')) {
+                                this.accessNextPage();
+                            } else {
+                                if([1,3].includes(Object.keys(data.query).length)) this.initialSpec = data.spec;
+
+                                let dataQueryKeys = Object.keys(data.query);
+                                if(dataQueryKeys.includes('中分類')){
+                                    let selectedMiddleClassificationName = data.query['中分類'];
+                                    this.specQuery['中分類'] = selectedMiddleClassificationName;
+                                    this.selectedMiddleClassificationName = selectedMiddleClassificationName;
+                                }
+                                if(dataQueryKeys.includes('材質')){
+                                    let selectedMaterialName = data.query['材質'];
+                                    this.specQuery['材質'] = selectedMaterialName;
+                                    this.selectedMaterialName = selectedMaterialName;
+                                }
+                                if(dataQueryKeys.includes('表面処理')){
+                                    let selectedSurfaceName = data.query['表面処理'];
+                                    this.specQuery['表面処理'] = selectedSurfaceName;
+                                    this.selectedSurfaceName = selectedSurfaceName;
+                                }
+                                if(dataQueryKeys.includes('構成数クラス')){
+                                    let selectedAmountName = data.query['構成数クラス'];
+                                    this.specQuery['構成数クラス'] = selectedAmountName;
+                                    this.selectedAmountName = selectedAmountName;
+                                }
+                                if(dataQueryKeys.includes('呼び径')){
+                                    let nominalValue = data.query['呼び径'];
+                                    this.specQuery['呼び径'] = nominalValue;
+                                    this.nominal.model = nominalValue;
+                                }
+                                if(dataQueryKeys.includes('外径か幅')){
+                                    let outerValue = data.query['外径か幅'];
+                                    this.specQuery['外径か幅'] = outerValue;
+                                    this.outer.model = outerValue;
+                                }
+                                if(dataQueryKeys.includes('長さか厚み')){
+                                    let thicknessValue = data.query['長さか厚み'];
+                                    this.specQuery['長さか厚み'] = thicknessValue;
+                                    this.thickness.model = thicknessValue;
+                                }
+
+                                for(let _key in this.selectableItemValues){
+                                    if(!Object.keys(this.specQuery).includes(_key)){
+                                        if(!["長さか厚み","外径か幅"].includes(_key)){
+                                            this.selectableItemValues[_key] = data.spec[_key];
+                                        }else if(_key == "長さか厚み"){
+                                            if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                                        }else{
+                                            if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                                        }
+                                    }
+                                }
+
+                                if(Object.keys(data).includes('items')){
+                                    this.currentItems = data.items;
+                                    this.itemQuantity = data.items.length;
+                                }else{
+                                    this.currentItems = [];
+                                    this.itemQuantity = 0;
+                                }
+                            }
+                        }
+                    },
+                },
+            );
+        },
     }, 
     watch:{
         itemQuantity(){
@@ -323,46 +443,97 @@ export default{
             this.nominal.image = this.icons.nominal[2].src;
             this.outer.image = this.icons.outer[0].src;
         }
+        this.syncStateReceiveRequestId = this.duct.nextRid();
         this.$emit(
-            'register-page-specific-sync-manager-response-handler',
+            'register-sync-state-receive-handler',
             {
-                id: 'query-spec',
-                handler: (rid, eid, data) => {
-                    if (data.entry_type === 'StateEntry') {
-                        if([1,3].includes(Object.keys(data.query).length)) this.initialSpec = data.spec;
+                rid: this.syncStateReceiveRequestId,
+                handler: async (rid, eid, data) => {
+                    let initialSyncState = data;
+                    data = await this.duct.call(
+                        this.duct.EVENT.NEJI,
+                        {
+                            genre: this.genre,
+                            query: this.shapeQuery,
+                        },
+                    );
 
-                        for(let _key in this.selectableItemValues){
-                            if(!Object.keys(this.specQuery).includes(_key)){
-                                if(!["長さか厚み","外径か幅"].includes(_key)){
-                                    this.selectableItemValues[_key] = data.spec[_key];
-                                }else if(_key == "長さか厚み"){
-                                    if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
-                                }else{
-                                    if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
-                                }
-                            }
-                        }
-
-                        if(Object.keys(data).includes('items')){
-                            this.currentItems = data.items;
-                            this.itemQuantity = data.items.length;
+                    for(let _key in this.selectableItemValues){
+                        if(!["長さか厚み","外径か幅"].includes(_key)){
+                            this.selectableItemValues[_key] = data.spec[_key];
+                        }else if(_key == "長さか厚み"){
+                            if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
                         }else{
-                            this.currentItems = [];
-                            this.itemQuantity = 0;
+                            if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
                         }
                     }
+
+                    let initialQueryKeys = Object.keys(initialSyncState.query);
+                    if(initialQueryKeys.includes('中分類')){
+                        let selectedMiddleClassificationName = initialSyncState.query['中分類'];
+                        this.specQuery['中分類'] = selectedMiddleClassificationName;
+                        this.selectedMiddleClassificationName = selectedMiddleClassificationName;
+                    }
+                    if(initialQueryKeys.includes('材質')){
+                        let selectedMaterialName = initialSyncState.query['材質'];
+                        this.specQuery['材質'] = selectedMaterialName;
+                        this.selectedMaterialName = selectedMaterialName;
+                    }
+                    if(initialQueryKeys.includes('表面処理')){
+                        let selectedSurfaceName = initialSyncState.query['表面処理'];
+                        this.specQuery['表面処理'] = selectedSurfaceName;
+                        this.selectedSurfaceName = selectedSurfaceName;
+                    }
+                    if(initialQueryKeys.includes('構成数クラス')){
+                        let selectedAmountName = initialSyncState.query['構成数クラス'];
+                        this.specQuery['構成数クラス'] = selectedAmountName;
+                        this.selectedAmountName = selectedAmountName;
+                    }
+                    if(initialQueryKeys.includes('呼び径')){
+                        let nominalValue = initialSyncState.query['呼び径'];
+                        this.specQuery['呼び径'] = nominalValue;
+                        this.nominal.model = nominalValue;
+                    }
+                    if(initialQueryKeys.includes('外径か幅')){
+                        let outerValue = initialSyncState.query['外径か幅'];
+                        this.specQuery['外径か幅'] = outerValue;
+                        this.outer.model = outerValue;
+                    }
+                    if(initialQueryKeys.includes('長さか厚み')){
+                        let thicknessValue = initialSyncState.query['長さか厚み'];
+                        this.specQuery['長さか厚み'] = thicknessValue;
+                        this.thickness.model = thicknessValue;
+                    }
+                    let query = {}
+                    Object.assign(query, this.shapeQuery, this.specQuery);
+                    data = await this.duct.call(
+                        this.duct.EVENT.NEJI,
+                        {
+                            genre: this.genre,
+                            query: query,
+                        },
+                    );
+
+                    if(Object.keys(data).includes('items')){
+                        this.currentItems = data.items;
+                        this.itemQuantity = data.items.length;
+                    }else{
+                        this.currentItems = [];
+                        this.itemQuantity = 0;
+                    }
+
+                    this.registerSyncStateReceiveHandler();
                 },
             },
         );
-        this.duct.invokeOnOpen(this.resetQuery);
     },
     mounted(){
         this.$emit('add-step', 3);
     },
     destroyed(){
         this.$emit(
-            'unregister-page-specific-sync-manager-response-handler',
-            { id: 'query-spec' },
+            'unregister-sync-state-receive-handler',
+            { rid: this.syncStateReceiveRequestId },
         );
     },
 }

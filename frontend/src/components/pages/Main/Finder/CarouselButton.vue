@@ -14,14 +14,14 @@
             :touchDrag="true"
         >
             <slide 
-                v-for="item in inputItems" 
-                :key="item.name" 
+                v-for="(item, itemIdx) in inputItems" 
+                :key="itemIdx" 
                 align="center"
             >
                 <v-card
                     class="d-flex align-center justify-center"
                     @click="emitItem(item)"
-                    :color="item.backgroundColor"
+                    :color="itemBackgroundColors[item.name]"
                     max-width="100"
                     min-height="100"
                 >
@@ -39,11 +39,15 @@
 <script>
 import { Carousel, Slide } from 'vue-carousel'
 export default{
+    model: {
+        prop: 'selectedItemName',
+        event: 'update',
+    },
     components:{
         Carousel,
         Slide
     },
-    props:["headerIsOn","headerTitle","inputItems"],
+    props:["selectedItemName","headerIsOn","headerTitle","inputItems"],
     computed: {
         numItemsForMobile() {
             return this.inputItems.length ? Math.min(3, this.inputItems.length) : 3;
@@ -51,9 +55,22 @@ export default{
         numItemsForDesktop() {
             return this.inputItems.length ? Math.min(3, this.inputItems.length) : 3;
         },
+        itemBackgroundColors() {
+            let itemBackgroundColors = {};
+            for (let item of this.inputItems) {
+                let itemName = item.name;
+                if (itemName === this.selectedItemName) {
+                    itemBackgroundColors[itemName] = '#FFCA28';
+                } else {
+                    itemBackgroundColors[itemName] = '#FFFFFF';
+                }
+            }
+            return itemBackgroundColors;
+        },
     },
     methods:{
         emitItem(item){
+            this.$emit('update', item.name);
             this.$emit('update-query', item);
         }
     }

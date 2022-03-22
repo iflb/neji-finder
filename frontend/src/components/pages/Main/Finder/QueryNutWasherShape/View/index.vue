@@ -3,6 +3,7 @@
         <v-card-title>{{genre}}の形状を選ぶ</v-card-title>
         <v-card-text> 
             <card-button
+                v-model="selectedShapeName"
                 :headerIsOn="false"
                 :inputItems="selectedItems"
                 :labelIsOn="true"
@@ -11,7 +12,7 @@
             <v-divider class="pt-3"/>
             <page-transition-button 
                 :nextIsNecessary="false"
-                @click-back="backToPreviousPage"
+                @click-back="unsetGenre"
             />
         </v-card-text>   
     </v-card>
@@ -37,7 +38,9 @@ export default{
         nut_washer_icons,
         nextPage:true,
         query: {},
-        genreEng:''
+        genreEng:'',
+        syncStateReceiveRequestId:null,
+        selectedShapeName: null,
     }),
     props:["duct","syncId","genre"],
     computed:{
@@ -55,6 +58,17 @@ export default{
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
                 {'sync_id': this.syncId, 'genre': this.genre, 'query': _query},
+            );
+        },
+        unsetGenre(){
+            this.query = {};
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {
+                    sync_id: this.syncId,
+                    query: this.query,
+                },
             );
         },
         makeQuery(item){
@@ -93,15 +107,18 @@ export default{
             this.genreEng = 'washer';
         }
 
+        this.syncStateReceiveRequestId = this.duct.nextRid();
         this.$emit(
-            'register-page-specific-sync-manager-response-handler',
+            'register-sync-state-receive-handler',
             {
-                id: 'query-nut-washer-shape',
+                rid: this.syncStateReceiveRequestId,
                 handler: (rid, eid, data) => {
-                    if (data.entry_type === 'StateEntry') {
+                    if(!Object.keys(data).includes('genre')){
+                        this.backToPreviousPage();
+                    }else{
                         this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
 
-                        if(Object.keys(this.query).length === 1 && this.nextPage){
+                        if(Object.keys(data).includes('spec')){
                             this.accessNextPage();
                         }else{
                             this.$nextTick(() => {
@@ -112,15 +129,14 @@ export default{
                 },
             }
         );
-        this.duct.invokeOnOpen(this.send_query);
     },
     mounted(){
         this.$emit('add-step', 2);
     },
     destroyed(){
         this.$emit(
-            'unregister-page-specific-sync-manager-response-handler',
-            { id: 'query-nut-washer-shape' },
+            'unregister-sync-state-receive-handler',
+            { rid: this.syncStateReceiveRequestId },
         );
     },
 }

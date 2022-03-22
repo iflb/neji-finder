@@ -3,6 +3,7 @@
         <v-card-title color="primary">ジャンルを決定する</v-card-title>
         <v-card-text> 
             <card-button
+                v-model="selectedGenre"
                 :headerIsOn="false"
                 :inputItems="icons"
                 @update-query="chooseGenre"
@@ -29,27 +30,33 @@ export default{
             { 
                 name: "おねじ", 
                 src: require("@/assets/icons/1_bolt.jpg"), 
-                backgroundColor: "#FFFFFF" 
             },
             { 
                 name: "めねじ", 
                 src: require("@/assets/icons/2_nut.jpg"), 
-                backgroundColor: "#FFFFFF" 
             },
             { 
                 name: "座金", 
                 src: require("@/assets/icons/3_washer.jpg"), 
-                backgroundColor: "#FFFFFF" 
             },
         ],
-        chosenGenre: '',
+        syncStateReceiveRequestId: null,
+        selectedGenre: null,
     }),
-    props:["duct"],
+    props:["duct","syncId"],
     methods: {
-        chooseGenre(clickedGenre){
-            this.chosenGenre = clickedGenre.name;
-            this.$emit( 'emit-genre', this.chosenGenre );
-            if(["めねじ","座金"].includes(this.chosenGenre)){
+        chooseGenre(selectedGenre){
+            let chosenGenre = selectedGenre.name;
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {'sync_id': this.syncId,'genre': chosenGenre, 'query': {}},
+            );
+            this.accessNextPage(chosenGenre);
+        },
+        accessNextPage(genre){
+            this.$emit( 'emit-genre', genre );
+            if(["めねじ","座金"].includes(genre)){
                 this.$emit( 'emit-component-name', 'query-nut-washer-shape' );
             }else{
                 this.$emit( 'emit-component-name', 'query-bolt-shape' );
@@ -57,8 +64,37 @@ export default{
         },
         backToPreviousPage(){
             this.$emit( 'emit-component-name', 'start-screen' );
-        }
+        },
+        emitFooterComponentName(){
+        },
     }, 
+    created() {
+        this.syncStateReceiveRequestId = this.duct.nextRid();
+        this.$emit( 'emit-footer-component-name', 'ask-for-image-search-support' );
+        this.$emit(
+            'register-sync-state-receive-handler',
+            {
+                rid: this.syncStateReceiveRequestId,
+                handler: (rid, eid, data) => {
+                    let dataKeys = Object.keys(data);
+                    if (dataKeys.includes('genre')) {
+                        let foundGenre = this.icons.map(icon => icon.name).find(iconName => (iconName === data.genre));
+                        if (foundGenre) {
+                            this.$nextTick(() => {
+                                this.accessNextPage(foundGenre);
+                            });
+                        }
+                    }
+                },
+            }
+        );
+    },
+    destroyed() {
+        this.$emit(
+            'unregister-sync-state-receive-handler',
+            { rid: this.syncStateReceiveRequestId },
+        );
+    },
     mounted(){
         this.$emit('add-step',1)
     }

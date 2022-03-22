@@ -101,9 +101,10 @@
 export default{
     data: () => ({
         path:'',
+        syncStateReceiveRequestId:null,
         shopArea:false
     }),
-    props:["item","itemList"],
+    props:["item","itemList","duct","syncId"],
     methods:{
         backToPreviousPage(){
             if(this.itemList.length != 1){
@@ -113,11 +114,19 @@ export default{
             }
         },
         backToFirstPage(){
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_STATE_CANCEL,
+                {
+                    sync_id: this.syncId
+                },
+            );
             this.$emit( 'emit-genre', "" );
             this.$emit( 'emit-shape-query', {} );
             this.$emit( 'emit-item-list', [] );
             this.$emit( 'emit-item', [] );
             this.$emit( 'emit-component-name', 'start-screen' );
+            window.location.href = window.location.pathname;
         }
     },
     computed:{
@@ -164,9 +173,28 @@ export default{
             }
             window.localStorage.setItem('neji-product' + String(_index), JSON.stringify(_itemStoraging));
         }
+
+        this.syncStateReceiveRequestId = this.duct.nextRid();
+        this.$emit(
+            'register-sync-state-receive-handler',
+            {
+                rid: this.syncStateReceiveRequestId,
+                handler: (rid, eid, data) => {
+                    if (!Object.keys(data).includes('query_fixed')) {
+                        this.backToPreviousPage();
+                    }
+                }
+            },
+        );
     },
     mounted(){
         this.$emit('add-step', 4);
+    },
+    destroyed(){
+        this.$emit(
+            'unregister-sync-state-receive-handler',
+            { rid: this.syncStateReceiveRequestId },
+        );
     }
 }
 </script>

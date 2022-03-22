@@ -9,14 +9,14 @@
         </v-row>
         <v-row justify="center">
             <v-col 
-                v-for="item in inputItems" 
-                :key="item.jan" 
+                v-for="(item, itemIdx) in inputItems" 
+                :key="itemIdx" 
                 cols="4" 
                 align="center"
             >
                 <v-card
                     @click="emitItem(item)"
-                    :color="item.backgroundColor"
+                    :color="itemBackgroundColors[item.name]"
                     max-width="100"
                     hover
                 >
@@ -32,9 +32,31 @@
 </template>
 <script>
 export default{
-    props:["headerIsOn","headerTitle","inputItems","labelIsOn"],
+    model: {
+        prop: 'selectedItemName',
+        event: 'update',
+    },
+    props:["selectedItemName","headerIsOn","headerTitle","inputItems","labelIsOn"],
+    computed: {
+        numInputItems() {
+            return this.inputItems.length;
+        },
+        itemBackgroundColors() {
+            let itemBackgroundColors = {};
+            for (let item of this.inputItems) {
+                let itemName = item.name;
+                if (itemName === this.selectedItemName) {
+                    itemBackgroundColors[itemName] = '#FFCA28';
+                } else {
+                    itemBackgroundColors[itemName] = '#FFFFFF';
+                }
+            }
+            return itemBackgroundColors;
+        },
+    },
     methods:{
         emitItem(item){
+            this.$emit('update', item.name);
             this.$emit('update-query', item);
         }
     }

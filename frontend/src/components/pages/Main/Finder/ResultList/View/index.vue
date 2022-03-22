@@ -12,7 +12,7 @@
             <v-divider class="pt-3"/>
             <page-transition-button 
                 :nextIsNecessary="false"
-                @click-back="backToPreviousPage"
+                @click-back="removeQueryFixedParameter"
             />
         </v-card-text>   
     </v-card>
@@ -27,10 +27,22 @@ export default{
     },
     data: () => ({
         pickedItem:[],
-        itemQuantity:0
+        itemQuantity:0,
+        syncStateReceiveRequestId:null,
     }),
-    props:["itemList"],
+    props:["itemList","duct","syncId","genre","totalQuery"],
     methods: {
+        removeQueryFixedParameter(){
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {
+                    sync_id: this.syncId,
+                    genre: this.genre,
+                    query: this.totalQuery,
+                },
+            );
+        },
         accessNextPage(item){
             this.$emit( 'emit-item', [this.itemList[item.index]] );
             this.$emit( 'emit-component-name', 'result' );
@@ -71,9 +83,27 @@ export default{
     },
     created(){
         this.itemQuantity = this.itemList.length;
+        this.syncStateReceiveRequestId = this.duct.nextRid();
+        this.$emit(
+            'register-sync-state-receive-handler',
+            {
+                rid: this.syncStateReceiveRequestId,
+                handler: (rid, eid, data) => {
+                    if (!Object.keys(data).includes('query_fixed')) {
+                        this.backToPreviousPage();
+                    }
+                }
+            },
+        );
     },
     mounted(){
         this.$emit('add-step', 4);
-    }
+    },
+    destroyed(){
+        this.$emit(
+            'unregister-sync-state-receive-handler',
+            { rid: this.syncStateReceiveRequestId },
+        );
+    },
 }
 </script>

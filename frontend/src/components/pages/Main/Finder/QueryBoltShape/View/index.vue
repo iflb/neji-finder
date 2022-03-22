@@ -5,10 +5,11 @@
             <v-row>
                 <v-col cols="12" md="4">
                     <card-button 
+                        v-model="selectedHeadName"
                         :headerIsOn="true"
                         headerTitle="頭部の形状"
-                        :inputItems="bolt_icons.head"
-                        @update-query="makeQuery"
+                        :inputItems="selectableHead"
+                        @update-query="getTips"
                         :labelIsOn="true"
                         class="mb-6"
                     />
@@ -17,10 +18,11 @@
                     <v-slide-y-transition>
                         <carousel-button
                            v-if="isPicked.head"
+                           v-model="selectedTipName"
                            :headerIsOn="true"
                            headerTitle="おねじ先端の形状"
                            :inputItems="selectableTip"
-                           @update-query="makeQuery"
+                           @update-query="getHoleShapes"
                            class="mb-6"
                         />
                     </v-slide-y-transition>
@@ -29,10 +31,11 @@
                     <v-slide-y-transition>
                         <carousel-button
                             v-if="isPicked.tip"
+                            v-model="selectedHoleShapeName"
                             :headerIsOn="true"
                             headerTitle="頭部穴の形状"
                             :inputItems="selectableHoleShape"
-                            @update-query="makeQuery"
+                            @update-query="getSpecs"
                             class="mb-6"
                         />
                     </v-slide-y-transition>
@@ -41,7 +44,7 @@
             <v-divider class="pt-3"/>
             <page-transition-button 
                 :nextIsNecessary="false"
-                @click-back="backToPreviousPage"
+                @click-back="unsetGenre"
             />
         </v-card-text>   
     </v-card>
@@ -67,7 +70,6 @@ export default{
     },
     data: () => ({
         bolt_icons,
-        isPicked: { head:false, tip:false, hole_shape:false },
         pickedTip:[],
         pickedHoleShape:[],
         query: {},
@@ -77,10 +79,23 @@ export default{
             'tip': 'おねじ先端', 
             'hole_shape': '頭部穴形状'
         },
-        nextPage:true,
+        syncStateReceiveRequestId: null,
+        selectedHeadName: null,
+        selectedTipName: null,
+        selectedHoleShapeName: null,
     }),
     props:["duct","syncId","genre","shapeQuery"],
     computed:{
+        isPicked() {
+            return {
+                head: (this.selectedHeadName !== null),
+                tip: (this.selectedTipName !== null),
+                hole_shape: (this.selectedHoleShapeName !== null),
+            };
+        },
+        selectableHead() {
+            return this.bolt_icons.head;
+        },
         selectableTip(){
             let _arr = [];
             this.bolt_icons.tip.forEach((item) => {
@@ -113,28 +128,28 @@ export default{
                 {'sync_id': this.syncId,'genre': this.genre, 'query': _query},
             );
         },
-        makeQuery(item){
-            this.nextPage = true;
-            for(let _key in this.shapeKey){
-                const _shapeType = this.bolt_icons[_key];
-                if(_shapeType.includes(item)){
-                    if(_key === 'head'){
-                        this.query = {};
-                        for (let _key in this.isPicked){
-                            this.isPicked[_key] = false;
-                        }
-                        for (let _key in this.shapeKey){
-                            changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
-                        }
-                        changeBackgroundColor( item, this.bolt_icons[_key] );
-                    }else{
-                        changeBackgroundColor( item, this.bolt_icons[_key]);
-                    }
-                    this.isPicked[_key] = true;
-                    this.query[this.shapeKey[_key]] = item.name;
-                    this.send_query();
-                }
-            }
+        unsetGenre(){
+            this.query = {};
+            this.duct.send(
+                this.duct.nextRid(), 
+                this.duct.EVENT.SYNC_STATE_UPDATE,
+                {
+                    sync_id: this.syncId,
+                    query: this.query,
+                },
+            );
+        },
+        getTips(item){
+            this.query[this.shapeKey.head] = item.name;
+            this.send_query();
+        },
+        getHoleShapes(item){
+            this.query[this.shapeKey.tip] = item.name;
+            this.send_query();
+        },
+        getSpecs(item){
+            this.query[this.shapeKey.hole_shape] = item.name;
+            this.send_query();
         },
         accessNextPage(){
             for (let _key in this.shapeKey){
@@ -147,51 +162,119 @@ export default{
             for (let _key in this.shapeKey){
                 changeBackgroundColor({ name: '' }, this.bolt_icons[_key]);
             }
-            this.query = {};
             this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-genre' );
-        }
-    }, 
-    created(){
-        this.nextPage = false;
-        this.$emit(
-            'register-page-specific-sync-manager-response-handler',
-            {
-                id: 'query-bolt-shape',
-                handler: (rid, eid, data) => {
-                    if (data.entry_type === 'StateEntry') {
-                        this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
-                        this.$set(this, 'shape', 'shape' in data ? data.shape : '');
-
-                        if(!Object.keys(this.query).includes("おねじ先端")){
-                            this.pickedTip = this.shape["おねじ先端"];
-                        }
-                        if(!Object.keys(this.query).includes("頭部穴形状")){
-                            this.pickedHoleShape = this.shape["頭部穴形状"];
-                        }
-
-                        if(Object.keys(this.query).length === 3 && this.nextPage){
-                            this.accessNextPage();
+        },
+        registerSyncStateReceiveHandler(){
+            this.$emit(
+                'register-sync-state-receive-handler',
+                {
+                    rid: this.syncStateReceiveRequestId,
+                    handler: (rid, eid, data) => {
+                        if(!Object.keys(data).includes('genre')){
+                            this.backToPreviousPage();
                         }else{
-                            if(!['md','lg','xl'].includes(this.$vuetify.breakpoint.name)){
-                                this.$nextTick(() => {
-                                    this.$vuetify.goTo(document.body.scrollHeight);
-                                });
+                            this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
+                            this.$set(this, 'shape', 'shape' in data ? data.shape : '');
+
+                            if(Object.keys(this.query).includes("頭部")){
+                                this.selectedHeadName = this.query["頭部"];
+                            }
+                            if(!Object.keys(this.query).includes("おねじ先端")){
+                                this.pickedTip = this.shape["おねじ先端"];
+                            } else {
+                                this.selectedTipName = this.query["おねじ先端"];
+                            }
+                            if(!Object.keys(this.query).includes("頭部穴形状")){
+                                this.pickedHoleShape = this.shape["頭部穴形状"]
+                            } else {
+                                this.selectedHoleShape = this.query["頭部穴形状"];
+                            }
+
+                            if(Object.keys(data).includes('spec')){
+                                this.accessNextPage();
+                            }else{
+                                if(!['md','lg','xl'].includes(this.$vuetify.breakpoint.name)){
+                                    this.$nextTick(() => {
+                                        this.$vuetify.goTo(document.body.scrollHeight);
+                                    });
+                                }
                             }
                         }
+                    },
+                },
+            );
+        },
+    }, 
+    created(){
+        this.syncStateReceiveRequestId = this.duct.nextRid();
+        this.$emit(
+            'register-sync-state-receive-handler',
+            {
+                rid: this.syncStateReceiveRequestId,
+                handler: async (rid, eid, data) => {
+                    let initialSyncState = data;
+                    this.query = {};
+                    let shapeKeyHead = this.shapeKey.head;
+                    if(!Object.keys(initialSyncState.query).includes(shapeKeyHead)){
+                        this.registerSyncStateReceiveHandler();
+                        return;
                     }
+                    let selectedHeadName = initialSyncState.query[shapeKeyHead];
+                    this.query[shapeKeyHead] = selectedHeadName;
+                    this.selectedHeadName = this.selectableHead
+                        .map(selectableHead => selectableHead.name)
+                        .find(selectableHeadName => (selectedHeadName === selectableHeadName));
+                    data = await this.duct.call(
+                        this.duct.EVENT.NEJI,
+                        {
+                            genre: this.genre,
+                            query: this.query,
+                        },
+                    );
+                    let shapeKeyTip = this.shapeKey.tip;
+                    let selectableTipNames = data.shape[shapeKeyTip];
+                    this.pickedTip = selectableTipNames;
+                    if(!Object.keys(initialSyncState.query).includes(shapeKeyTip)){
+                        this.registerSyncStateReceiveHandler();
+                        return;
+                    }
+                    let selectedTipName = initialSyncState.query[shapeKeyTip];
+                    this.query[shapeKeyTip] = selectedTipName;
+                    this.selectedTipName = this.selectableTip
+                        .map(selectableTip => selectableTip.name)
+                        .find(selectableTipName => (selectedTipName === selectableTipName));
+                    data = await this.duct.call(
+                        this.duct.EVENT.NEJI,
+                        {
+                            genre: this.genre,
+                            query: this.query,
+                        },
+                    );
+                    let shapeKeyHoleShape = this.shapeKey.hole_shape;
+                    let selectableHoleShapeNames = data.shape[shapeKeyHoleShape];
+                    this.pickedHoleShape = selectableHoleShapeNames;
+                    if(Object.keys(initialSyncState.query).includes(shapeKeyHoleShape)){
+                        this.registerSyncStateReceiveHandler();
+                        return;
+                    }
+                    let selectedHoleShapeName = initialSyncState.query[shapeKeyHoleShape];
+                    this.query[shapeKeyHoleShape] = selectedHoleShapeName;
+                    this.selectedHoleShapeName = this.selectableHoleShape
+                        .map(selectableHoleShape => selectableHoleShape.name)
+                        .find(selectableHoleShapeName => (selectedHoleShapeName === selectableHoleShapeName));
+                    this.registerSyncStateReceiveHandler();
                 },
             },
         );
-        this.duct.invokeOnOpen(this.send_query);
     },
     mounted(){
         this.$emit('add-step', 2);
     },
     destroyed(){
         this.$emit(
-            'unregister-page-specific-sync-manager-response-handler',
-            { id: 'query-bolt-shape' },
+            'unregister-sync-state-receive-handler',
+            { rid: this.syncStateReceiveRequestId },
         );
     },
 }
