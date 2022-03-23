@@ -29,15 +29,15 @@ export default{
         icons: [
             { 
                 name: "おねじ", 
-                src: require("@/assets/icons/1_bolt.jpg"), 
+                src: require("../../../../../../../assets/icons/1_bolt.jpg"), 
             },
             { 
                 name: "めねじ", 
-                src: require("@/assets/icons/2_nut.jpg"), 
+                src: require("../../../../../../../assets/icons/2_nut.jpg"), 
             },
             { 
                 name: "座金", 
-                src: require("@/assets/icons/3_washer.jpg"), 
+                src: require("../../../../../../../assets/icons/3_washer.jpg"), 
             },
         ],
         syncStateReceiveRequestId: null,
