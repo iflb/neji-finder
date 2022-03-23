@@ -121,12 +121,12 @@ export default{
                     sync_id: this.syncId
                 },
             );
+            this.$emit( 'initialize-sync' );
             this.$emit( 'emit-genre', "" );
             this.$emit( 'emit-shape-query', {} );
             this.$emit( 'emit-item-list', [] );
             this.$emit( 'emit-item', [] );
             this.$emit( 'emit-component-name', 'start-screen' );
-            window.location.href = window.location.pathname;
         }
     },
     computed:{

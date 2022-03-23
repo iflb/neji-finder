@@ -73,6 +73,7 @@
                         :itemList="itemList"
                         :item="item"
                         @add-step="step = $event"
+                        @initialize-sync="initializeSync"
                         @emit-component-name="changeComponent"
                         @emit-footer-component-name="changeFooterComponent"
                         @emit-genre="updateGenre"
@@ -160,6 +161,9 @@ export default {
         changeFooterComponent(componentName){
             this.footerShown = (componentName !== null);
             this.currentFooterComponent = componentName;
+        },
+        initializeSync() {
+            router.replace(this.$route.path);
         },
         registerSyncStateReceiveHandler({ rid, handler }) {
             this.$set(this.syncStateReceiveHandlers, rid, handler);
