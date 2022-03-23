@@ -65,9 +65,9 @@ export default{
                 let _path = "";
                 const _jan = String(item["JANコード"]);
                 try{
-                    _path = require(`@/assets/productsImage/${_jan}.jpg`);
+                    _path = require(`../../../../../../assets/productsImage/${_jan}.jpg`);
                 }catch{
-                    _path = require(`@/assets/productsImage/no_image.jpg`);
+                    _path = require(`../../../../../../assets/productsImage/no_image.jpg`);
                 }
                 _arr.push({
                     name: item["品名"] + `(サイズ：${item["サイズ"]}, 構成数:${item["構成数"]})`,

@@ -148,9 +148,9 @@ export default{
         this.$vuetify.goTo(0);
         let _jan = String(this.tableData[0].value);
         try{
-            this.path = require(`@/assets/productsImage/${_jan}.jpg`);
+            this.path = require(`../../../../../../assets/productsImage/${_jan}.jpg`);
         }catch{
-            this.path = require(`@/assets/productsImage/no_image.jpg`);
+            this.path = require(`../../../../../../assets/productsImage/no_image.jpg`);
         }
 
         const storagedItemsKey = Object.keys(window.localStorage).filter(key => key.includes('neji-product'));
