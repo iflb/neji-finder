@@ -102,18 +102,18 @@
     </div>
 </template>
 <script>
-import Stepper from '@/components/ui/Stepper'
-import StartScreen from '@/components/pages/Main/Finder/StartScreen/View'
-import QueryGenre from '@/components/pages/Main/Finder/QueryGenre/View'
-import QueryBoltShape from '@/components/pages/Main/Finder/QueryBoltShape/View'
-import QueryNutWasherShape from '@/components/pages/Main/Finder/QueryNutWasherShape/View'
-import QuerySpec from '@/components/pages/Main/Finder/QuerySpec/View'
-import ResultList from '@/components/pages/Main/Finder/ResultList/View'
-import Result from '@/components/pages/Main/Finder/Result/View'
-import AskForImageSearchSupport from '@/components/pages/Main/Finder/AskForImageSearchSupport/View'
-import VersionLog from '@/components/pages/Main/VersionLog'
+import Stepper from '../components/ui/Stepper'
+import StartScreen from '../components/pages/Main/Finder/StartScreen/View'
+import QueryGenre from '../components/pages/Main/Finder/QueryGenre/View'
+import QueryBoltShape from '../components/pages/Main/Finder/QueryBoltShape/View'
+import QueryNutWasherShape from '../components/pages/Main/Finder/QueryNutWasherShape/View'
+import QuerySpec from '../components/pages/Main/Finder/QuerySpec/View'
+import ResultList from '../components/pages/Main/Finder/ResultList/View'
+import Result from '../components/pages/Main/Finder/Result/View'
+import AskForImageSearchSupport from '../components/pages/Main/Finder/AskForImageSearchSupport/View'
+import VersionLog from '../components/pages/Main/VersionLog'
 import ducts from '@iflb/ducts-client'
-import router from '@/router'
+import router from '../router'
 export default {
     components:{
         Stepper,
