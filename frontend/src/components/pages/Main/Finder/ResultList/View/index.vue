@@ -4,10 +4,11 @@
         <v-card-title>該当商品一覧：{{itemQuantity}}個</v-card-title>
         <v-card-text> 
             <card-button 
+                v-model="selectedItemName"
                 :headerIsOn="false"
                 :inputItems="selectableItems"
                 :labelIsOn="true"
-                @update-query="accessNextPage"
+                @update="accessNextPage"
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
@@ -26,6 +27,7 @@ export default{
         PageTransitionButton
     },
     data: () => ({
+        selectedItemName: null,
         pickedItem:[],
         itemQuantity:0,
         syncStateReceiveRequestId:null,
@@ -43,8 +45,9 @@ export default{
                 },
             );
         },
-        accessNextPage(item){
-            this.$emit( 'emit-item', [this.itemList[item.index]] );
+        accessNextPage(){
+            let itemIdx = this.selectableItems.findIndex(item => (item.name === this.selectedItemName));
+            this.$emit( 'emit-item', [this.itemList[itemIdx]] );
             this.$emit( 'emit-component-name', 'result' );
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);

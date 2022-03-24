@@ -7,7 +7,7 @@
                 :headerIsOn="false"
                 :inputItems="selectedItems"
                 :labelIsOn="true"
-                @update-query="makeQuery"
+                @update="send_query"
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
@@ -37,7 +37,6 @@ export default{
     data: () => ({
         nut_washer_icons,
         nextPage:true,
-        query: {},
         genreEng:'',
         syncStateReceiveRequestId:null,
         selectedShapeName: null,
@@ -46,55 +45,50 @@ export default{
     computed:{
         selectedItems(){
             return this.nut_washer_icons[this.genreEng]
-        }
+        },
+        query() {
+            let query = {};
+            let queryKey = null;
+            switch (this.genreEng) {
+                case 'nut':
+                    queryKey = 'ナット形状';
+                    break;
+                case 'washer':
+                    queryKey = '座金形状';
+                    break;
+            }
+            if (this.selectedShapeName !== null) {
+                query[queryKey] = this.selectedShapeName;
+            }
+            return query;
+        },
     },
     methods: {
         send_query() {
             if (this.syncId === null) return;
-            let _query = {};
-            if (this.query) _query = this.query;
-            
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
-                {'sync_id': this.syncId, 'genre': this.genre, 'query': _query},
+                {'sync_id': this.syncId, 'genre': this.genre, 'query': this.query},
             );
         },
         unsetGenre(){
-            this.query = {};
+            this.selectedShapeName = null;
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
                 {
                     sync_id: this.syncId,
-                    query: this.query,
                 },
             );
-        },
-        makeQuery(item){
-            let _queryKey = '';
-            if(this.genreEng == 'nut'){
-                _queryKey = 'ナット形状'
-            }else if(this.genreEng == 'washer'){
-                _queryKey = '座金形状'
-            }
-
-            this.nextPage = true;
-            this.query = {};
-            this.query[_queryKey] = item.name;
-            changeBackgroundColor(item, this.nut_washer_icons[this.genreEng]);
-
-            this.send_query();
         },
         accessNextPage(){
             changeBackgroundColor({ name: '' }, this.nut_washer_icons[this.genreEng]);
             this.$emit( 'emit-query', this.query );
-            this.query = {};
             this.$emit( 'emit-component-name', 'query-spec' );
         },
         backToPreviousPage(){
             changeBackgroundColor({ name: '' }, this.nut_washer_icons[this.genreEng]);
-            this.query = {};
             this.$emit( 'emit-component-name', 'query-genre' );
         }
     }, 
@@ -116,8 +110,6 @@ export default{
                     if(!Object.keys(data).includes('genre')){
                         this.backToPreviousPage();
                     }else{
-                        this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
-
                         if(Object.keys(data).includes('spec')){
                             this.accessNextPage();
                         }else{

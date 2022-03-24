@@ -23,10 +23,12 @@
                 >
                     <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                            v-model="model"
+                            :value="model"
                             :label="headerTitle"
                             v-bind="attrs"
                             v-on="on"
+                            v-on:click.clear="emitItem(null)"
+                            clearable
                             outlined
                             readonly
                             append-icon="mdi-menu-down"
@@ -59,6 +61,10 @@
 </template>
 <script>
 export default{
+    model: {
+        prop: 'model',
+        event: 'update',
+    },
     props:["headerTitle","imageSource","model","inputItems"],
     computed: {
         inputItemsSorted() {
@@ -82,7 +88,11 @@ export default{
             }
         },
         emitItem(item){
-            this.$emit('update-query', item);
+            if (item === null) {
+                this.$emit('update', null);
+            } else {
+                this.$emit('update', item.val);
+            }
         }
     },
     //watch: {

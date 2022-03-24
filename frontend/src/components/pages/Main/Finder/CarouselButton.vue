@@ -70,8 +70,11 @@ export default{
     },
     methods:{
         emitItem(item){
-            this.$emit('update', item.name);
-            this.$emit('update-query', item);
+            if (this.selectedItemName === item.name) {
+                this.$emit('update', null);
+            } else {
+                this.$emit('update', item.name);
+            }
         }
     }
 }

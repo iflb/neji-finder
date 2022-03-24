@@ -35,7 +35,7 @@
                         :headerIsOn="true"
                         headerTitle="中分類"
                         :inputItems="selectableItems.middle_classification"
-                        @update-query="makeQuery"
+                        @update="send_query"
                         :labelIsOn="true"
                         class="mb-6"
                     />
@@ -46,7 +46,7 @@
                         :headerIsOn="true"
                         headerTitle="材質"
                         :inputItems="selectableItems.material"
-                        @update-query="makeQuery"
+                        @update="send_query"
                         :labelIsOn="false"
                         class="mb-6"
                     />
@@ -57,7 +57,7 @@
                         :headerIsOn="true"
                         headerTitle="表面処理"
                         :inputItems="selectableItems.surface"
-                        @update-query="makeQuery"
+                        @update="send_query"
                         :labelIsOn="false"
                         class="mb-6"
                     />
@@ -68,7 +68,7 @@
                         :headerIsOn="true"
                         headerTitle="構成数クラス"
                         :inputItems="selectableItems.amount"
-                        @update-query="makeQuery"
+                        @update="send_query"
                         :labelIsOn="false"
                         class="mb-6"
                     />
@@ -77,9 +77,9 @@
                     <drop-down-menu
                         headerTitle="呼び径"
                         :imageSource="nominal.image"
-                        :model="nominal.model"
+                        v-model="nominal.model"
                         :inputItems="selectableItems.nominal"
-                        @update-query="makeQuery"
+                        @update="send_query"
                         class="mb-6"
                     />
                 </v-col>
@@ -88,9 +88,9 @@
                         v-if="outer.isNecessary"
                         headerTitle="外径・幅"
                         :imageSource="outer.image"
-                        :model="outer.model"
+                        v-model="outer.model"
                         :inputItems="selectableItems.outer"
-                        @update-query="makeQuery"
+                        @update="send_query"
                         class="mb-6"
                     />
                 </v-col>
@@ -99,9 +99,9 @@
                         v-if="thickness.isNecessary"
                         headerTitle="長さ・厚さ"
                         :imageSource="thickness.image"
-                        :model="thickness.model"
+                        v-model="thickness.model"
                         :inputItems="selectableItems.thickness"
-                        @update-query="makeQuery"
+                        @update="send_query"
                         class="mb-6"
                     />
                 </v-col>
@@ -150,7 +150,6 @@ export default{
     data: () => ({
         icons,
         syncStateReceiveRequestId: null,
-        specQuery:{}, 
         snackbar:false,
         initialSpec:{
             "中分類": [],
@@ -246,34 +245,8 @@ export default{
                 },
             );
         },
-        makeQuery(item){
-            if(this.icons.middle_classification.includes(item)){
-                this.specQuery["中分類"] = item.name;
-                changeBackgroundColor(item, this.icons.middle_classification);
-            }else if(this.icons.material.includes(item)){
-                this.specQuery["材質"] = item.name;
-                changeBackgroundColor(item, this.icons.material);
-            }else if(this.icons.surface.includes(item)){
-                this.specQuery["表面処理"] = item.name;
-                changeBackgroundColor(item, this.icons.surface);
-            }else if(this.icons.amount.includes(item)){
-                this.specQuery["構成数クラス"] = item.name;
-                changeBackgroundColor(item, this.icons.amount);
-            }else if(this.initialSpec["呼び径"].includes(item.val) && item.name=="呼び径" ){
-                this.specQuery["呼び径"] = item.val;
-                this.nominal.model = item.val; 
-            }else if(this.outer.isNecessary && this.initialSpec["外径か幅"].includes(item.val) && item.name=="外径か幅" ){
-                this.specQuery["外径か幅"] = item.val;
-                this.outer.model = this.specQuery["外径か幅"];
-            }else if(this.thickness.isNecessary && this.initialSpec["長さか厚み"].includes(item.val) && item.name=="長さか厚み"){
-                this.specQuery["長さか厚み"] = item.val;
-                this.thickness.model = this.specQuery["長さか厚み"]; 
-            }
-            this.send_query();
-        },
         resetQuery(){
             const carouselAndCard = ['middle_classification', 'material', 'surface', 'amount'];
-            this.specQuery = {};
             this.send_query();
             for(let _key of carouselAndCard){
                 changeBackgroundColor({ name: "" }, this.icons[_key]);
@@ -319,39 +292,39 @@ export default{
 
                                 let dataQueryKeys = Object.keys(data.query);
                                 if(dataQueryKeys.includes('中分類')){
-                                    let selectedMiddleClassificationName = data.query['中分類'];
-                                    this.specQuery['中分類'] = selectedMiddleClassificationName;
-                                    this.selectedMiddleClassificationName = selectedMiddleClassificationName;
+                                    this.selectedMiddleClassificationName = data.query['中分類'];
+                                }else{
+                                    this.selectedMiddleClassificationName = null;
                                 }
                                 if(dataQueryKeys.includes('材質')){
-                                    let selectedMaterialName = data.query['材質'];
-                                    this.specQuery['材質'] = selectedMaterialName;
-                                    this.selectedMaterialName = selectedMaterialName;
+                                    this.selectedMaterialName = data.query['材質'];
+                                }else{
+                                    this.selectedMaterialName = null;
                                 }
                                 if(dataQueryKeys.includes('表面処理')){
-                                    let selectedSurfaceName = data.query['表面処理'];
-                                    this.specQuery['表面処理'] = selectedSurfaceName;
-                                    this.selectedSurfaceName = selectedSurfaceName;
+                                    this.selectedSurfaceName = data.query['表面処理'];
+                                }else{
+                                    this.selectedSurfaceName = null;
                                 }
                                 if(dataQueryKeys.includes('構成数クラス')){
-                                    let selectedAmountName = data.query['構成数クラス'];
-                                    this.specQuery['構成数クラス'] = selectedAmountName;
-                                    this.selectedAmountName = selectedAmountName;
+                                    this.selectedAmountName = data.query['構成数クラス'];
+                                }else{
+                                    this.selectedAmountName = null;
                                 }
                                 if(dataQueryKeys.includes('呼び径')){
-                                    let nominalValue = data.query['呼び径'];
-                                    this.specQuery['呼び径'] = nominalValue;
-                                    this.nominal.model = nominalValue;
+                                    this.nominal.model = data.query['呼び径'];
+                                }else{
+                                    this.nominal.model = null;
                                 }
                                 if(dataQueryKeys.includes('外径か幅')){
-                                    let outerValue = data.query['外径か幅'];
-                                    this.specQuery['外径か幅'] = outerValue;
-                                    this.outer.model = outerValue;
+                                    this.outer.model = data.query['外径か幅'];
+                                }else{
+                                    this.outer.model = null;
                                 }
                                 if(dataQueryKeys.includes('長さか厚み')){
-                                    let thicknessValue = data.query['長さか厚み'];
-                                    this.specQuery['長さか厚み'] = thicknessValue;
-                                    this.thickness.model = thicknessValue;
+                                    this.thickness.model = data.query['長さか厚み'];
+                                }else{
+                                    this.thickness.model = null;
                                 }
 
                                 for(let _key in this.selectableItemValues){
@@ -424,6 +397,31 @@ export default{
             }
             return _obj
         },
+        specQuery(){
+            let specQuery = {};
+            if (this.selectedMiddleClassificationName !== null) {
+                specQuery['中分類'] = this.selectedMiddleClassificationName;
+            }
+            if (this.selectedMaterialName !== null) {
+                specQuery['材質'] = this.selectedMaterialName;
+            }
+            if (this.selectedSurfaceName !== null) {
+                specQuery['表面処理'] = this.selectedSurfaceName;
+            }
+            if (this.selectedAmountName !== null) {
+                specQuery['構成数クラス'] = this.selectedAmountName;
+            }
+            if (this.nominal.model !== null) {
+                specQuery['呼び径'] = this.nominal.model;
+            }
+            if (this.outer.model !== null) {
+                specQuery['外径か幅'] = this.outer.model;
+            }
+            if (this.thickness.model !== null) {
+                specQuery['長さか厚み'] = this.thickness.model;
+            }
+            return specQuery;
+        },
     },
     created(){
         this.$vuetify.goTo(0);
@@ -468,39 +466,25 @@ export default{
 
                     let initialQueryKeys = Object.keys(initialSyncState.query);
                     if(initialQueryKeys.includes('中分類')){
-                        let selectedMiddleClassificationName = initialSyncState.query['中分類'];
-                        this.specQuery['中分類'] = selectedMiddleClassificationName;
-                        this.selectedMiddleClassificationName = selectedMiddleClassificationName;
+                        this.selectedMiddleClassificationName = initialSyncState.query['中分類'];
                     }
                     if(initialQueryKeys.includes('材質')){
-                        let selectedMaterialName = initialSyncState.query['材質'];
-                        this.specQuery['材質'] = selectedMaterialName;
-                        this.selectedMaterialName = selectedMaterialName;
+                        this.selectedMaterialName = initialSyncState.query['材質'];
                     }
                     if(initialQueryKeys.includes('表面処理')){
-                        let selectedSurfaceName = initialSyncState.query['表面処理'];
-                        this.specQuery['表面処理'] = selectedSurfaceName;
-                        this.selectedSurfaceName = selectedSurfaceName;
+                        this.selectedSurfaceName = initialSyncState.query['表面処理'];
                     }
                     if(initialQueryKeys.includes('構成数クラス')){
-                        let selectedAmountName = initialSyncState.query['構成数クラス'];
-                        this.specQuery['構成数クラス'] = selectedAmountName;
-                        this.selectedAmountName = selectedAmountName;
+                        this.selectedAmountName = initialSyncState.query['構成数クラス'];
                     }
                     if(initialQueryKeys.includes('呼び径')){
-                        let nominalValue = initialSyncState.query['呼び径'];
-                        this.specQuery['呼び径'] = nominalValue;
-                        this.nominal.model = nominalValue;
+                        this.nominal.model = initialSyncState.query['呼び径'];
                     }
                     if(initialQueryKeys.includes('外径か幅')){
-                        let outerValue = initialSyncState.query['外径か幅'];
-                        this.specQuery['外径か幅'] = outerValue;
-                        this.outer.model = outerValue;
+                        this.outer.model = initialSyncState.query['外径か幅'];
                     }
                     if(initialQueryKeys.includes('長さか厚み')){
-                        let thicknessValue = initialSyncState.query['長さか厚み'];
-                        this.specQuery['長さか厚み'] = thicknessValue;
-                        this.thickness.model = thicknessValue;
+                        this.thickness.model = initialSyncState.query['長さか厚み'];
                     }
                     let query = {}
                     Object.assign(query, this.shapeQuery, this.specQuery);

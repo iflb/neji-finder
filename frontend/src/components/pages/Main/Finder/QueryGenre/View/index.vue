@@ -6,7 +6,7 @@
                 v-model="selectedGenre"
                 :headerIsOn="false"
                 :inputItems="icons"
-                @update-query="chooseGenre"
+                @update="chooseGenre"
                 :labelIsOn="true"
             />
             <v-divider class="pt-3"/>
@@ -45,14 +45,13 @@ export default{
     }),
     props:["duct","syncId"],
     methods: {
-        chooseGenre(selectedGenre){
-            let chosenGenre = selectedGenre.name;
+        chooseGenre(){
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
-                {'sync_id': this.syncId,'genre': chosenGenre, 'query': {}},
+                {'sync_id': this.syncId,'genre': this.selectedGenre, 'query': {}},
             );
-            this.accessNextPage(chosenGenre);
+            this.accessNextPage(this.selectedGenre);
         },
         accessNextPage(genre){
             this.$emit( 'emit-genre', genre );

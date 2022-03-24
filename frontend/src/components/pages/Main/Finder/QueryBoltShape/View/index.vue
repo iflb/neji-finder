@@ -9,7 +9,7 @@
                         :headerIsOn="true"
                         headerTitle="頭部の形状"
                         :inputItems="selectableHead"
-                        @update-query="getTips"
+                        @update="send_query"
                         :labelIsOn="true"
                         class="mb-6"
                     />
@@ -22,7 +22,7 @@
                            :headerIsOn="true"
                            headerTitle="おねじ先端の形状"
                            :inputItems="selectableTip"
-                           @update-query="getHoleShapes"
+                           @update="send_query"
                            class="mb-6"
                         />
                     </v-slide-y-transition>
@@ -35,7 +35,7 @@
                             :headerIsOn="true"
                             headerTitle="頭部穴の形状"
                             :inputItems="selectableHoleShape"
-                            @update-query="getSpecs"
+                            @update="send_query"
                             class="mb-6"
                         />
                     </v-slide-y-transition>
@@ -63,6 +63,19 @@ function changeBackgroundColor(pickedItem, icons){
     pickedItem.backgroundColor = "#FFCA28"
 }
 export default{
+    watch: {
+        selectedHeadName(newSelectedHeadName) {
+            if (newSelectedHeadName === null) {
+                this.selectedTipName = null;
+            }
+        },
+        selectedTipName(newSelectedTipName) {
+            if (newSelectedTipName === null) {
+                this.selectedHoleShapeName = null;
+            }
+        },
+    },
+
     components:{
         CardButton,
         CarouselButton,
@@ -72,7 +85,6 @@ export default{
         bolt_icons,
         pickedTip:[],
         pickedHoleShape:[],
-        query: {},
         shape: {},
         shapeKey: {
             'head': '頭部', 
@@ -114,42 +126,38 @@ export default{
             });
             return _arr
         },
+        query(){
+            let query = {};
+            if (this.selectedHeadName !== null) {
+                query[this.shapeKey.head] = this.selectedHeadName;
+            }
+            if (this.selectedTipName !== null) {
+                query[this.shapeKey.tip] = this.selectedTipName;
+            }
+            if (this.selectedHoleShapeName !== null) {
+                query[this.shapeKey.hole_shape] = this.selectedHoleShapeName;
+            }
+            return query;
+        },
     },
     methods: {
         send_query() {
             if (this.syncId === null) return;
-            let _query = {};
-            if (this.query){
-                _query = this.query;
-            }
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
-                {'sync_id': this.syncId,'genre': this.genre, 'query': _query},
+                {'sync_id': this.syncId,'genre': this.genre, 'query': this.query},
             );
         },
         unsetGenre(){
-            this.query = {};
+            this.selectedHeadName = null;
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
                 {
                     sync_id: this.syncId,
-                    query: this.query,
                 },
             );
-        },
-        getTips(item){
-            this.query[this.shapeKey.head] = item.name;
-            this.send_query();
-        },
-        getHoleShapes(item){
-            this.query[this.shapeKey.tip] = item.name;
-            this.send_query();
-        },
-        getSpecs(item){
-            this.query[this.shapeKey.hole_shape] = item.name;
-            this.send_query();
         },
         accessNextPage(){
             for (let _key in this.shapeKey){
@@ -174,21 +182,20 @@ export default{
                         if(!Object.keys(data).includes('genre')){
                             this.backToPreviousPage();
                         }else{
-                            this.$set(this, 'query', 'query' in data && Object.keys(data.query).length > 0 ? data.query : {});
                             this.$set(this, 'shape', 'shape' in data ? data.shape : '');
 
-                            if(Object.keys(this.query).includes("頭部")){
-                                this.selectedHeadName = this.query["頭部"];
+                            if(Object.keys(data.query).includes("頭部")){
+                                this.selectedHeadName = data.query["頭部"];
                             }
-                            if(!Object.keys(this.query).includes("おねじ先端")){
+                            if(!Object.keys(data.query).includes("おねじ先端")){
                                 this.pickedTip = this.shape["おねじ先端"];
                             } else {
-                                this.selectedTipName = this.query["おねじ先端"];
+                                this.selectedTipName = data.query["おねじ先端"];
                             }
-                            if(!Object.keys(this.query).includes("頭部穴形状")){
+                            if(!Object.keys(data.query).includes("頭部穴形状")){
                                 this.pickedHoleShape = this.shape["頭部穴形状"]
                             } else {
-                                this.selectedHoleShapeName = this.query["頭部穴形状"];
+                                this.selectedHoleShapeName = data.query["頭部穴形状"];
                             }
 
                             if(Object.keys(data).includes('spec')){
@@ -214,14 +221,12 @@ export default{
                 rid: this.syncStateReceiveRequestId,
                 handler: async (rid, eid, data) => {
                     let initialSyncState = data;
-                    this.query = {};
                     let shapeKeyHead = this.shapeKey.head;
                     if(!Object.keys(initialSyncState.query).includes(shapeKeyHead)){
                         this.registerSyncStateReceiveHandler();
                         return;
                     }
                     let selectedHeadName = initialSyncState.query[shapeKeyHead];
-                    this.query[shapeKeyHead] = selectedHeadName;
                     this.selectedHeadName = this.selectableHead
                         .map(selectableHead => selectableHead.name)
                         .find(selectableHeadName => (selectedHeadName === selectableHeadName));
@@ -240,7 +245,6 @@ export default{
                         return;
                     }
                     let selectedTipName = initialSyncState.query[shapeKeyTip];
-                    this.query[shapeKeyTip] = selectedTipName;
                     this.selectedTipName = this.selectableTip
                         .map(selectableTip => selectableTip.name)
                         .find(selectableTipName => (selectedTipName === selectableTipName));
@@ -259,7 +263,6 @@ export default{
                         return;
                     }
                     let selectedHoleShapeName = initialSyncState.query[shapeKeyHoleShape];
-                    this.query[shapeKeyHoleShape] = selectedHoleShapeName;
                     this.selectedHoleShapeName = this.selectableHoleShape
                         .map(selectableHoleShape => selectableHoleShape.name)
                         .find(selectableHoleShapeName => (selectedHoleShapeName === selectableHoleShapeName));
