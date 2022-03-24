@@ -138,6 +138,7 @@ export default {
         captureEnabled: true,
         captureCameraIntervalId: null,
         captureHistoryElement: null,
+        resizeObserver: null,
         videoElementViewPortInOrOutObserver: null,
     }),
 
@@ -285,9 +286,16 @@ export default {
             }
         );
         this.videoElementViewPortInOrOutObserver.observe(this.videoElement);
+        this.resizeObserver = new ResizeObserver(
+            resizeObserverEntries => {
+                this.$emit('update-height', resizeObserverEntries[0].borderBoxSize[0].blockSize);
+            },
+        );
+        this.resizeObserver.observe(this.$el);
     },
 
     beforeDestroy() {
+        this.resizeObserver.disconnect();
         this.videoElementViewPortInOrOutObserver.disconnect();
         if (this.captureStarted) {
             this.stopCapture();

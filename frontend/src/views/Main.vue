@@ -56,7 +56,7 @@
             </template>
         </v-navigation-drawer>
 
-        <v-main>
+        <v-main ref="main">
             <v-container>
                 <stepper 
                     v-if="!['version-log'].includes(currentComponent)"
@@ -85,20 +85,21 @@
                     />
                 </v-scroll-y-reverse-transition>
             </v-container>
-        </v-main>
 
-        <v-footer
-            app fixed
-            v-if="footerShown"
-        >
-            <component
-                :sync-id="syncId"
-                :duct="duct"
-                :is="currentFooterComponent"
-                @register-sync-image-receive-handler="registerSyncImageReceiveHandler"
-                @unregister-sync-image-receive-handler="unregisterSyncImageReceiveHandler"
-            />
-        </v-footer>
+            <v-footer
+                fixed
+                v-show="footerShown"
+            >
+                <component
+                    :sync-id="syncId"
+                    :duct="duct"
+                    :is="currentFooterComponent"
+                    @register-sync-image-receive-handler="registerSyncImageReceiveHandler"
+                    @unregister-sync-image-receive-handler="unregisterSyncImageReceiveHandler"
+                    @update-height="updateMainPaddingSize"
+                />
+            </v-footer>
+        </v-main>
     </div>
 </template>
 <script>
@@ -211,6 +212,9 @@ export default {
         },
         updateItem(item){
             this.item = item;
+        },
+        updateMainPaddingSize(footerHeightPx){
+            this.$refs.main.$el.style.paddingBottom = String(footerHeightPx) + 'px';
         },
     }, 
     created(){
