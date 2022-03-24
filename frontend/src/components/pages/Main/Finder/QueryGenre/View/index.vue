@@ -3,10 +3,9 @@
         <v-card-title color="primary">ジャンルを決定する</v-card-title>
         <v-card-text> 
             <card-button
-                v-model="selectedGenre"
+                v-model="selectedGenreName"
                 :headerIsOn="false"
-                :inputItems="icons"
-                @update="chooseGenre"
+                :inputItems="selectableGenreIcons"
                 :labelIsOn="true"
             />
             <v-divider class="pt-3"/>
@@ -20,51 +19,63 @@
 <script>
 import CardButton from '../../CardButton'
 import PageTransitionButton from '../../PageTransitionButton'
+const genreIcons = [
+    { 
+        name: "おねじ", 
+        src: require("../../../../../../assets/icons/1_bolt.jpg"), 
+    },
+    { 
+        name: "めねじ", 
+        src: require("../../../../../../assets/icons/2_nut.jpg"), 
+    },
+    { 
+        name: "座金", 
+        src: require("../../../../../../assets/icons/3_washer.jpg"), 
+    },
+];
+
 export default{
+    watch: {
+        selectedGenreName() {
+            this.sendQuery();
+        },
+    },
     components:{
         CardButton,
         PageTransitionButton
     },
     data: () => ({
-        icons: [
-            { 
-                name: "おねじ", 
-                src: require("../../../../../../assets/icons/1_bolt.jpg"), 
-            },
-            { 
-                name: "めねじ", 
-                src: require("../../../../../../assets/icons/2_nut.jpg"), 
-            },
-            { 
-                name: "座金", 
-                src: require("../../../../../../assets/icons/3_washer.jpg"), 
-            },
-        ],
         syncStateReceiveRequestId: null,
-        selectedGenre: null,
+        selectedGenreName: null,
     }),
     props:["duct","syncId"],
+    computed: {
+        selectableGenreIcons() { return genreIcons },
+    },
     methods: {
-        chooseGenre(){
+        sendQuery(){
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
-                {'sync_id': this.syncId,'genre': this.selectedGenre, 'query': {}},
+                {'sync_id': this.syncId,'genre': this.selectedGenreName, 'query': {}},
             );
-            this.accessNextPage(this.selectedGenre);
         },
-        accessNextPage(genre){
-            this.$emit( 'emit-genre', genre );
-            if(["めねじ","座金"].includes(genre)){
-                this.$emit( 'emit-component-name', 'query-nut-washer-shape' );
-            }else{
-                this.$emit( 'emit-component-name', 'query-bolt-shape' );
+        accessNextPage(genreName){
+            this.$emit( 'emit-genre', genreName );
+            switch (genreName) {
+                case 'めねじ':
+                    this.$emit('emit-component-name', 'query-nut-washer-shape');
+                    break;
+                case '座金':
+                    this.$emit('emit-component-name', 'query-nut-washer-shape');
+                    break;
+                case 'おねじ':
+                    this.$emit('emit-component-name', 'query-bolt-shape');
+                    break;
             }
         },
         backToPreviousPage(){
             this.$emit( 'emit-component-name', 'start-screen' );
-        },
-        emitFooterComponentName(){
         },
     }, 
     created() {
@@ -77,12 +88,9 @@ export default{
                 handler: (rid, eid, data) => {
                     let dataKeys = Object.keys(data);
                     if (dataKeys.includes('genre')) {
-                        let foundGenre = this.icons.map(icon => icon.name).find(iconName => (iconName === data.genre));
-                        if (foundGenre) {
-                            this.$nextTick(() => {
-                                this.accessNextPage(foundGenre);
-                            });
-                        }
+                        this.$nextTick(() => {
+                            this.accessNextPage(data.genre);
+                        });
                     }
                 },
             }

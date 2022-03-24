@@ -5,9 +5,8 @@
             <card-button
                 v-model="selectedShapeName"
                 :headerIsOn="false"
-                :inputItems="selectedItems"
+                :inputItems="selectableShapeIcons"
                 :labelIsOn="true"
-                @update="send_query"
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
@@ -21,46 +20,51 @@
 import { nut_washer_icons } from '../../shape_profile.js'
 import CardButton from '../../CardButton' 
 import PageTransitionButton from '../../PageTransitionButton'
-function changeBackgroundColor(pickedItem, nut_washer_icons){
-    for (let item of nut_washer_icons){
-        if(pickedItem.name !== item.name){
-            item.backgroundColor = "#FFFFFF";
-        }
-    }
-    pickedItem.backgroundColor = "#FFCA28"
-}
 export default{
+    watch: {
+        selectedShapeName() {
+            this.send_query();
+        },
+    },
     components:{
         CardButton,
         PageTransitionButton
     },
     data: () => ({
-        nut_washer_icons,
-        nextPage:true,
-        genreEng:'',
         syncStateReceiveRequestId:null,
         selectedShapeName: null,
     }),
     props:["duct","syncId","genre"],
     computed:{
-        selectedItems(){
-            return this.nut_washer_icons[this.genreEng]
+        selectableShapeIcons(){
+            return nut_washer_icons[this.genreEng]
         },
         query() {
             let query = {};
-            let queryKey = null;
-            switch (this.genreEng) {
-                case 'nut':
-                    queryKey = 'ナット形状';
-                    break;
-                case 'washer':
-                    queryKey = '座金形状';
-                    break;
-            }
             if (this.selectedShapeName !== null) {
-                query[queryKey] = this.selectedShapeName;
+                query[this.queryKey] = this.selectedShapeName;
             }
             return query;
+        },
+        queryKey() {
+            switch (this.genreEng) {
+                case 'nut':
+                    return 'ナット形状';
+                case 'washer':
+                    return '座金形状';
+                default:
+                    return null;
+            }
+        },
+        genreEng() {
+            switch (this.genre) {
+                case 'めねじ':
+                    return 'nut';
+                case '座金':
+                    return 'washer';
+                default:
+                    return null;
+            }
         },
     },
     methods: {
@@ -73,7 +77,6 @@ export default{
             );
         },
         unsetGenre(){
-            this.selectedShapeName = null;
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
@@ -83,24 +86,14 @@ export default{
             );
         },
         accessNextPage(){
-            changeBackgroundColor({ name: '' }, this.nut_washer_icons[this.genreEng]);
             this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-spec' );
         },
         backToPreviousPage(){
-            changeBackgroundColor({ name: '' }, this.nut_washer_icons[this.genreEng]);
             this.$emit( 'emit-component-name', 'query-genre' );
         }
     }, 
     created(){
-        this.nextPage = false;
-
-        if (this.genre == "めねじ"){
-            this.genreEng = 'nut';
-        }else if(this.genre == "座金"){
-            this.genreEng = 'washer';
-        }
-
         this.syncStateReceiveRequestId = this.duct.nextRid();
         this.$emit(
             'register-sync-state-receive-handler',
@@ -110,6 +103,10 @@ export default{
                     if(!Object.keys(data).includes('genre')){
                         this.backToPreviousPage();
                     }else{
+                        if(Object.keys(data.query).includes(this.queryKey)){
+                            this.selectedShapeName = data.query[this.queryKey];
+                        }
+
                         if(Object.keys(data).includes('spec')){
                             this.accessNextPage();
                         }else{
