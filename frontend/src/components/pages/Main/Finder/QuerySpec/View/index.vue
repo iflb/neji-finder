@@ -246,6 +246,13 @@ export default{
             );
         },
         resetQuery(){
+            this.selectedMiddleClassificationName = null;
+            this.selectedMaterialName = null;
+            this.selectedSurfaceName = null;
+            this.selectedAmountName = null;
+            this.nominal.model = null;
+            this.outer.model = null;
+            this.thickness.model = null;
             const carouselAndCard = ['middle_classification', 'material', 'surface', 'amount'];
             this.send_query();
             for(let _key of carouselAndCard){
