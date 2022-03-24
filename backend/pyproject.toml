@@ -13,6 +13,7 @@ argh = "^0.26.2"
 pandas = "^1.3.3"
 openpyxl = "^3.0.9"
 opencv-python = "^4.5.5"
+neji-finder-tutti-client = {git = "https://github.com/iflb/neji-finder-tutti-client-python"}
 
 [tool.poetry.dev-dependencies]
 

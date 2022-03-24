@@ -39,7 +39,7 @@ class Handler(EventHandler):
             entry.filename = "{:06d}.jpg".format(int(await event.session.redis.execute_str('INCR', incrkey)))
             await self.helper.write_image_for(sync_id, entry.filename, buf)
 
-        print('******************{}'.format(entry))
+        logger.debug('****************** IMG_ADD=%s', entry)
         await event.session.redis.xadd_and_publish(pubkey, streamkey, **entry)
 
 

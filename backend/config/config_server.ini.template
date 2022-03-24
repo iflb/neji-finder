@@ -68,6 +68,7 @@ root_path_static = /ducts/static/
 #  (<class 'str'>)
 # jsonp_callback_default = callback
 
+wsd_cors_origins = ["https://neji-finder.tutti.works", "https://dev.neji-finder.tutti.works"]
 
 
 [ducts.event_config]

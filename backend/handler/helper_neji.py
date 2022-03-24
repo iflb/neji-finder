@@ -148,7 +148,13 @@ StateEntry = nameddict(
     ))
 
 def stream_key_for_sync():
-    return f'SYNC/IDS'
+    return f'SYNC/IDS/STREAMS'
+
+def pubsub_key_for_sync():
+    return f'SYNC/IDS/PUBSUB'
+
+def str_key_for_sync_tutti():
+    return f'SYNC/TUTTI'
 
 
 def pubsub_key_for_state(sync_id):

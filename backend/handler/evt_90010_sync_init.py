@@ -16,7 +16,7 @@ class Handler(EventHandler):
 
     async def handle(self, event):
         sync_id = self.helper.SyncID()
+        pubkey = self.helper.pubsub_key_for_sync()
         streamkey = self.helper.stream_key_for_sync()
-        await event.session.redis.xadd(streamkey, sync_id = sync_id.base64)
+        await event.session.redis.xadd_and_publish(pubkey, streamkey, sync_id = sync_id.base64, sid = sync_id.hash_id)
         return {'sync_id': sync_id.base64}
-
