@@ -355,14 +355,12 @@ export default{
                                 }
 
                                 for(let _key in this.selectableItemValues){
-                                    if(!Object.keys(this.specQuery).includes(_key)){
-                                        if(!["長さか厚み","外径か幅"].includes(_key)){
-                                            this.selectableItemValues[_key] = data.spec[_key];
-                                        }else if(_key == "長さか厚み"){
-                                            if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
-                                        }else{
-                                            if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
-                                        }
+                                    if(!["長さか厚み","外径か幅"].includes(_key)){
+                                        this.selectableItemValues[_key] = data.spec[_key];
+                                    }else if(_key == "長さか厚み"){
+                                        if(["おねじ","座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
+                                    }else{
+                                        if(["座金"].includes(this.genre)) this.selectableItemValues[_key] = data.spec[_key];
                                     }
                                 }
 
