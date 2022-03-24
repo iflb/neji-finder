@@ -188,7 +188,7 @@ export default{
                             if(!Object.keys(this.query).includes("頭部穴形状")){
                                 this.pickedHoleShape = this.shape["頭部穴形状"]
                             } else {
-                                this.selectedHoleShape = this.query["頭部穴形状"];
+                                this.selectedHoleShapeName = this.query["頭部穴形状"];
                             }
 
                             if(Object.keys(data).includes('spec')){
