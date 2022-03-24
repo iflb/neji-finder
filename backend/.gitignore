@@ -9,4 +9,4 @@ poetry.lock
 *.xlsx
 *.pkl
 .python_history
-
+*~
