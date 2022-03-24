@@ -104,12 +104,21 @@ export default{
         syncStateReceiveRequestId:null,
         shopArea:false
     }),
-    props:["item","itemList","duct","syncId"],
+    props:["item","itemList","duct","syncId","genre","totalQuery"],
     methods:{
         backToPreviousPage(){
             if(this.itemList.length != 1){
                 this.$emit( 'emit-component-name', 'result-list' );
             }else{
+                this.duct.send(
+                    this.duct.nextRid(), 
+                    this.duct.EVENT.SYNC_STATE_UPDATE,
+                    {
+                        sync_id: this.syncId,
+                        genre: this.genre,
+                        query: this.totalQuery,
+                    },
+                );
                 this.$emit( 'emit-component-name', 'query-spec' );
             }
         },
