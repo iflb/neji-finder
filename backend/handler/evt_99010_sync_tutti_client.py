@@ -66,7 +66,6 @@ class Handler(EventHandler):
             except:
                 logger.exception('********************Error occurred in sync_tutti_client#run**********************')
                 await asyncio.sleep(1)
-                break
 
     async def psub_and_xrange_str(self, redis, subkey, streamkey, last_id):
         ch = (await redis.psubscribe(subkey))

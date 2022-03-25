@@ -46,7 +46,6 @@ class Neji:
     def __init__(self):
         ##df = pd.read_excel(xlsx_path, header=2)
         df = pd.read_pickle(str(conf.path_neji_pkl))
-        
         df.rename(columns={'長さ・厚み':'長さか厚み', '外径・幅':'外径か幅'}, inplace=True)
         self.neji = {g : df[df['おねじ・めねじ・座金'] == g] for g in Neji.GENRE}
 
@@ -56,17 +55,18 @@ class Neji:
         try:
             df = self.neji[genre].query('&'.join([' {} == "{}" '.format(k,v) for k,v in query.items()])) if query else self.neji[genre]
         except Exception as e:
-            return {'genres':Neji.GENRE, 'error':str(e)}
-        if len(df) == 0:
-            return {'genres':Neji.GENRE}
+            return {'genres':Neji.GENRE, 'error':str(e).encode('UTF-8')}
+        count = len(df)
+        if count == 0:
+            return {'genres':Neji.GENRE, 'count':count}
         shape = {shape: df[shape].unique().tolist() for shape in Neji.SHAPE[genre]}
         if max([len(v) for v in shape.values()]) > 1:
-            return {'genre':genre, 'query':query, 'shape':shape}
+            return {'genre':genre, 'query':query, 'shape':shape, 'count':count}
         spec = {spec: df[spec].unique().tolist() for spec in Neji.SPEC[genre]}
         if len(df) <= 100:
-            return {'genre':genre, 'query':query, 'shape':shape, 'spec':spec, 'items':df.to_dict('records')}
+            return {'genre':genre, 'query':query, 'shape':shape, 'spec':spec, 'items':df.to_dict('records'), 'count':count}
         else:
-            return {'genre':genre, 'query':query, 'shape':shape, 'spec':spec }
+            return {'genre':genre, 'query':query, 'shape':shape, 'spec':spec, 'count':count }
 
 
 class DateHashID(metaclass=abc.ABCMeta):

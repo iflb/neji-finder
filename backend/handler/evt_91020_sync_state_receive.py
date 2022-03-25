@@ -21,9 +21,10 @@ class Handler(EventHandler):
         streamkey = self.helper.stream_key_for_state(sync_id)
         async for updated, stream_id, kv in self.psub_and_xlast_str(event.session.redis, subkey, streamkey, event.session.request_id()):
             entry = self.helper.StateEntry(kv)
+            entry.query = json.loads(entry.query) if entry.query else {}
             entry.sync_id = sync_id.base64
             entry.updated = updated
-            entry.update(self.neji.find(entry.genre, json.loads(entry.query) if entry.query else {}))
+            entry.update(self.neji.find(entry.genre, entry.query))
             yield entry
     
     async def psub_and_xlast_str(self, redis, subkey, streamkey, rid):
