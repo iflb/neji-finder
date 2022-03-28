@@ -2,14 +2,9 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>{{genre}}の規格を選ぶ</v-card-title>
         <v-card-text> 
-            <v-row v-if="itemQuantity !== null">
+            <v-row>
                 <v-col>
-                    <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
-                </v-col>
-            </v-row>
-            <v-row v-else>
-                <v-col>
-                    <span class="text-body-1">該当件数が多すぎます。絞り込んでください</span>
+                    <span class="text-body-1">{{ itemQuantityMessage }}</span>
                 </v-col>
             </v-row>
             <page-transition-button 
@@ -93,14 +88,9 @@
                 </v-col>
             </v-row>
             <v-divider />
-            <v-row v-if="itemQuantity !== null" class="pt-3">
+            <v-row class="pt-3">
                 <v-col>
-                    <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
-                </v-col>
-            </v-row>
-            <v-row v-else class="pt-3">
-                <v-col>
-                    <span class="text-body-1">該当件数が多すぎます。絞り込んでください</span>
+                    <span class="text-body-1">{{ itemQuantityMessage }}</span>
                 </v-col>
             </v-row>
             <page-transition-button 
@@ -444,6 +434,13 @@ export default{
         },
         buttonDisabled() {
             return (this.itemQuantity === null);
+        },
+        itemQuantityMessage() {
+            if (this.buttonDisabled) {
+                return '該当件数が多すぎます。絞り込んでください';
+            } else {
+                return '該当商品数：' + String(this.itemQuantity) + '個';
+            }
         },
     },
     created(){
