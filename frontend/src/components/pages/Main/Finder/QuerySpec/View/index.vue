@@ -8,7 +8,7 @@
                 </v-col>
             </v-row>
             <page-transition-button 
-                :button-disabled="buttonDisabled"
+                :next-disabled="isItemQuantityTooMany"
                 :click-back-callback="removeSpecQuery"
                 :click-next-callback="fix_query"
             />
@@ -94,7 +94,7 @@
                 </v-col>
             </v-row>
             <page-transition-button 
-                :button-disabled="buttonDisabled"
+                :next-disabled="isItemQuantityTooMany"
                 :click-back-callback="removeSpecQuery"
                 :click-next-callback="fix_query"
             />
@@ -432,11 +432,11 @@ export default{
             if (this.currentItems === null) return null;
             return this.currentItems.length;
         },
-        buttonDisabled() {
+        isItemQuantityTooMany() {
             return (this.itemQuantity === null);
         },
         itemQuantityMessage() {
-            if (this.buttonDisabled) {
+            if (this.isItemQuantityTooMany) {
                 return '該当件数が多すぎます。絞り込んでください';
             } else {
                 return '該当商品数：' + String(this.itemQuantity) + '個';

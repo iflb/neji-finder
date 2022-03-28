@@ -13,8 +13,8 @@
         <v-col class="d-flex mr-auto" v-if="nextIsNecessary">
             <v-spacer />
             <v-btn
-                :dark="!buttonDisabled"
-                :disabled="buttonDisabled"
+                :dark="!nextDisabled"
+                :disabled="nextDisabled"
                 color="indigo darken-1"
                 @click="clickNextCallback"
             >
@@ -29,7 +29,7 @@ const emptyCallback = () => {};
 
 export default{
     props: {
-        buttonDisabled: { type: Boolean },
+        nextDisabled: { type: Boolean },
         clickBackCallback: { type: Function, default: emptyCallback },
         clickNextCallback: { type: Function, default: emptyCallback },
     },
