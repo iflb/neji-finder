@@ -227,8 +227,6 @@ export default{
             this.send_query();
         },
         accessNextPage(){
-            const _query = {}
-            Object.assign(_query, this.shapeQuery,this.specQuery)
             this.$emit( 'emit-item-list', this.currentItems );
             if(this.itemQuantity == 1){
                 this.$emit( 'emit-item', this.currentItems[0] );
