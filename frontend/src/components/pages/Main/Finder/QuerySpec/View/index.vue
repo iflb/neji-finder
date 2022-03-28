@@ -119,6 +119,8 @@ const specKeyToIconKey = {
     '長さか厚み': 'thickness',
 };
 
+const specKeys = Object.keys(specKeyToIconKey);
+
 export default{
     components:{
         CardButton,
@@ -126,36 +128,28 @@ export default{
         CarouselButton,
         PageTransitionButton
     },
-    data: () => ({
-        syncStateReceiveRequestId: null,
-        snackbar:false,
-        initialSpec:{
-            "中分類": [],
-            "材質": [],
-            "表面処理": [],
-            "構成数クラス": [],
-            "呼び径": [],
-            "外径か幅": [],
-            "長さか厚み": [],
-        },
-        selectableItemValues:{
-            "中分類": [],
-            "材質": [],
-            "表面処理": [],
-            "構成数クラス": [],
-            "呼び径": [],
-            "外径か幅": [],
-            "長さか厚み": [],
-        },
-        currentItems: null,
-        selectedMiddleClassificationName: null,
-        selectedMaterialName: null,
-        selectedSurfaceName: null,
-        selectedAmountName: null,
-        selectedNominal: null,
-        selectedOuter: null,
-        selectedThickness: null,
-    }),
+    data() {
+        let initialSpec = {};
+        let selectableItemValues = {};
+        for (let specKey of specKeys) {
+            initialSpec[specKey] = [];
+            selectableItemValues[specKey] = [];
+        }
+        return {
+            syncStateReceiveRequestId: null,
+            snackbar:false,
+            initialSpec: initialSpec,
+            selectableItemValues: selectableItemValues,
+            currentItems: null,
+            selectedMiddleClassificationName: null,
+            selectedMaterialName: null,
+            selectedSurfaceName: null,
+            selectedAmountName: null,
+            selectedNominal: null,
+            selectedOuter: null,
+            selectedThickness: null,
+        };
+    },
 
     props: {
         duct: { type: Duct },
@@ -262,8 +256,6 @@ export default{
                             if (Object.keys(data).includes('query_fixed')) {
                                 this.accessNextPage();
                             } else {
-                                if([1,3].includes(Object.keys(data.query).length)) this.initialSpec = data.spec;
-
                                 let dataQueryKeys = Object.keys(data.query);
                                 if(dataQueryKeys.includes('中分類')){
                                     this.selectedMiddleClassificationName = data.query['中分類'];
@@ -301,7 +293,7 @@ export default{
                                     this.selectedThickness = null;
                                 }
 
-                                for(let specKey in this.selectableItemValues){
+                                for(let specKey of specKeys){
                                     switch (specKey) {
                                         case '長さか厚み':
                                             switch (this.genre) {
@@ -443,6 +435,7 @@ export default{
                 rid: this.syncStateReceiveRequestId,
                 handler: async (rid, eid, data) => {
                     let initialSyncState = data;
+                    this.initialSpec = initialSyncState.spec;
                     data = await this.duct.call(
                         this.duct.EVENT.NEJI,
                         {
