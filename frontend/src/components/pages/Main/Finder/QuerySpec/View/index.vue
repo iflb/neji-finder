@@ -146,7 +146,6 @@ export default{
             "外径か幅": [],
             "長さか厚み": [],
         },
-        buttonDisabled:true,
         currentItems:[],
         selectedMiddleClassificationName: null,
         selectedMaterialName: null,
@@ -232,7 +231,7 @@ export default{
             Object.assign(_query, this.shapeQuery,this.specQuery)
             this.$emit( 'emit-item-list', this.currentItems );
             if(this.itemQuantity == 1){
-                this.$emit( 'emit-item', this.currentItems );
+                this.$emit( 'emit-item', this.currentItems[0] );
                 this.$emit( 'emit-component-name', 'result' );
             }else{
                 this.$emit( 'emit-component-name', 'result-list' );
@@ -347,13 +346,6 @@ export default{
         selectedNominal() { this.send_query() },
         selectedOuter() { this.send_query() },
         selectedThickness() { this.send_query() },
-        itemQuantity(){
-            if (this.itemQuantity != 0){
-                this.buttonDisabled = false;
-            }else{
-                this.buttonDisabled = true;
-            }
-        },
     },
     computed:{
         selectableItems(){
@@ -449,6 +441,9 @@ export default{
         },
         itemQuantity() {
             return this.currentItems.length;
+        },
+        buttonDisabled() {
+            return (this.itemQuantity === 0);
         },
     },
     created(){
