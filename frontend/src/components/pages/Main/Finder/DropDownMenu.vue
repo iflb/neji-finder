@@ -27,7 +27,7 @@
                             :label="headerTitle"
                             v-bind="attrs"
                             v-on="on"
-                            v-on:click.clear="emitItem(null)"
+                            v-on:click:clear="emitItem(null)"
                             clearable
                             outlined
                             readonly
