@@ -20,7 +20,7 @@
                         <template v-slot:default>
                             <tbody>
                                 <tr
-                                    v-for="item in tableData"
+                                    v-for="item of tableData"
                                     :key="item.key"
                                 >
                                     <td>{{item.key}}</td>
