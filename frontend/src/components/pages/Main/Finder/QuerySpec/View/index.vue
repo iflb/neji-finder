@@ -108,6 +108,17 @@ import CardButton from '../../CardButton'
 import CarouselButton from '../../CarouselButton'
 import DropDownMenu from '../../DropDownMenu'
 import PageTransitionButton from '../../PageTransitionButton'
+
+const specKeyToIconKey = {
+    '中分類': 'middle_classification',
+    '材質': 'material',
+    '表面処理': 'surface',
+    '構成数クラス': 'amount',
+    '呼び径': 'nominal',
+    '外径か幅': 'outer',
+    '長さか厚み': 'thickness',
+};
+
 export default{
     components:{
         CardButton,
@@ -338,40 +349,20 @@ export default{
     },
     computed:{
         selectableItems(){
-            let _obj = {
-                "middle_classification": [],
-                "material": [],
-                "surface": [],
-                "amount": [],
-                "nominal": [],
-                "outer": [],
-                "thickness": [],
-            };
-            const _language = {
-                "中分類": 'middle_classification',
-                "材質": 'material',
-                "表面処理": 'surface',
-                "構成数クラス": 'amount',
-                "呼び径": 'nominal',
-                "外径か幅": 'outer',
-                "長さか厚み": 'thickness',
-            };
-
-            for(let _key in _language){
-                const _eng = _language[_key];
-                if(["中分類","材質","表面処理","構成数クラス"].includes(_key)){
-                    icons[_eng].forEach((item) => {
-                        if(this.selectableItemValues[_key].includes(item.name)) _obj[_eng].push(item);
-                    });
+            let selectableItems = {};
+            for(let [ specKey, iconKey ] of Object.entries(specKeyToIconKey)){
+                if(["中分類","材質","表面処理","構成数クラス"].includes(specKey)){
+                    selectableItems[iconKey] = icons[iconKey]
+                        .filter(icon => this.selectableItemValues[specKey].includes(icon.name));
                 }else{
-                    if(typeof this.initialSpec[_key] !== 'undefined'){
-                        this.initialSpec[_key].forEach((item) => {
-                            if(this.selectableItemValues[_key].includes(item)) _obj[_eng].push({ "name": _key, "val": item });
-                        });
+                    if (Object.keys(this.initialSpec).includes(specKey)) {
+                        selectableItems[iconKey] = this.initialSpec[specKey]
+                            .filter(itemName => this.selectableItemValues[specKey].includes(itemName))
+                            .map(itemName => ({ name: specKey, val: itemName }));
                     }
                 }
             }
-            return _obj
+            return selectableItems;
         },
         specQuery(){
             let specQuery = {};
