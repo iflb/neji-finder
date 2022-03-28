@@ -2,7 +2,7 @@
     <v-card tile class="pa-1 ma-1" color="grey lighten-3">
         <v-card-title>{{genre}}の規格を選ぶ</v-card-title>
         <v-card-text> 
-            <v-row v-if="itemQuantity != 0">
+            <v-row v-if="itemQuantity !== null">
                 <v-col>
                     <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
                 </v-col>
@@ -93,7 +93,7 @@
                 </v-col>
             </v-row>
             <v-divider />
-            <v-row v-if="itemQuantity != 0" class="pt-3">
+            <v-row v-if="itemQuantity !== null" class="pt-3">
                 <v-col>
                     <span class="text-body-1">該当商品数：{{itemQuantity}}個</span>
                 </v-col>
@@ -146,7 +146,7 @@ export default{
             "外径か幅": [],
             "長さか厚み": [],
         },
-        currentItems:[],
+        currentItems: null,
         selectedMiddleClassificationName: null,
         selectedMaterialName: null,
         selectedSurfaceName: null,
@@ -227,6 +227,7 @@ export default{
             this.send_query();
         },
         accessNextPage(){
+            console.assert(this.currentItem !== null);
             this.$emit( 'emit-item-list', this.currentItems );
             if(this.itemQuantity == 1){
                 this.$emit( 'emit-item', this.currentItems[0] );
@@ -327,7 +328,7 @@ export default{
                                 if(Object.keys(data).includes('items')){
                                     this.currentItems = data.items;
                                 }else{
-                                    this.currentItems = [];
+                                    this.currentItems = null;
                                 }
                             }
                         }
@@ -438,10 +439,11 @@ export default{
             }
         },
         itemQuantity() {
+            if (this.currentItems === null) return null;
             return this.currentItems.length;
         },
         buttonDisabled() {
-            return (this.itemQuantity === 0);
+            return (this.itemQuantity === null);
         },
     },
     created(){
@@ -521,7 +523,7 @@ export default{
                     if(Object.keys(data).includes('items')){
                         this.currentItems = data.items;
                     }else{
-                        this.currentItems = [];
+                        this.currentItems = null;
                     }
 
                     this.registerSyncStateReceiveHandler();
