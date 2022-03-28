@@ -146,7 +146,6 @@ export default{
             "外径か幅": [],
             "長さか厚み": [],
         },
-        itemQuantity:0,
         buttonDisabled:true,
         currentItems:[],
         selectedMiddleClassificationName: null,
@@ -330,10 +329,8 @@ export default{
 
                                 if(Object.keys(data).includes('items')){
                                     this.currentItems = data.items;
-                                    this.itemQuantity = data.items.length;
                                 }else{
                                     this.currentItems = [];
-                                    this.itemQuantity = 0;
                                 }
                             }
                         }
@@ -450,6 +447,9 @@ export default{
                     return null;
             }
         },
+        itemQuantity() {
+            return this.currentItems.length;
+        },
     },
     created(){
         this.$vuetify.goTo(0);
@@ -527,10 +527,8 @@ export default{
 
                     if(Object.keys(data).includes('items')){
                         this.currentItems = data.items;
-                        this.itemQuantity = data.items.length;
                     }else{
                         this.currentItems = [];
-                        this.itemQuantity = 0;
                     }
 
                     this.registerSyncStateReceiveHandler();
