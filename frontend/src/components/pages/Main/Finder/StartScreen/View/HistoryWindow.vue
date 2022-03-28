@@ -22,7 +22,7 @@ export default {
     }),
     methods:{
         accessResultPage(item){
-            this.$emit( 'emit-item', [item.data] );
+            this.$emit( 'emit-item', item.data );
             this.$emit( 'emit-component-name', 'result' );
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);

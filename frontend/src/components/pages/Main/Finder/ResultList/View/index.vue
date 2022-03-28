@@ -54,7 +54,7 @@ export default{
         },
         accessNextPage(){
             let itemIdx = this.selectableItems.findIndex(item => (item.name === this.selectedItemName));
-            this.$emit( 'emit-item', [this.itemList[itemIdx]] );
+            this.$emit( 'emit-item', this.itemList[itemIdx] );
             this.$emit( 'emit-component-name', 'result' );
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);

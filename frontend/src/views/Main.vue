@@ -145,7 +145,7 @@ export default {
         syncId: null,
         genre:'',
         itemList:[],
-        item:[],
+        item: null,
         shapeQuery: {},
         totalQuery: {},
     }),    

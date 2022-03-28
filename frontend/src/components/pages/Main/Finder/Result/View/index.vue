@@ -9,8 +9,8 @@
                         max-width="400"
                     />
                     <div v-if="this.item" class="text-h6 mt-4">
-                        <span v-if="this.item[0]['店舗取り扱い']=='お取り寄せ'">店舗在庫なし</span>
-                        <span v-else-if="this.item[0]['店舗取り扱い']=='〇'">店舗在庫あり</span>
+                        <span v-if="this.item['店舗取り扱い']=='お取り寄せ'">店舗在庫なし</span>
+                        <span v-else-if="this.item['店舗取り扱い']=='〇'">店舗在庫あり</span>
                     </div>
                 </v-col>
             </v-row>
@@ -108,7 +108,7 @@ export default{
     }),
 
     props: {
-        item: { type: Array },
+        item: { type: Object },
         itemList: { type: Array },
         duct: { type: Duct },
         syncId: { type: String },
@@ -145,13 +145,13 @@ export default{
             this.$emit( 'emit-genre', "" );
             this.$emit( 'emit-shape-query', {} );
             this.$emit( 'emit-item-list', [] );
-            this.$emit( 'emit-item', [] );
+            this.$emit( 'emit-item', null );
             this.$emit( 'emit-component-name', 'start-screen' );
         }
     },
     computed:{
         tableData(){
-            const _arr = Object.entries(this.item[0]).map(([key, value]) => ({key, value}));
+            const _arr = Object.entries(this.item).map(([key, value]) => ({key, value}));
             let _arr2 = _arr.filter(item => { 
                 if(item.key == "画像" || item.value == null){
                     return false
@@ -179,17 +179,17 @@ export default{
         for(let item of storagedItemsString){
             storagedItemsJSON.push(JSON.parse(item));
         }
-        if (!storagedItemsJSON.map(item => item.jan).includes(this.item[0]["JANコード"])){
+        if (!storagedItemsJSON.map(item => item.jan).includes(this.item["JANコード"])){
             let _index = 0;
             const storagedItemsLength = storagedItemsKey.length;
             if(storagedItemsLength != 0) _index = storagedItemsLength;
             const _itemStoraging = {
-                name: this.item[0]["品名"] + `(サイズ：${this.item[0]["サイズ"]}, 構成数:${this.item[0]["構成数"]})`,
+                name: this.item["品名"] + `(サイズ：${this.item["サイズ"]}, 構成数:${this.item["構成数"]})`,
                 src: this.path,
                 backgroundColor: "#FFFFFF",
                 index: _index,
-                jan: this.item[0]["JANコード"],
-                data: this.item[0]
+                jan: this.item["JANコード"],
+                data: this.item,
             }
             window.localStorage.setItem('neji-product' + String(_index), JSON.stringify(_itemStoraging));
         }
