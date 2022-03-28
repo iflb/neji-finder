@@ -14,23 +14,27 @@
         </v-card-text>   
     </v-card>
 </template>
+
 <script>
 import { Duct } from '@iflb/ducts-client'
 import { nut_washer_icons } from '../../shape_profile.js'
 import CardButton from '../../CardButton' 
 import PageTransitionButton from '../../PageTransitionButton'
-export default{
+
+export default {
     watch: {
         selectedShapeName() {
-            this.send_query();
+            this.sendQuery();
         },
     },
-    components:{
+
+    components: {
         CardButton,
-        PageTransitionButton
+        PageTransitionButton,
     },
+
     data: () => ({
-        syncStateReceiveRequestId:null,
+        syncStateReceiveRequestId: null,
         selectedShapeName: null,
     }),
 
@@ -40,8 +44,8 @@ export default{
         genre: { type: String },
     },
 
-    computed:{
-        selectableShapeIcons(){
+    computed: {
+        selectableShapeIcons() {
             switch (this.genre) {
                 case 'めねじ':
                     return nut_washer_icons.nut;
@@ -51,6 +55,7 @@ export default{
                     return null;
             }
         },
+
         query() {
             let query = {};
             if (this.selectedShapeName !== null) {
@@ -58,6 +63,7 @@ export default{
             }
             return query;
         },
+
         queryKey() {
             switch (this.genre) {
                 case 'めねじ':
@@ -69,8 +75,9 @@ export default{
             }
         },
     },
+
     methods: {
-        send_query() {
+        sendQuery() {
             if (this.syncId === null) return;
             this.duct.send(
                 this.duct.nextRid(), 
@@ -78,7 +85,8 @@ export default{
                 {'sync_id': this.syncId, 'genre': this.genre, 'query': this.query},
             );
         },
-        unsetGenre(){
+
+        unsetGenre() {
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
@@ -87,32 +95,35 @@ export default{
                 },
             );
         },
-        accessNextPage(){
-            this.$emit( 'emit-shape-query', this.query );
-            this.$emit( 'emit-query', this.query );
-            this.$emit( 'emit-component-name', 'query-spec' );
+
+        accessNextPage() {
+            this.$emit('emit-shape-query', this.query);
+            this.$emit('emit-query', this.query);
+            this.$emit('emit-component-name', 'query-spec');
         },
-        backToPreviousPage(){
-            this.$emit( 'emit-component-name', 'query-genre' );
+
+        backToPreviousPage() {
+            this.$emit('emit-component-name', 'query-genre');
         }
     }, 
-    created(){
+
+    created() {
         this.syncStateReceiveRequestId = this.duct.nextRid();
         this.$emit(
             'register-sync-state-receive-handler',
             {
                 rid: this.syncStateReceiveRequestId,
                 handler: (rid, eid, data) => {
-                    if(!Object.keys(data).includes('genre')){
+                    if (!Object.keys(data).includes('genre')) {
                         this.backToPreviousPage();
-                    }else{
-                        if(Object.keys(data.query).includes(this.queryKey)){
+                    } else {
+                        if (Object.keys(data.query).includes(this.queryKey)) {
                             this.selectedShapeName = data.query[this.queryKey];
                         }
 
-                        if(Object.keys(data).includes('spec')){
+                        if (Object.keys(data).includes('spec')) {
                             this.accessNextPage();
-                        }else{
+                        } else {
                             this.$nextTick(() => {
                                 this.$vuetify.goTo(document.body.scrollHeight);
                             });
@@ -122,10 +133,12 @@ export default{
             }
         );
     },
-    mounted(){
+
+    mounted() {
         this.$emit('add-step', 2);
     },
-    destroyed(){
+
+    destroyed() {
         this.$emit(
             'unregister-sync-state-receive-handler',
             { rid: this.syncStateReceiveRequestId },

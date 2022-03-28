@@ -59,8 +59,9 @@
         </v-row>
     </v-card>
 </template>
+
 <script>
-export default{
+export default {
     model: {
         prop: 'model',
         event: 'update',
@@ -78,29 +79,31 @@ export default{
             return this.inputItems
                 .map((item) => ({ name: item.name, val: item.val, sortValue: this.convertToFloatOrLargeNumber(item.val) }))
                 .sort((a,b) => (a.sortValue>b.sortValue ? 1 : -1));
-        }
+        },
     },
-    methods:{
+
+    methods: {
         convertToFloatOrLargeNumber(str) {
-            if(typeof(str)=='number') str = str.toString();
+            if (typeof(str)=='number') str = str.toString();
             let _str = str.replace(/[０-９]/g, (s) => (String.fromCharCode(s.charCodeAt(0) - 0xFEE0)))
                 .replace('．', '.')
                 .replace('／', '/');
-            if(/^[0-9./]+$/.test(_str)) {
+            if (/^[0-9./]+$/.test(_str)) {
                 let nums = _str.split('/').map((c) => parseFloat(c));
-                if(nums.length==2) nums[0] /= nums[1];
+                if (nums.length==2) nums[0] /= nums[1];
                 return nums[0];
             } else {
                 return 99999;
             }
         },
-        emitItem(item){
+
+        emitItem(item) {
             if (item === null) {
                 this.$emit('update', null);
             } else {
                 this.$emit('update', item.val);
             }
-        }
+        },
     },
     //watch: {
     //    inputItemsSorted() {

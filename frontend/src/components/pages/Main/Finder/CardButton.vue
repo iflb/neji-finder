@@ -21,7 +21,7 @@
                     hover
                 >
                     <v-img 
-                        class="imgOpacity"
+                        class="img-opacity"
                         contain
                         :src="item.src" />
                 </v-card>
@@ -30,6 +30,7 @@
         </v-row>
     </v-card>
 </template>
+
 <script>
 export default{
     model: {
@@ -48,9 +49,11 @@ export default{
         headerIsOn() {
             return (this.headerTitle !== undefined);
         },
+
         numInputItems() {
             return this.inputItems.length;
         },
+
         itemBackgroundColors() {
             let itemBackgroundColors = {};
             for (let item of this.inputItems) {
@@ -64,19 +67,21 @@ export default{
             return itemBackgroundColors;
         },
     },
-    methods:{
-        emitItem(item){
+
+    methods: {
+        emitItem(item) {
             if (this.selectedItemName === item.name) {
                 this.$emit('update', null);
             } else {
                 this.$emit('update', item.name);
             }
         }
-    }
+    },
 }
 </script>
+
 <style>
-.imgOpacity{
-    opacity: 0.75
+.img-opacity{
+    opacity: 0.75;
 }
 </style>

@@ -97,14 +97,15 @@
         </v-card-text>   
     </v-card>
 </template>
+
 <script>
 import { Duct } from '@iflb/ducts-client'
 
-export default{
+export default {
     data: () => ({
-        path:'',
-        syncStateReceiveRequestId:null,
-        shopArea:false
+        path: '',
+        syncStateReceiveRequestId: null,
+        shopArea: false,
     }),
 
     props: {
@@ -116,11 +117,11 @@ export default{
         totalQuery: { type: Object },
     },
 
-    methods:{
-        backToPreviousPage(){
-            if(this.itemList.length !== 1){
+    methods: {
+        backToPreviousPage() {
+            if (this.itemList.length !== 1) {
                 this.$emit( 'emit-component-name', 'result-list' );
-            }else{
+            } else {
                 this.duct.send(
                     this.duct.nextRid(), 
                     this.duct.EVENT.SYNC_STATE_UPDATE,
@@ -133,38 +134,41 @@ export default{
                 this.$emit( 'emit-component-name', 'query-spec' );
             }
         },
-        backToFirstPage(){
+
+        backToFirstPage() {
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_CANCEL,
                 {
-                    sync_id: this.syncId
+                    sync_id: this.syncId,
                 },
             );
-            this.$emit( 'initialize-sync' );
-            this.$emit( 'emit-genre', "" );
-            this.$emit( 'emit-shape-query', {} );
-            this.$emit( 'emit-item-list', [] );
-            this.$emit( 'emit-item', null );
-            this.$emit( 'emit-component-name', 'start-screen' );
+            this.$emit('initialize-sync');
+            this.$emit('emit-genre', '');
+            this.$emit('emit-shape-query', {});
+            this.$emit('emit-item-list', []);
+            this.$emit('emit-item', null);
+            this.$emit('emit-component-name', 'start-screen');
         }
     },
-    computed:{
-        tableData(){
+
+    computed: {
+        tableData() {
             const _arr = Object.entries(this.item).map(([key, value]) => ({key, value}));
             let _arr2 = _arr.filter(item => { 
-                if(item.key == "画像" || item.value == null){
-                    return false
-                }else if(!isNaN(item.value) || typeof item.value === 'string'){
-                    return true
-                }else{
-                    return false
+                if (item.key === '画像' || item.value === null) {
+                    return false;
+                } else if (!isNaN(item.value) || typeof item.value === 'string') {
+                    return true;
+                } else {
+                    return false;
                 }
             });
-            return _arr2
+            return _arr2;
         },
     },
-    created(){
+
+    created() {
         this.$vuetify.goTo(0);
         let _jan = String(this.tableData[0].value);
         try{
@@ -176,19 +180,19 @@ export default{
         const storagedItemsKey = Object.keys(window.localStorage).filter(key => key.includes('neji-product'));
         const storagedItemsString = storagedItemsKey.map((key) => window.localStorage[key]);
         let storagedItemsJSON = [];
-        for(let item of storagedItemsString){
+        for(let item of storagedItemsString) {
             storagedItemsJSON.push(JSON.parse(item));
         }
-        if (!storagedItemsJSON.map(item => item.jan).includes(this.item["JANコード"])){
+        if (!storagedItemsJSON.map(item => item.jan).includes(this.item['JANコード'])) {
             let _index = 0;
             const storagedItemsLength = storagedItemsKey.length;
-            if(storagedItemsLength !== 0) _index = storagedItemsLength;
+            if (storagedItemsLength !== 0) _index = storagedItemsLength;
             const _itemStoraging = {
-                name: this.item["品名"] + `(サイズ：${this.item["サイズ"]}, 構成数:${this.item["構成数"]})`,
+                name: this.item['品名'] + `(サイズ：${this.item['サイズ']}, 構成数:${this.item['構成数']})`,
                 src: this.path,
-                backgroundColor: "#FFFFFF",
+                backgroundColor: '#FFFFFF',
                 index: _index,
-                jan: this.item["JANコード"],
+                jan: this.item['JANコード'],
                 data: this.item,
             }
             window.localStorage.setItem('neji-product' + String(_index), JSON.stringify(_itemStoraging));
@@ -207,10 +211,12 @@ export default{
             },
         );
     },
-    mounted(){
+
+    mounted() {
         this.$emit('add-step', 4);
     },
-    destroyed(){
+
+    destroyed() {
         this.$emit(
             'unregister-sync-state-receive-handler',
             { rid: this.syncStateReceiveRequestId },

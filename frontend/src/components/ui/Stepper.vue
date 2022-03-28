@@ -35,8 +35,9 @@
         </v-stepper-header>
     </v-stepper>
 </template>
+
 <script>
-export default{
+export default {
     props: {
         stepper: { type: Number },
     },

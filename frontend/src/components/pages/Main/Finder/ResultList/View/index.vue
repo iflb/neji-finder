@@ -16,20 +16,23 @@
         </v-card-text>   
     </v-card>
 </template>
+
 <script>
 import { Duct } from '@iflb/ducts-client'
 import CardButton from '../../CardButton'
 import PageTransitionButton from '../../PageTransitionButton'
-export default{
-    components:{
+
+export default {
+    components: {
         CardButton,
-        PageTransitionButton
+        PageTransitionButton,
     },
+
     data: () => ({
         selectedItemName: null,
-        pickedItem:[],
-        itemQuantity:0,
-        syncStateReceiveRequestId:null,
+        pickedItem: [],
+        itemQuantity: 0,
+        syncStateReceiveRequestId: null,
     }),
 
     props: {
@@ -41,7 +44,7 @@ export default{
     },
 
     methods: {
-        removeQueryFixedParameter(){
+        removeQueryFixedParameter() {
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
@@ -52,23 +55,26 @@ export default{
                 },
             );
         },
-        accessNextPage(){
+
+        accessNextPage() {
             let itemIdx = this.selectableItems.findIndex(item => (item.name === this.selectedItemName));
-            this.$emit( 'emit-item', this.itemList[itemIdx] );
-            this.$emit( 'emit-component-name', 'result' );
+            this.$emit('emit-item', this.itemList[itemIdx]);
+            this.$emit('emit-component-name', 'result');
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);
             });
         },
-        backToPreviousPage(){
-            this.$emit( 'emit-component-name', 'query-spec' );
+
+        backToPreviousPage() {
+            this.$emit('emit-component-name', 'query-spec');
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);
             });
         }
     }, 
-    computed:{
-        selectableItems(){
+
+    computed: {
+        selectableItems() {
             let _arr = [];
             let _ind = 0;
             this.itemList.forEach((item) =>{
@@ -80,9 +86,9 @@ export default{
                     _path = require(`../../../../../../assets/productsImage/no_image.jpg`);
                 }
                 _arr.push({
-                    name: item["品名"] + `(サイズ：${item["サイズ"]}, 構成数:${item["構成数"]})`,
+                    name: item['品名'] + `(サイズ：${item['サイズ']}, 構成数:${item['構成数']})`,
                     src: _path,
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: '#FFFFFF',
                     index: _ind,
                     jan: _jan
                 })
@@ -91,7 +97,8 @@ export default{
             return _arr        
         },
     },
-    created(){
+
+    created() {
         this.itemQuantity = this.itemList.length;
         this.syncStateReceiveRequestId = this.duct.nextRid();
         this.$emit(
@@ -106,10 +113,12 @@ export default{
             },
         );
     },
-    mounted(){
+
+    mounted() {
         this.$emit('add-step', 4);
     },
-    destroyed(){
+
+    destroyed() {
         this.$emit(
             'unregister-sync-state-receive-handler',
             { rid: this.syncStateReceiveRequestId },

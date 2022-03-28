@@ -1,38 +1,35 @@
 <template>
-  <div id="app">
-    <v-app>
-        <router-view />
-    </v-app>
-  </div>
+    <div id="app">
+        <v-app>
+            <router-view />
+        </v-app>
+    </div>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-  components: {
-  }
+    name: 'App',
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
 }
 
 #nav {
-  padding: 30px;
+    padding: 30px;
 }
 
 #nav a {
-  font-weight: bold;
-  color: #2c3e50;
+    font-weight: bold;
+    color: #2c3e50;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+    color: #42b983;
 }
 </style>

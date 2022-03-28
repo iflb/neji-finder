@@ -39,18 +39,19 @@
                 </v-col>
             </v-row>
         </v-card-text>   
-
     </v-card>
 </template>
+
 <script>
 export default {
-    methods:{
-        emitComponentName(){
-            this.$emit( 'emit-component-name', 'query-genre' );
+    methods: {
+        emitComponentName() {
+            this.$emit('emit-component-name', 'query-genre');
         }
     },
-    mounted(){
+
+    mounted() {
         this.$emit('add-step', 1);
-    }
+    },
 }
 </script>

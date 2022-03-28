@@ -24,10 +24,11 @@
         </v-col> 
     </v-row>
 </template>
+
 <script>
 const emptyCallback = () => {};
 
-export default{
+export default {
     props: {
         nextDisabled: { type: Boolean },
         clickBackCallback: { type: Function, default: emptyCallback },

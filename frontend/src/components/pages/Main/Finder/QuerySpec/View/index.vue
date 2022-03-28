@@ -122,7 +122,7 @@ const specKeyToIconKey = {
 const specKeys = Object.keys(specKeyToIconKey);
 
 export default{
-    components:{
+    components: {
         CardButton,
         DropDownMenu,
         CarouselButton,
@@ -137,7 +137,6 @@ export default{
         }
         return {
             syncStateReceiveRequestId: null,
-            snackbar:false,
             initialSpec: initialSpec,
             selectableItemValues: selectableItemValues,
             currentItems: null,
@@ -161,36 +160,47 @@ export default{
     methods: {
         send_query() {
             if (this.syncId === null) return;
-            const _query = {}
-            Object.assign(_query, this.shapeQuery,this.specQuery);
+            let query = {}
+            Object.assign(query, this.shapeQuery, this.specQuery);
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
-                {'sync_id': this.syncId, 'genre': this.genre, 'query': _query},
+                {
+                    sync_id: this.syncId,
+                    genre: this.genre,
+                    query: query,
+                },
             );
         },
+
         fix_query() {
             if (this.syncId === null) return;
-            const _query = {}
-            Object.assign(_query, this.shapeQuery, this.specQuery);
-            this.$emit( 'emit-query', _query );
+            const query = {}
+            Object.assign(query, this.shapeQuery, this.specQuery);
+            this.$emit('emit-query', query);
             this.duct.send(
                 this.duct.nextRid(), 
                 this.duct.EVENT.SYNC_STATE_UPDATE,
-                {'sync_id': this.syncId, 'genre': this.genre, 'query': _query, 'query_fixed': true },
+                {
+                    sync_id: this.syncId,
+                    genre: this.genre,
+                    query: query,
+                    query_fixed: true,
+                },
             );
         },
-        removeSpecQuery(){
+
+        removeSpecQuery() {
             if (this.syncId === null) return;
-            this.$emit( 'emit-shape-query', {} );
+            this.$emit('emit-shape-query', {});
             let query = new Object(this.shapeQuery);
-            switch(this.genre){
+            switch (this.genre) {
                 case 'おねじ':
-                    if (Object.keys(query).includes('頭部穴形状')){
+                    if (Object.keys(query).includes('頭部穴形状')) {
                         delete query['頭部穴形状'];
-                    } else if (Object.keys(query).includes('おねじ先端')){
+                    } else if (Object.keys(query).includes('おねじ先端')) {
                         delete query['おねじ先端'];
-                    } else if (Object.keys(query).includes('頭部')){
+                    } else if (Object.keys(query).includes('頭部')) {
                         delete query['頭部'];
                     }
                     break;
@@ -211,7 +221,8 @@ export default{
                 },
             );
         },
-        resetQuery(){
+
+        resetQuery() {
             this.selectedMiddleClassificationName = null;
             this.selectedMaterialName = null;
             this.selectedSurfaceName = null;
@@ -221,75 +232,78 @@ export default{
             this.selectedThickness = null;
             this.send_query();
         },
-        accessNextPage(){
+
+        accessNextPage() {
             console.assert(this.currentItem !== null);
-            this.$emit( 'emit-item-list', this.currentItems );
-            if(this.itemQuantity == 1){
-                this.$emit( 'emit-item', this.currentItems[0] );
-                this.$emit( 'emit-component-name', 'result' );
-            }else{
-                this.$emit( 'emit-component-name', 'result-list' );
+            this.$emit('emit-item-list', this.currentItems);
+            if (this.itemQuantity === 1) {
+                this.$emit('emit-item', this.currentItems[0]);
+                this.$emit('emit-component-name', 'result');
+            } else {
+                this.$emit('emit-component-name', 'result-list');
             }
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);
             });
         },
-        backToPreviousPage(){
-            if(['めねじ','座金'].includes(this.genre)){
-                this.$emit( 'emit-component-name', 'query-nut-washer-shape' );
-            }else{
-                this.$emit( 'emit-component-name', 'query-bolt-shape' );
+
+        backToPreviousPage() {
+            if (['めねじ','座金'].includes(this.genre)) {
+                this.$emit('emit-component-name', 'query-nut-washer-shape');
+            } else {
+                this.$emit('emit-component-name', 'query-bolt-shape');
             }
             this.$nextTick(() => {
                 this.$vuetify.goTo(0);
             });
         },
-        registerSyncStateReceiveHandler(){
+
+        registerSyncStateReceiveHandler() {
             this.$emit(
                 'register-sync-state-receive-handler',
                 {
                     rid: this.syncStateReceiveRequestId,
                     handler: (rid, eid, data) => {
-                        if(!Object.keys(data).includes('spec')){
+                        if (!Object.keys(data).includes('spec')) {
                             this.backToPreviousPage();
-                        }else{
+                        } else {
                             if (Object.keys(data).includes('query_fixed')) {
                                 this.accessNextPage();
                             } else {
                                 let dataQueryKeys = Object.keys(data.query);
-                                if(dataQueryKeys.includes('中分類')){
+                                if (dataQueryKeys.includes('中分類')) {
                                     this.selectedMiddleClassificationName = data.query['中分類'];
-                                }else{
+                                } else {
                                     this.selectedMiddleClassificationName = null;
                                 }
-                                if(dataQueryKeys.includes('材質')){
+                                if (dataQueryKeys.includes('材質')) {
                                     this.selectedMaterialName = data.query['材質'];
-                                }else{
+                                } else {
                                     this.selectedMaterialName = null;
                                 }
-                                if(dataQueryKeys.includes('表面処理')){
+                                if (dataQueryKeys.includes('表面処理')) {
                                     this.selectedSurfaceName = data.query['表面処理'];
-                                }else{
+                                } else {
                                     this.selectedSurfaceName = null;
                                 }
-                                if(dataQueryKeys.includes('構成数クラス')){
+                                if (dataQueryKeys.includes('構成数クラス')) {
                                     this.selectedAmountName = data.query['構成数クラス'];
-                                }else{
+                                } else {
                                     this.selectedAmountName = null;
                                 }
-                                if(dataQueryKeys.includes('呼び径')){
+                                if (dataQueryKeys.includes('呼び径')) {
                                     this.selectedNominal = data.query['呼び径'];
-                                }else{
+                                } else {
                                     this.selectedNominal = null;
                                 }
-                                if(dataQueryKeys.includes('外径か幅')){
+                                if (dataQueryKeys.includes('外径か幅')) {
                                     this.selectedOuter = data.query['外径か幅'];
-                                }else{
+                                } else {
                                     this.selectedOuter = null;
                                 }
-                                if(dataQueryKeys.includes('長さか厚み')){
+                                if (dataQueryKeys.includes('長さか厚み')) {
                                     this.selectedThickness = data.query['長さか厚み'];
-                                }else{
+                                } else {
                                     this.selectedThickness = null;
                                 }
 
@@ -297,9 +311,9 @@ export default{
                                     this.selectableItemValues[specKey] = specValue;
                                 }
 
-                                if(Object.keys(data).includes('items')){
+                                if (Object.keys(data).includes('items')) {
                                     this.currentItems = data.items;
-                                }else{
+                                } else {
                                     this.currentItems = null;
                                 }
                             }
@@ -309,7 +323,8 @@ export default{
             );
         },
     }, 
-    watch:{
+
+    watch: {
         selectedMiddleClassificationName() { this.send_query() },
         selectedMaterialName() { this.send_query() },
         selectedSurfaceName() { this.send_query() },
@@ -318,7 +333,8 @@ export default{
         selectedOuter() { this.send_query() },
         selectedThickness() { this.send_query() },
     },
-    computed:{
+
+    computed: {
         selectableIcons() {
             let selectableIcons = {};
             for (let specKey of [ '中分類', '材質', '表面処理', '構成数クラス' ]) {
@@ -331,6 +347,7 @@ export default{
         selectableMaterialIcons() { return this.selectableIcons['材質'] },
         selectableSurfaceIcons() { return this.selectableIcons['表面処理'] },
         selectableAmountIcons() { return this.selectableIcons['構成数クラス'] },
+
         selectableValues() {
             let selectableValues = {};
             for (let specKey of [ '呼び径', '外径か幅', '長さか厚み' ]) {
@@ -347,7 +364,8 @@ export default{
         selectableNominalValues() { return this.selectableValues['呼び径'] },
         selectableOuterValues() { return this.selectableValues['外径か幅'] },
         selectableThicknessValues() { return this.selectableValues['長さか厚み'] },
-        specQuery(){
+
+        specQuery() {
             let specQuery = {};
             if (this.selectedMiddleClassificationName !== null) {
                 specQuery['中分類'] = this.selectedMiddleClassificationName;
@@ -372,6 +390,7 @@ export default{
             }
             return specQuery;
         },
+
         nominalImage() {
             switch (this.genre) {
                 case 'おねじ':
@@ -384,6 +403,7 @@ export default{
                     return null;
             }
         },
+
         thicknessImage() {
             switch (this.genre) {
                 case 'おねじ':
@@ -394,6 +414,7 @@ export default{
                     return null;
             }
         },
+
         outerImage() {
             switch (this.genre) {
                 case '座金':
@@ -402,13 +423,16 @@ export default{
                     return null;
             }
         },
+
         itemQuantity() {
             if (this.currentItems === null) return null;
             return this.currentItems.length;
         },
+
         isItemQuantityTooMany() {
             return (this.itemQuantity === null);
         },
+
         itemQuantityMessage() {
             if (this.isItemQuantityTooMany) {
                 return '該当件数が多すぎます。絞り込んでください';
@@ -417,7 +441,8 @@ export default{
             }
         },
     },
-    created(){
+
+    created() {
         this.$vuetify.goTo(0);
         this.syncStateReceiveRequestId = this.duct.nextRid();
         this.$emit(
@@ -440,25 +465,25 @@ export default{
                     }
 
                     let initialQueryKeys = Object.keys(initialSyncState.query);
-                    if(initialQueryKeys.includes('中分類')){
+                    if (initialQueryKeys.includes('中分類')) {
                         this.selectedMiddleClassificationName = initialSyncState.query['中分類'];
                     }
-                    if(initialQueryKeys.includes('材質')){
+                    if (initialQueryKeys.includes('材質')) {
                         this.selectedMaterialName = initialSyncState.query['材質'];
                     }
-                    if(initialQueryKeys.includes('表面処理')){
+                    if (initialQueryKeys.includes('表面処理')) {
                         this.selectedSurfaceName = initialSyncState.query['表面処理'];
                     }
-                    if(initialQueryKeys.includes('構成数クラス')){
+                    if (initialQueryKeys.includes('構成数クラス')) {
                         this.selectedAmountName = initialSyncState.query['構成数クラス'];
                     }
-                    if(initialQueryKeys.includes('呼び径')){
+                    if (initialQueryKeys.includes('呼び径')) {
                         this.selectedNominal = initialSyncState.query['呼び径'];
                     }
-                    if(initialQueryKeys.includes('外径か幅')){
+                    if (initialQueryKeys.includes('外径か幅')) {
                         this.selectedOuter = initialSyncState.query['外径か幅'];
                     }
-                    if(initialQueryKeys.includes('長さか厚み')){
+                    if (initialQueryKeys.includes('長さか厚み')) {
                         this.selectedThickness = initialSyncState.query['長さか厚み'];
                     }
                     let query = {}
@@ -471,9 +496,9 @@ export default{
                         },
                     );
 
-                    if(Object.keys(data).includes('items')){
+                    if (Object.keys(data).includes('items')) {
                         this.currentItems = data.items;
-                    }else{
+                    } else {
                         this.currentItems = null;
                     }
 
@@ -482,10 +507,12 @@ export default{
             },
         );
     },
-    mounted(){
+
+    mounted() {
         this.$emit('add-step', 3);
     },
-    destroyed(){
+
+    destroyed() {
         this.$emit(
             'unregister-sync-state-receive-handler',
             { rid: this.syncStateReceiveRequestId },

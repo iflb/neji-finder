@@ -12,27 +12,33 @@
         /> 
     </div> 
 </template>
+
 <script>
 import SearchWindow from './SearchWindow'
 import HistoryWindow from './HistoryWindow'
+
 export default {
-    components:{
+    components: {
         SearchWindow,
-        HistoryWindow
+        HistoryWindow,
     },
-    methods:{
-        emitComponentName(componentName){
-            this.$emit( 'emit-component-name', componentName );
+
+    methods: {
+        emitComponentName(componentName) {
+            this.$emit('emit-component-name', componentName);
         },
-        emitFooterComponentName(componentName){
-            this.$emit( 'emit-footer-component-name', componentName );
+
+        emitFooterComponentName(componentName) {
+            this.$emit('emit-footer-component-name', componentName);
         },
-        emitItem(item){
-            this.$emit( 'emit-item', item );
+
+        emitItem(item) {
+            this.$emit('emit-item', item);
         }
     },
-    mounted(){
+
+    mounted() {
         this.$emit('add-step', 1);
-    }
+    },
 }
 </script>

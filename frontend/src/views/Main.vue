@@ -103,6 +103,7 @@
         </v-main>
     </div>
 </template>
+
 <script>
 import Stepper from '../components/ui/Stepper'
 import StartScreen from '../components/pages/Main/Finder/StartScreen/View'
@@ -116,8 +117,9 @@ import AskForImageSearchSupport from '../components/pages/Main/Finder/AskForImag
 import VersionLog from '../components/pages/Main/VersionLog'
 import ducts from '@iflb/ducts-client'
 import router from '../router'
+
 export default {
-    components:{
+    components: {
         Stepper,
         StartScreen,
         QueryGenre,
@@ -129,45 +131,49 @@ export default {
         Result,
         VersionLog,
     },
+
     data: () => ({
-        duct:new ducts.Duct(),
+        duct: new ducts.Duct(),
         drawerShown: false,
         footerShown: false,
         menuItems: [
-            { to: "start-screen", icon:"mdi-magnify", title: "メインページ" },
-            { to: "version-log", icon:"mdi-update", title: "システム更新状況" }
+            { to: 'start-screen', icon:'mdi-magnify', title: 'メインページ' },
+            { to: 'version-log', icon:'mdi-update', title: 'システム更新状況' },
         ],
-        step:1,
-        currentComponent:'start-screen',
+        step: 1,
+        currentComponent: 'start-screen',
         currentFooterComponent: null,
         syncStateReceiveHandlers: {},
         syncImageReceiveHandler: null,
         syncId: null,
-        genre:'',
-        itemList:[],
+        genre: '',
+        itemList: [],
         item: null,
         shapeQuery: {},
         totalQuery: {},
     }),    
-    watch:{
-    },
+
     methods: {
-        toggleDrawer(){
+        toggleDrawer() {
             this.drawerShown = !this.drawerShown;
         },
-        changeComponent(componentName){
-            if(componentName == 'start-screen'){
+
+        changeComponent(componentName) {
+            if (componentName === 'start-screen') {
                 document.location.reload();
             }  
             this.currentComponent = componentName;
         },
-        changeFooterComponent(componentName){
+
+        changeFooterComponent(componentName) {
             this.footerShown = (componentName !== null);
             this.currentFooterComponent = componentName;
         },
+
         initializeSync() {
             router.replace(this.$route.path);
         },
+
         registerSyncStateReceiveHandler({ rid, handler }) {
             this.$set(this.syncStateReceiveHandlers, rid, handler);
             this.duct.send(
@@ -178,6 +184,7 @@ export default {
                 },
             );
         },
+
         unregisterSyncStateReceiveHandler({ rid }) {
             this.$delete(this.syncStateReceiveHandlers, rid);
             this.duct.send(
@@ -189,34 +196,43 @@ export default {
                 },
             );
         },
+
         registerSyncImageReceiveHandler(handler) {
             this.syncImageReceiveHandler = handler;
             this.changeFooterComponent('ask-for-image-search-support');
         },
+
         unregisterSyncImageReceiveHandler() {
             this.syncImageReceiveHandler = null;
             this.changeFooterComponent(null);
         },
-        updateGenre(genre){
+
+        updateGenre(genre) {
             this.genre = genre;
         },
-        updateShapeQuery(query){
+
+        updateShapeQuery(query) {
             this.shapeQuery = query;
         },
-        updateQuery(query){
+
+        updateQuery(query) {
             this.totalQuery = query;
         },
-        updateItemList(list){
+
+        updateItemList(list) {
             this.itemList = list;
         },
-        updateItem(item){
+
+        updateItem(item) {
             this.item = item;
         },
-        updateMainPaddingSize(footerHeightPx){
+
+        updateMainPaddingSize(footerHeightPx) {
             this.$refs.main.$el.style.paddingBottom = String(footerHeightPx) + 'px';
         },
     }, 
-    created(){
+
+    created() {
         if (Object.keys(this.$route.query).includes('sync_id')) {
             this.syncId = this.$route.query.sync_id;
         } else {
@@ -255,8 +271,9 @@ export default {
                 }
             );
         });
-        this.duct.open("/ducts/wsd"); 
+        this.duct.open('/ducts/wsd'); 
     },
+
     destroyed() {
         this.unregisterSyncImageReceiveHandler();
     },

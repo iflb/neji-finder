@@ -10,58 +10,59 @@ const routes = [
     },
     {
         path: '/main',
-        component: () => import("../views/Main"),
+        component: () => import('../views/Main'),
         redirect: '/main/finder',
         children: [
             {
                 path: 'finder',
-                component: () => import("../components/pages/Main/Finder/StartScreen/View"),
+                component: () => import('../components/pages/Main/Finder/StartScreen/View'),
             },
             {
                 path: 'finder/query-genre',
-                component: () => import("../components/pages/Main/Finder/QueryGenre/View")
+                component: () => import('../components/pages/Main/Finder/QueryGenre/View')
             },
             {
                 path: 'finder/query-bolt-shape',
-                component: () => import("../components/pages/Main/Finder/QueryBoltShape/View"),
-                name:"QueryBoltShape",
-                props:true
+                component: () => import('../components/pages/Main/Finder/QueryBoltShape/View'),
+                name: 'QueryBoltShape',
+                props: true,
             },
             {
                 path: 'finder/query-nut-washer-shape',
-                component: () => import("../components/pages/Main/Finder/QueryNutWasherShape/View"),
-                name:"QueryNutWasherShape",
-                props:true
+                component: () => import('../components/pages/Main/Finder/QueryNutWasherShape/View'),
+                name:'QueryNutWasherShape',
+                props: true,
             },
             {
                 path: 'finder/query-spec',
-                component: () => import("../components/pages/Main/Finder/QuerySpec/View"),
-                name:"QuerySpec",
-                props:true
+                component: () => import('../components/pages/Main/Finder/QuerySpec/View'),
+                name: 'QuerySpec',
+                props: true,
             },
             {
                 path: 'finder/result-list',
-                component: () => import("../components/pages/Main/Finder/ResultList/View"),
-                name:"ResultList",
-                props:true
+                component: () => import('../components/pages/Main/Finder/ResultList/View'),
+                name: 'ResultList',
+                props: true,
             },
             {
                 path: 'finder/result',
-                component: () => import("../components/pages/Main/Finder/Result/View"),
-                name:"FinderResult",
-                props:true
+                component: () => import('../components/pages/Main/Finder/Result/View'),
+                name: 'FinderResult',
+                props: true,
             },
             {
                 path: 'version-log',
-                component: () => import("../components/pages/Main/VersionLog")
+                component: () => import('../components/pages/Main/VersionLog'),
             },
         ]
     },
-]
+];
+
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
-})
+});
 
 export default router
