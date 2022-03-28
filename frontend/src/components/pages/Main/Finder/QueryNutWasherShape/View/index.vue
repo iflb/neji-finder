@@ -9,8 +9,7 @@
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
-                :next-is-necessary="false"
-                @click-back="unsetGenre"
+                :click-back-callback="unsetGenre"
             />
         </v-card-text>   
     </v-card>

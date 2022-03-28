@@ -13,10 +13,9 @@
                 </v-col>
             </v-row>
             <page-transition-button 
-                :next-is-necessary="true"
                 :button-disabled="buttonDisabled"
-                @click-back="removeSpecQuery"
-                @click-next="fix_query"
+                :click-back-callback="removeSpecQuery"
+                :click-next-callback="fix_query"
             />
             <v-row>
                 <v-col>
@@ -105,10 +104,9 @@
                 </v-col>
             </v-row>
             <page-transition-button 
-                :next-is-necessary="true"
                 :button-disabled="buttonDisabled"
-                @click-back="removeSpecQuery"
-                @click-next="fix_query"
+                :click-back-callback="removeSpecQuery"
+                :click-next-callback="fix_query"
             />
         </v-card-text>   
     </v-card>

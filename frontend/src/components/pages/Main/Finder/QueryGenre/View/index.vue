@@ -9,8 +9,7 @@
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
-                :next-is-necessary="false"
-                @click-back="backToPreviousPage"
+                :click-back-callback="backToPreviousPage"
             />
         </v-card-text>
     </v-card>

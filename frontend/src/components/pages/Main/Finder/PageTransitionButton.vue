@@ -4,7 +4,7 @@
             <v-btn
                 dark
                 color="indigo darken-1"
-                @click="$emit('click-back')"
+                @click="clickBackCallback"
             >
                 <v-icon>mdi-arrow-left</v-icon>
                 戻る    
@@ -16,7 +16,7 @@
                 :dark="!buttonDisabled"
                 :disabled="buttonDisabled"
                 color="indigo darken-1"
-                @click="$emit('click-next')"
+                @click="clickNextCallback"
             >
                 次に進む 
                 <v-icon>mdi-arrow-right</v-icon>
@@ -25,10 +25,19 @@
     </v-row>
 </template>
 <script>
+const emptyCallback = () => {};
+
 export default{
     props: {
-        nextIsNecessary: { type: Boolean },
         buttonDisabled: { type: Boolean },
+        clickBackCallback: { type: Function, default: emptyCallback },
+        clickNextCallback: { type: Function, default: emptyCallback },
+    },
+
+    computed: {
+        nextIsNecessary() {
+            return (this.clickNextCallback !== emptyCallback);
+        },
     },
 }
 </script>
