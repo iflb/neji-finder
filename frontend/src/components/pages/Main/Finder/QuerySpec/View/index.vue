@@ -293,29 +293,8 @@ export default{
                                     this.selectedThickness = null;
                                 }
 
-                                for(let specKey of specKeys){
-                                    switch (specKey) {
-                                        case '長さか厚み':
-                                            switch (this.genre) {
-                                                case 'おねじ':
-                                                    this.selectableItemValues[specKey] = data.spec[specKey];
-                                                    break;
-                                                case '座金':
-                                                    this.selectableItemValues[specKey] = data.spec[specKey];
-                                                    break;
-                                            }
-                                            break;
-                                        case '外径か幅':
-                                            switch (this.genre) {
-                                                case '座金':
-                                                    this.selectableItemValues[specKey] = data.spec[specKey];
-                                                    break;
-                                            }
-                                            break;
-                                        default:
-                                            this.selectableItemValues[specKey] = data.spec[specKey];
-                                            break;
-                                    }
+                                for (let [ specKey, specValue ] of Object.entries(data.spec)) {
+                                    this.selectableItemValues[specKey] = specValue;
                                 }
 
                                 if(Object.keys(data).includes('items')){
@@ -456,29 +435,8 @@ export default{
                         },
                     );
 
-                    for(let specKey in this.selectableItemValues){
-                        switch (specKey) {
-                            case '長さか厚み':
-                                switch (this.genre) {
-                                    case 'おねじ':
-                                        this.selectableItemValues[specKey] = data.spec[specKey];
-                                        break;
-                                    case '座金':
-                                        this.selectableItemValues[specKey] = data.spec[specKey];
-                                        break;
-                                }
-                                break;
-                            case '外径か幅':
-                                switch (this.genre) {
-                                    case '座金':
-                                        this.selectableItemValues[specKey] = data.spec[specKey];
-                                        break;
-                                }
-                                break;
-                            default:
-                                this.selectableItemValues[specKey] = data.spec[specKey];
-                                break;
-                        }
+                    for (let [ specKey, specValue ] of Object.entries(data.spec)) {
+                        this.selectableItemValues[specKey] = specValue;
                     }
 
                     let initialQueryKeys = Object.keys(initialSyncState.query);
