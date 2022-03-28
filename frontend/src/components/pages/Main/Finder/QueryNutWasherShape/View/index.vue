@@ -42,7 +42,14 @@ export default{
 
     computed:{
         selectableShapeIcons(){
-            return nut_washer_icons[this.genreEng]
+            switch (this.genre) {
+                case 'めねじ':
+                    return nut_washer_icons.nut;
+                case '座金':
+                    return nut_washer_icons.washer;
+                default:
+                    return null;
+            }
         },
         query() {
             let query = {};
@@ -52,21 +59,11 @@ export default{
             return query;
         },
         queryKey() {
-            switch (this.genreEng) {
-                case 'nut':
-                    return 'ナット形状';
-                case 'washer':
-                    return '座金形状';
-                default:
-                    return null;
-            }
-        },
-        genreEng() {
             switch (this.genre) {
                 case 'めねじ':
-                    return 'nut';
+                    return 'ナット形状';
                 case '座金':
-                    return 'washer';
+                    return '座金形状';
                 default:
                     return null;
             }
