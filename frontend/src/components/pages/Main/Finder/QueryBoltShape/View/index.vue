@@ -223,7 +223,7 @@ export default{
                         },
                     );
                     this.selectableHoleShapeNames = data.shape[shapeKey.hole_shape];
-                    if(Object.keys(initialSyncState.query).includes(shapeKey.hole_shape)){
+                    if(!Object.keys(initialSyncState.query).includes(shapeKey.hole_shape)){
                         this.registerSyncStateReceiveHandler();
                         return;
                     }
