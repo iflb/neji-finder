@@ -16,6 +16,7 @@
     </v-card>
 </template>
 <script>
+import { Duct } from '@iflb/ducts-client'
 import { nut_washer_icons } from '../../shape_profile.js'
 import CardButton from '../../CardButton' 
 import PageTransitionButton from '../../PageTransitionButton'
@@ -33,7 +34,13 @@ export default{
         syncStateReceiveRequestId:null,
         selectedShapeName: null,
     }),
-    props:["duct","syncId","genre"],
+
+    props: {
+        duct: { type: Duct },
+        syncId: { type: String },
+        genre: { type: String },
+    },
+
     computed:{
         selectableShapeIcons(){
             return nut_washer_icons[this.genreEng]

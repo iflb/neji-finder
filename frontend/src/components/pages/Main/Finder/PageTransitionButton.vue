@@ -26,6 +26,9 @@
 </template>
 <script>
 export default{
-    props:["nextIsNecessary","buttonDisabled"]
+    props: {
+        nextIsNecessary: { type: Boolean },
+        buttonDisabled: { type: Boolean },
+    },
 }
 </script>

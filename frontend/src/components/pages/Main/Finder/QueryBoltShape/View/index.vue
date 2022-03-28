@@ -44,6 +44,7 @@
     </v-card>
 </template>
 <script>
+import { Duct } from '@iflb/ducts-client'
 import CardButton from '../../CardButton'
 import CarouselButton from '../../CarouselButton'
 import PageTransitionButton from '../../PageTransitionButton'
@@ -82,7 +83,14 @@ export default{
         selectedTipName: null,
         selectedHoleShapeName: null,
     }),
-    props:["duct","syncId","genre","shapeQuery"],
+
+    props: {
+        duct: { type: Duct },
+        syncId: { type: String },
+        genre: { type: String },
+        shapeQuery: { type: Object },
+    },
+
     computed:{
         isPicked() {
             return {

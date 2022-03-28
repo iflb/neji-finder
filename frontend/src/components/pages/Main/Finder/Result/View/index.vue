@@ -98,13 +98,24 @@
     </v-card>
 </template>
 <script>
+import { Duct } from '@iflb/ducts-client'
+
 export default{
     data: () => ({
         path:'',
         syncStateReceiveRequestId:null,
         shopArea:false
     }),
-    props:["item","itemList","duct","syncId","genre","totalQuery"],
+
+    props: {
+        item: { type: Array },
+        itemList: { type: Array },
+        duct: { type: Duct },
+        syncId: { type: String },
+        genre: { type: String },
+        totalQuery: { type: Object },
+    },
+
     methods:{
         backToPreviousPage(){
             if(this.itemList.length != 1){

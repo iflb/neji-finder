@@ -114,6 +114,7 @@
     </v-card>
 </template>
 <script>
+import { Duct } from '@iflb/ducts-client'
 import { icons } from '../../spec_profile.js'
 import CardButton from '../../CardButton'
 import CarouselButton from '../../CarouselButton'
@@ -158,7 +159,14 @@ export default{
         selectedOuter: null,
         selectedThickness: null,
     }),
-    props:["duct","syncId","genre","shapeQuery"],
+
+    props: {
+        duct: { type: Duct },
+        syncId: { type: String },
+        genre: { type: String },
+        shapeQuery: { type: Object },
+    },
+
     methods: {
         send_query() {
             if (this.syncId === null) return;

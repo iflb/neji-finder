@@ -47,7 +47,13 @@ export default{
         Carousel,
         Slide
     },
-    props:["selectedItemName","headerTitle","inputItems"],
+
+    props: {
+        selectedItemName: { type: String },
+        headerTitle: { type: String },
+        inputItems: { type: Array },
+    },
+
     computed: {
         headerIsOn() {
             return (this.headerTitle !== undefined);

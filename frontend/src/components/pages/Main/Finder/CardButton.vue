@@ -36,7 +36,14 @@ export default{
         prop: 'selectedItemName',
         event: 'update',
     },
-    props:["selectedItemName","headerTitle","inputItems","labelIsOn"],
+
+    props: {
+        selectedItemName: { type: String },
+        headerTitle: { type: String },
+        inputItems: { type: Array },
+        labelIsOn: { type: Boolean },
+    },
+
     computed: {
         headerIsOn() {
             return (this.headerTitle !== undefined);

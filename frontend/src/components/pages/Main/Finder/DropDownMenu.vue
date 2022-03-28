@@ -65,7 +65,14 @@ export default{
         prop: 'model',
         event: 'update',
     },
-    props:["headerTitle","imageSource","model","inputItems"],
+
+    props: {
+        headerTitle: { type: String },
+        imageSource: { type: String },
+        model: { type: String },
+        inputItems: { type: Array },
+    },
+
     computed: {
         inputItemsSorted() {
             return this.inputItems

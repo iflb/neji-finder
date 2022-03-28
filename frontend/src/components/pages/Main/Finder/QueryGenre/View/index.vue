@@ -16,6 +16,7 @@
     </v-card>
 </template>
 <script>
+import { Duct } from '@iflb/ducts-client'
 import CardButton from '../../CardButton'
 import PageTransitionButton from '../../PageTransitionButton'
 const genreIcons = [
@@ -47,7 +48,12 @@ export default{
         syncStateReceiveRequestId: null,
         selectedGenreName: null,
     }),
-    props:["duct","syncId"],
+
+    props: {
+        duct: { type: Duct },
+        syncId: { type: String },
+    },
+
     computed: {
         selectableGenreIcons() { return genreIcons },
     },

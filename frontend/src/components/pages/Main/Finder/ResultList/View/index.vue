@@ -18,6 +18,7 @@
     </v-card>
 </template>
 <script>
+import { Duct } from '@iflb/ducts-client'
 import CardButton from '../../CardButton'
 import PageTransitionButton from '../../PageTransitionButton'
 export default{
@@ -31,7 +32,15 @@ export default{
         itemQuantity:0,
         syncStateReceiveRequestId:null,
     }),
-    props:["itemList","duct","syncId","genre","totalQuery"],
+
+    props: {
+        itemList: { type: Array },
+        duct: { type: Duct },
+        syncId: { type: String },
+        genre: { type: String },
+        totalQuery: { type: Object },
+    },
+
     methods: {
         removeQueryFixedParameter(){
             this.duct.send(

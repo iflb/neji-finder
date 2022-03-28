@@ -37,6 +37,8 @@
 </template>
 <script>
 export default{
-    props:["stepper"]
+    props: {
+        stepper: { type: Number },
+    },
 }
 </script>
