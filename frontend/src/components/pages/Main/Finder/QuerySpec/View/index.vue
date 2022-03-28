@@ -27,7 +27,7 @@
                     <carousel-button
                         v-model="selectedMiddleClassificationName"
                         header-title="中分類を選ぶ"
-                        :input-items="selectableItems.middle_classification"
+                        :input-items="selectableMiddleClassificationIcons"
                         :label-is-on="true"
                         class="mb-6"
                     />
@@ -36,7 +36,7 @@
                     <card-button 
                         v-model="selectedMaterialName"
                         header-title="材質を選ぶ"
-                        :input-items="selectableItems.material"
+                        :input-items="selectableMaterialIcons"
                         :label-is-on="false"
                         class="mb-6"
                     />
@@ -45,7 +45,7 @@
                     <card-button 
                         v-model="selectedSurfaceName"
                         header-title="表面処理を選ぶ"
-                        :input-items="selectableItems.surface"
+                        :input-items="selectableSurfaceIcons"
                         :label-is-on="false"
                         class="mb-6"
                     />
@@ -54,7 +54,7 @@
                     <card-button 
                         v-model="selectedAmountName"
                         header-title="構成数クラス"
-                        :input-items="selectableItems.amount"
+                        :input-items="selectableAmountIcons"
                         :label-is-on="false"
                         class="mb-6"
                     />
@@ -64,7 +64,7 @@
                         header-title="呼び径を選ぶ"
                         :imageSource="nominalImage"
                         v-model="selectedNominal"
-                        :input-items="selectableItems.nominal"
+                        :input-items="selectableNominalValues"
                         class="mb-6"
                     />
                 </v-col>
@@ -73,7 +73,7 @@
                         header-title="外径・幅を選ぶ"
                         :imageSource="outerImage"
                         v-model="selectedOuter"
-                        :input-items="selectableItems.outer"
+                        :input-items="selectableOuterValues"
                         class="mb-6"
                     />
                 </v-col>
@@ -82,7 +82,7 @@
                         header-title="長さ・厚さを選ぶ"
                         :imageSource="thicknessImage"
                         v-model="selectedThickness"
-                        :input-items="selectableItems.thickness"
+                        :input-items="selectableThicknessValues"
                         class="mb-6"
                     />
                 </v-col>
@@ -340,22 +340,34 @@ export default{
         selectedThickness() { this.send_query() },
     },
     computed:{
-        selectableItems(){
-            let selectableItems = {};
-            for(let [ specKey, iconKey ] of Object.entries(specKeyToIconKey)){
-                if(["中分類","材質","表面処理","構成数クラス"].includes(specKey)){
-                    selectableItems[iconKey] = icons[iconKey]
-                        .filter(icon => this.selectableItemValues[specKey].includes(icon.name));
-                }else{
-                    if (Object.keys(this.initialSpec).includes(specKey)) {
-                        selectableItems[iconKey] = this.initialSpec[specKey]
-                            .filter(itemName => this.selectableItemValues[specKey].includes(itemName))
-                            .map(itemName => ({ name: specKey, val: itemName }));
-                    }
+        selectableIcons() {
+            let selectableIcons = {};
+            for (let specKey of [ '中分類', '材質', '表面処理', '構成数クラス' ]) {
+                let iconKey = specKeyToIconKey[specKey];
+                selectableIcons[specKey] = icons[iconKey].filter(icon => this.selectableItemValues[specKey].includes(icon.name));
+            }
+            return selectableIcons;
+        },
+        selectableMiddleClassificationIcons() { return this.selectableIcons['中分類'] },
+        selectableMaterialIcons() { return this.selectableIcons['材質'] },
+        selectableSurfaceIcons() { return this.selectableIcons['表面処理'] },
+        selectableAmountIcons() { return this.selectableIcons['構成数クラス'] },
+        selectableValues() {
+            let selectableValues = {};
+            for (let specKey of [ '呼び径', '外径か幅', '長さか厚み' ]) {
+                if (Object.keys(this.initialSpec).includes(specKey)) {
+                    selectableValues[specKey] = this.initialSpec[specKey]
+                        .filter(value => this.selectableItemValues[specKey].includes(value))
+                        .map(value => ({ name: specKey, val: value }));
+                } else {
+                    selectableValues[specKey] = [];
                 }
             }
-            return selectableItems;
+            return selectableValues;
         },
+        selectableNominalValues() { return this.selectableValues['呼び径'] },
+        selectableOuterValues() { return this.selectableValues['外径か幅'] },
+        selectableThicknessValues() { return this.selectableValues['長さか厚み'] },
         specQuery(){
             let specQuery = {};
             if (this.selectedMiddleClassificationName !== null) {
