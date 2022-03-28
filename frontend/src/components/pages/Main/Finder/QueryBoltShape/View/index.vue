@@ -6,9 +6,9 @@
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedHeadName"
-                        headerTitle="頭部の形状を選ぶ"
-                        :inputItems="selectableHeadIcons"
-                        :labelIsOn="true"
+                        header-title="頭部の形状を選ぶ"
+                        :input-items="selectableHeadIcons"
+                        :label-is-on="true"
                         class="mb-6"
                     />
                 </v-col>
@@ -16,9 +16,9 @@
                     <v-slide-y-transition>
                         <carousel-button
                            v-if="isPicked.head"
+                           header-title="おねじ先端の形状を選ぶ"
                            v-model="selectedTipName"
-                           headerTitle="おねじ先端の形状を選ぶ"
-                           :inputItems="selectableTipIcons"
+                           :input-items="selectableTipIcons"
                            class="mb-6"
                         />
                     </v-slide-y-transition>
@@ -28,8 +28,8 @@
                         <carousel-button
                             v-if="isPicked.tip"
                             v-model="selectedHoleShapeName"
-                            headerTitle="頭部穴の形状を選ぶ"
-                            :inputItems="selectableHoleShapeIcons"
+                            header-title="頭部穴の形状を選ぶ"
+                            :input-items="selectableHoleShapeIcons"
                             class="mb-6"
                         />
                     </v-slide-y-transition>
@@ -37,7 +37,7 @@
             </v-row>
             <v-divider class="pt-3"/>
             <page-transition-button 
-                :nextIsNecessary="false"
+                :next-is-necessary="false"
                 @click-back="unsetGenre"
             />
         </v-card-text>   

@@ -11,7 +11,7 @@
             :per-page="['md','lg','xl'].includes($vuetify.breakpoint.name) ? numItemsForDesktop : numItemsForMobile" 
             pagination-color="#E53935"
             pagination-active-color="#3949AB"
-            :touchDrag="true"
+            :touch-drag="true"
         >
             <slide 
                 v-for="(item, itemIdx) in inputItems" 

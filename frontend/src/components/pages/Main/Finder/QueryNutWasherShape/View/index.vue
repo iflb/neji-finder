@@ -4,12 +4,12 @@
         <v-card-text> 
             <card-button
                 v-model="selectedShapeName"
-                :inputItems="selectableShapeIcons"
-                :labelIsOn="true"
+                :input-items="selectableShapeIcons"
+                :label-is-on="true"
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
-                :nextIsNecessary="false"
+                :next-is-necessary="false"
                 @click-back="unsetGenre"
             />
         </v-card-text>   

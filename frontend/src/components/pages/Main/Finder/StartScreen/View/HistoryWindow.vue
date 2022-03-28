@@ -3,7 +3,7 @@
         <v-card-title>最近閲覧した商品</v-card-title>
         <v-card-text> 
                 <carousel-button
-                   :inputItems="itemHistory"
+                   :input-items="itemHistory"
                    @update-query="accessResultPage"
                 />
         </v-card-text>   

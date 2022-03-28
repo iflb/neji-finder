@@ -5,13 +5,13 @@
         <v-card-text> 
             <card-button 
                 v-model="selectedItemName"
-                :inputItems="selectableItems"
-                :labelIsOn="true"
+                :input-items="selectableItems"
+                :label-is-on="true"
                 @update="accessNextPage"
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
-                :nextIsNecessary="false"
+                :next-is-necessary="false"
                 @click-back="removeQueryFixedParameter"
             />
         </v-card-text>   

@@ -13,8 +13,8 @@
                 </v-col>
             </v-row>
             <page-transition-button 
-                :nextIsNecessary="true"
-                :buttonDisabled="buttonDisabled"
+                :next-is-necessary="true"
+                :button-disabled="buttonDisabled"
                 @click-back="removeSpecQuery"
                 @click-next="fix_query"
             />
@@ -32,63 +32,63 @@
                 <v-col cols="12" md="4">
                     <carousel-button
                         v-model="selectedMiddleClassificationName"
-                        headerTitle="中分類を選ぶ"
-                        :inputItems="selectableItems.middle_classification"
-                        :labelIsOn="true"
+                        header-title="中分類を選ぶ"
+                        :input-items="selectableItems.middle_classification"
+                        :label-is-on="true"
                         class="mb-6"
                     />
                 </v-col>
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedMaterialName"
-                        headerTitle="材質を選ぶ"
-                        :inputItems="selectableItems.material"
-                        :labelIsOn="false"
+                        header-title="材質を選ぶ"
+                        :input-items="selectableItems.material"
+                        :label-is-on="false"
                         class="mb-6"
                     />
                 </v-col>
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedSurfaceName"
-                        headerTitle="表面処理を選ぶ"
-                        :inputItems="selectableItems.surface"
-                        :labelIsOn="false"
+                        header-title="表面処理を選ぶ"
+                        :input-items="selectableItems.surface"
+                        :label-is-on="false"
                         class="mb-6"
                     />
                 </v-col>
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedAmountName"
-                        headerTitle="構成数クラス"
-                        :inputItems="selectableItems.amount"
-                        :labelIsOn="false"
+                        header-title="構成数クラス"
+                        :input-items="selectableItems.amount"
+                        :label-is-on="false"
                         class="mb-6"
                     />
                 </v-col>
                 <v-col cols="12" md="4">
                     <drop-down-menu
-                        headerTitle="呼び径を選ぶ"
+                        header-title="呼び径を選ぶ"
                         :imageSource="nominalImage"
                         v-model="selectedNominal"
-                        :inputItems="selectableItems.nominal"
+                        :input-items="selectableItems.nominal"
                         class="mb-6"
                     />
                 </v-col>
                 <v-col cols="12" md="4" v-if="outerImage !== null">
                     <drop-down-menu
-                        headerTitle="外径・幅を選ぶ"
+                        header-title="外径・幅を選ぶ"
                         :imageSource="outerImage"
                         v-model="selectedOuter"
-                        :inputItems="selectableItems.outer"
+                        :input-items="selectableItems.outer"
                         class="mb-6"
                     />
                 </v-col>
                 <v-col cols="12" md="4" v-if="thicknessImage !== null">
                     <drop-down-menu
-                        headerTitle="長さ・厚さを選ぶ"
+                        header-title="長さ・厚さを選ぶ"
                         :imageSource="thicknessImage"
                         v-model="selectedThickness"
-                        :inputItems="selectableItems.thickness"
+                        :input-items="selectableItems.thickness"
                         class="mb-6"
                     />
                 </v-col>
@@ -105,8 +105,8 @@
                 </v-col>
             </v-row>
             <page-transition-button 
-                :nextIsNecessary="true"
-                :buttonDisabled="buttonDisabled"
+                :next-is-necessary="true"
+                :button-disabled="buttonDisabled"
                 @click-back="removeSpecQuery"
                 @click-next="fix_query"
             />
