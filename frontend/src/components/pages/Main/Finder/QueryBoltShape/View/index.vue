@@ -6,8 +6,7 @@
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedHeadName"
-                        :headerIsOn="true"
-                        headerTitle="頭部の形状"
+                        headerTitle="頭部の形状を選ぶ"
                         :inputItems="selectableHeadIcons"
                         :labelIsOn="true"
                         class="mb-6"
@@ -18,8 +17,7 @@
                         <carousel-button
                            v-if="isPicked.head"
                            v-model="selectedTipName"
-                           :headerIsOn="true"
-                           headerTitle="おねじ先端の形状"
+                           headerTitle="おねじ先端の形状を選ぶ"
                            :inputItems="selectableTipIcons"
                            class="mb-6"
                         />
@@ -30,8 +28,7 @@
                         <carousel-button
                             v-if="isPicked.tip"
                             v-model="selectedHoleShapeName"
-                            :headerIsOn="true"
-                            headerTitle="頭部穴の形状"
+                            headerTitle="頭部穴の形状を選ぶ"
                             :inputItems="selectableHoleShapeIcons"
                             class="mb-6"
                         />

@@ -32,8 +32,7 @@
                 <v-col cols="12" md="4">
                     <carousel-button
                         v-model="selectedMiddleClassificationName"
-                        :headerIsOn="true"
-                        headerTitle="中分類"
+                        headerTitle="中分類を選ぶ"
                         :inputItems="selectableItems.middle_classification"
                         :labelIsOn="true"
                         class="mb-6"
@@ -42,8 +41,7 @@
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedMaterialName"
-                        :headerIsOn="true"
-                        headerTitle="材質"
+                        headerTitle="材質を選ぶ"
                         :inputItems="selectableItems.material"
                         :labelIsOn="false"
                         class="mb-6"
@@ -52,8 +50,7 @@
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedSurfaceName"
-                        :headerIsOn="true"
-                        headerTitle="表面処理"
+                        headerTitle="表面処理を選ぶ"
                         :inputItems="selectableItems.surface"
                         :labelIsOn="false"
                         class="mb-6"
@@ -62,7 +59,6 @@
                 <v-col cols="12" md="4">
                     <card-button 
                         v-model="selectedAmountName"
-                        :headerIsOn="true"
                         headerTitle="構成数クラス"
                         :inputItems="selectableItems.amount"
                         :labelIsOn="false"
@@ -71,7 +67,7 @@
                 </v-col>
                 <v-col cols="12" md="4">
                     <drop-down-menu
-                        headerTitle="呼び径"
+                        headerTitle="呼び径を選ぶ"
                         :imageSource="nominalImage"
                         v-model="selectedNominal"
                         :inputItems="selectableItems.nominal"
@@ -80,7 +76,7 @@
                 </v-col>
                 <v-col cols="12" md="4" v-if="outerImage !== null">
                     <drop-down-menu
-                        headerTitle="外径・幅"
+                        headerTitle="外径・幅を選ぶ"
                         :imageSource="outerImage"
                         v-model="selectedOuter"
                         :inputItems="selectableItems.outer"
@@ -89,7 +85,7 @@
                 </v-col>
                 <v-col cols="12" md="4" v-if="thicknessImage !== null">
                     <drop-down-menu
-                        headerTitle="長さ・厚さ"
+                        headerTitle="長さ・厚さを選ぶ"
                         :imageSource="thicknessImage"
                         v-model="selectedThickness"
                         :inputItems="selectableItems.thickness"

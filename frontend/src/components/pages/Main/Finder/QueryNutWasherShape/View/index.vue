@@ -4,7 +4,6 @@
         <v-card-text> 
             <card-button
                 v-model="selectedShapeName"
-                :headerIsOn="false"
                 :inputItems="selectableShapeIcons"
                 :labelIsOn="true"
             />

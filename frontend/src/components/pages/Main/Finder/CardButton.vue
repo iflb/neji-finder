@@ -3,7 +3,7 @@
         <v-row v-if="headerIsOn" class="pt-3">
             <v-col>
                 <v-card dark flat color="#424242">
-                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}を選ぶ</span>
+                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}</span>
                 </v-card>
             </v-col>
         </v-row>
@@ -36,8 +36,11 @@ export default{
         prop: 'selectedItemName',
         event: 'update',
     },
-    props:["selectedItemName","headerIsOn","headerTitle","inputItems","labelIsOn"],
+    props:["selectedItemName","headerTitle","inputItems","labelIsOn"],
     computed: {
+        headerIsOn() {
+            return (this.headerTitle !== undefined);
+        },
         numInputItems() {
             return this.inputItems.length;
         },

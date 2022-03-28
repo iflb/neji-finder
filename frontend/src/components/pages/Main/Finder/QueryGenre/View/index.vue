@@ -4,7 +4,6 @@
         <v-card-text> 
             <card-button
                 v-model="selectedGenreName"
-                :headerIsOn="false"
                 :inputItems="selectableGenreIcons"
                 :labelIsOn="true"
             />

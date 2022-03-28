@@ -3,7 +3,7 @@
         <v-row class="pt-3">
             <v-col>
                 <v-card dark flat color="#424242">
-                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}を選ぶ</span>
+                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}</span>
                 </v-card>
             </v-col>
         </v-row>

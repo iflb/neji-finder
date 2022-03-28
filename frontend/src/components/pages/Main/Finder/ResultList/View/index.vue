@@ -5,7 +5,6 @@
         <v-card-text> 
             <card-button 
                 v-model="selectedItemName"
-                :headerIsOn="false"
                 :inputItems="selectableItems"
                 :labelIsOn="true"
                 @update="accessNextPage"

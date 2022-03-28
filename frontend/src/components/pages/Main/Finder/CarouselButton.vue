@@ -3,7 +3,7 @@
         <v-row v-if="headerIsOn" class="pt-3 mb-4">
             <v-col>
                 <v-card dark flat color="#424242">
-                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}を選ぶ</span>
+                    <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}</span>
                 </v-card>
             </v-col>
         </v-row>
@@ -47,8 +47,11 @@ export default{
         Carousel,
         Slide
     },
-    props:["selectedItemName","headerIsOn","headerTitle","inputItems"],
+    props:["selectedItemName","headerTitle","inputItems"],
     computed: {
+        headerIsOn() {
+            return (this.headerTitle !== undefined);
+        },
         numItemsForMobile() {
             return this.inputItems.length ? Math.min(3, this.inputItems.length) : 3;
         },
