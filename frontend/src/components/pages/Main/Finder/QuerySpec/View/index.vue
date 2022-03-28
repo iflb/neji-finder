@@ -374,7 +374,7 @@ export default{
                         if(this.selectableItemValues[_key].includes(item.name)) _obj[_eng].push(item);
                     });
                 }else{
-                    if(typeof this.initialSpec[_key] != 'undefined'){
+                    if(typeof this.initialSpec[_key] !== 'undefined'){
                         this.initialSpec[_key].forEach((item) => {
                             if(this.selectableItemValues[_key].includes(item)) _obj[_eng].push({ "name": _key, "val": item });
                         });

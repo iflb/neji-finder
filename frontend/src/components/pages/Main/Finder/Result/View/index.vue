@@ -68,7 +68,7 @@
             </v-row>-->
 
             <v-divider/>
-            <v-row class="pt-3 pb-0" v-if="itemList.length != 0"> 
+            <v-row class="pt-3 pb-0" v-if="itemList.length !== 0"> 
                 <v-col>
                     <v-btn
                         dark
@@ -118,7 +118,7 @@ export default{
 
     methods:{
         backToPreviousPage(){
-            if(this.itemList.length != 1){
+            if(this.itemList.length !== 1){
                 this.$emit( 'emit-component-name', 'result-list' );
             }else{
                 this.duct.send(
@@ -182,7 +182,7 @@ export default{
         if (!storagedItemsJSON.map(item => item.jan).includes(this.item["JANコード"])){
             let _index = 0;
             const storagedItemsLength = storagedItemsKey.length;
-            if(storagedItemsLength != 0) _index = storagedItemsLength;
+            if(storagedItemsLength !== 0) _index = storagedItemsLength;
             const _itemStoraging = {
                 name: this.item["品名"] + `(サイズ：${this.item["サイズ"]}, 構成数:${this.item["構成数"]})`,
                 src: this.path,
