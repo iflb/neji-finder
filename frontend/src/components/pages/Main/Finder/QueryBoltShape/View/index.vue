@@ -141,10 +141,12 @@ export default{
             );
         },
         accessNextPage(){
+            this.$emit( 'emit-shape-query', this.query );
             this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-spec' );
         },
         backToPreviousPage(){
+            this.$emit( 'emit-shape-query', this.query );
             this.$emit( 'emit-query', this.query );
             this.$emit( 'emit-component-name', 'query-genre' );
         },

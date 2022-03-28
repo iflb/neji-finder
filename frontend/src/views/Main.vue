@@ -68,8 +68,8 @@
                         :duct="duct"
                         :sync-id="syncId"
                         :genre="genre"
-                        :shape-query="queryList[0]"
-                        :total-query="queryList[1]"
+                        :shape-query="shapeQuery"
+                        :total-query="totalQuery"
                         :item-list="itemList"
                         :item="item"
                         @add-step="step = $event"
@@ -77,6 +77,7 @@
                         @emit-component-name="changeComponent"
                         @emit-footer-component-name="changeFooterComponent"
                         @emit-genre="updateGenre"
+                        @emit-shape-query="updateShapeQuery"
                         @emit-query="updateQuery"
                         @emit-item-list="updateItemList"
                         @emit-item="updateItem"
@@ -145,7 +146,8 @@ export default {
         genre:'',
         itemList:[],
         item:[],
-        queryList:[{},{}],
+        shapeQuery: {},
+        totalQuery: {},
     }),    
     watch:{
     },
@@ -198,14 +200,11 @@ export default {
         updateGenre(genre){
             this.genre = genre;
         },
+        updateShapeQuery(query){
+            this.shapeQuery = query;
+        },
         updateQuery(query){
-            if(['query-bolt-shape','query-nut-washer-shape'].includes(this.currentComponent)){
-                this.queryList[0] = query;
-                this.queryList[1] = query;
-            }else{
-                this.queryList[1] = query;
-            }
-            console.log(this.queryList)
+            this.totalQuery = query;
         },
         updateItemList(list){
             this.itemList = list;
