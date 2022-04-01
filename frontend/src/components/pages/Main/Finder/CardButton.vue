@@ -81,7 +81,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 .img-opacity{
     opacity: 0.75;
 }
