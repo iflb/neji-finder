@@ -23,7 +23,7 @@
                 >
                     <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                            :value="model"
+                            :value="selectedItemValue"
                             :label="headerTitle"
                             v-bind="attrs"
                             v-on="on"
@@ -63,14 +63,14 @@
 <script>
 export default {
     model: {
-        prop: 'model',
+        prop: 'selectedItemValue',
         event: 'update',
     },
 
     props: {
         headerTitle: { type: String },
         imageSource: { type: String },
-        model: { type: String },
+        selectedItemValue: { type: String },
         inputItems: { type: Array },
     },
 
