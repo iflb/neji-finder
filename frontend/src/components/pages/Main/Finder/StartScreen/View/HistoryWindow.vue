@@ -4,7 +4,7 @@
         <v-card-text> 
             <carousel-button
                 :input-items="itemHistory"
-                @update-query="accessResultPage"
+                @input="accessResultPage"
             />
         </v-card-text>   
     </v-card>

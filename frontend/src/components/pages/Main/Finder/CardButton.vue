@@ -75,6 +75,7 @@ export default{
             } else {
                 this.$emit('update', item.name);
             }
+            this.$emit('input', item);
         }
     },
 }
