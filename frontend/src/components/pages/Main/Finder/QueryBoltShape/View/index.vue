@@ -62,16 +62,23 @@ export default {
     watch: {
         selectedHeadName() {
             this.selectedTipName = null;
-            this.sendQuery();
+            this.isQueryUpdated = true;
         },
 
         selectedTipName() {
             this.selectedHoleShapeName = null;
-            this.sendQuery();
+            this.isQueryUpdated = true;
         },
 
         selectedHoleShapeName() {
-            this.sendQuery();
+            this.isQueryUpdated = true;
+        },
+
+        isQueryUpdated() {
+            if (this.isUiStateInitialized) {
+                this.sendQuery()
+                this.isQueryUpdated = false;
+            }
         },
     },
 
@@ -88,6 +95,8 @@ export default {
         selectedHeadName: null,
         selectedTipName: null,
         selectedHoleShapeName: null,
+        isUiStateInitialized: false,
+        isQueryUpdated: false,
     }),
 
     props: {
@@ -171,6 +180,7 @@ export default {
         },
 
         registerSyncStateReceiveHandler() {
+            this.isUiStateInitialized = true;
             this.$emit(
                 'register-sync-state-receive-handler',
                 {

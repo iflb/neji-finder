@@ -144,6 +144,8 @@ export default{
             selectedNominal: null,
             selectedOuter: null,
             selectedThickness: null,
+            isUiStateInitialized: false,
+            isQueryUpdated: false,
         };
     },
 
@@ -256,6 +258,7 @@ export default{
         },
 
         registerSyncStateReceiveHandler() {
+            this.isUiStateInitialized = true;
             this.$emit(
                 'register-sync-state-receive-handler',
                 {
@@ -322,13 +325,19 @@ export default{
     }, 
 
     watch: {
-        selectedMiddleClassificationName() { this.send_query() },
-        selectedMaterialName() { this.send_query() },
-        selectedSurfaceName() { this.send_query() },
-        selectedAmountName() { this.send_query() },
-        selectedNominal() { this.send_query() },
-        selectedOuter() { this.send_query() },
-        selectedThickness() { this.send_query() },
+        selectedMiddleClassificationName() { this.isQueryUpdated = true },
+        selectedMaterialName() { this.isQueryUpdated = true },
+        selectedSurfaceName() { this.isQueryUpdated = true },
+        selectedAmountName() { this.isQueryUpdated = true },
+        selectedNominal() { this.isQueryUpdated = true },
+        selectedOuter() { this.isQueryUpdated = true },
+        selectedThickness() { this.isQueryUpdated = true },
+        isQueryUpdated() {
+            if (this.isUiStateInitialized) {
+                this.send_query()
+                this.isQueryUpdated = false;
+            }
+        },
     },
 
     computed: {
