@@ -8,7 +8,7 @@
                         v-model="selectedHeadName"
                         header-title="頭部の形状を選ぶ"
                         :input-items="selectableHeadIcons"
-                        :label-is-on="true"
+                        shows-label
                         class="mb-6"
                     />
                 </v-col>
@@ -19,6 +19,7 @@
                             header-title="おねじ先端の形状を選ぶ"
                             v-model="selectedTipName"
                             :input-items="selectableTipIcons"
+                            shows-label
                             class="mb-6"
                         />
                     </v-slide-y-transition>
@@ -30,6 +31,7 @@
                             v-model="selectedHoleShapeName"
                             header-title="頭部穴の形状を選ぶ"
                             :input-items="selectableHoleShapeIcons"
+                            shows-label
                             class="mb-6"
                         />
                     </v-slide-y-transition>

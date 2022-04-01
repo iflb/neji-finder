@@ -28,7 +28,7 @@
                         v-model="selectedMiddleClassificationName"
                         header-title="中分類を選ぶ"
                         :input-items="selectableMiddleClassificationIcons"
-                        :label-is-on="true"
+                        shows-label
                         class="mb-6"
                     />
                 </v-col>
@@ -37,7 +37,6 @@
                         v-model="selectedMaterialName"
                         header-title="材質を選ぶ"
                         :input-items="selectableMaterialIcons"
-                        :label-is-on="false"
                         class="mb-6"
                     />
                 </v-col>
@@ -46,7 +45,6 @@
                         v-model="selectedSurfaceName"
                         header-title="表面処理を選ぶ"
                         :input-items="selectableSurfaceIcons"
-                        :label-is-on="false"
                         class="mb-6"
                     />
                 </v-col>
@@ -55,7 +53,6 @@
                         v-model="selectedAmountName"
                         header-title="構成数クラス"
                         :input-items="selectableAmountIcons"
-                        :label-is-on="false"
                         class="mb-6"
                     />
                 </v-col>

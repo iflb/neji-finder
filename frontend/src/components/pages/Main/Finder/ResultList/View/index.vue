@@ -6,7 +6,7 @@
             <card-button 
                 v-model="selectedItemName"
                 :input-items="selectableItems"
-                :label-is-on="true"
+                shows-label
                 @update="accessNextPage"
             />
             <v-divider class="pt-3"/>

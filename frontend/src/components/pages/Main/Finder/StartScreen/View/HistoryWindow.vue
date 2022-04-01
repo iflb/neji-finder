@@ -4,6 +4,7 @@
         <v-card-text> 
             <carousel-button
                 :input-items="itemHistory"
+                shows-label
                 @input="accessResultPage"
             />
         </v-card-text>   

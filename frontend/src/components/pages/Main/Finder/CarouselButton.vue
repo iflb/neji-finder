@@ -1,6 +1,6 @@
 <template>
     <v-card color="transparent" flat>
-        <v-row v-if="headerIsOn" class="pt-3 mb-4">
+        <v-row v-if="headerTitleExists" class="pt-3 mb-4">
             <v-col>
                 <v-card dark flat color="#424242">
                     <span class="text-subtitle-1 d-flex justify-center">{{headerTitle}}</span>
@@ -31,7 +31,7 @@
                         contain
                         :src="item.src" />
                 </v-card>
-                <span class="text-h8 d-flex justify-center">{{item.name}}</span>
+                <span v-if="showsLabel" class="text-h8 d-flex justify-center">{{item.name}}</span>
             </slide>
         </carousel>
     </v-card>
@@ -55,10 +55,11 @@ export default {
         selectedItemName: { type: String },
         headerTitle: { type: String },
         inputItems: { type: Array },
+        showsLabel: { type: Boolean, default: false },
     },
 
     computed: {
-        headerIsOn() {
+        headerTitleExists() {
             return (this.headerTitle !== undefined);
         },
 

@@ -5,7 +5,7 @@
             <card-button
                 v-model="selectedGenreName"
                 :input-items="selectableGenreIcons"
-                :label-is-on="true"
+                shows-label
             />
             <v-divider class="pt-3"/>
             <page-transition-button 
