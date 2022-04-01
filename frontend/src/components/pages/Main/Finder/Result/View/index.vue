@@ -198,18 +198,20 @@ export default {
             window.localStorage.setItem('neji-product' + String(_index), JSON.stringify(_itemStoraging));
         }
 
-        this.syncStateReceiveRequestId = this.duct.nextRid();
-        this.$emit(
-            'register-sync-state-receive-handler',
-            {
-                rid: this.syncStateReceiveRequestId,
-                handler: (rid, eid, data) => {
-                    if (!Object.keys(data).includes('query_fixed')) {
-                        this.backToPreviousPage();
+        if (this.syncId !== null) {
+            this.syncStateReceiveRequestId = this.duct.nextRid();
+            this.$emit(
+                'register-sync-state-receive-handler',
+                {
+                    rid: this.syncStateReceiveRequestId,
+                    handler: (rid, eid, data) => {
+                        if (!Object.keys(data).includes('query_fixed')) {
+                            this.backToPreviousPage();
+                        }
                     }
-                }
-            },
-        );
+                },
+            );
+        }
     },
 
     mounted() {

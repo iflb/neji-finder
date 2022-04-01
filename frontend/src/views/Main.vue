@@ -158,10 +158,27 @@ export default {
             this.drawerShown = !this.drawerShown;
         },
 
-        changeComponent(componentName) {
-            if (componentName === 'start-screen') {
-                document.location.reload();
-            }  
+        async changeComponent(componentName) {
+            switch (componentName) {
+                case 'start-screen':
+                    document.location.reload();
+                    break;
+                case 'query-genre':
+                    if (this.syncId === null) {
+                        let response = await this.duct.call(this.duct.EVENT.SYNC_INIT);
+                        this.syncId = response.sync_id;
+                        router.push({
+                            path: this.$route.path,
+                            query: { sync_id: response.sync_id },
+                        });
+                    }
+                    break;
+                case 'result':
+                    if (this.currentComponent === 'start-screen') {
+                        this.initializeSync();
+                    }
+                    break;
+            }
             this.currentComponent = componentName;
         },
 
@@ -171,6 +188,7 @@ export default {
         },
 
         initializeSync() {
+            this.syncId = null;
             router.replace(this.$route.path);
         },
 
@@ -235,23 +253,6 @@ export default {
     created() {
         if (Object.keys(this.$route.query).includes('sync_id')) {
             this.syncId = this.$route.query.sync_id;
-        } else {
-            this.duct.invokeOnOpen(async () => {
-                this.duct.setEventHandler(
-                    this.duct.EVENT.SYNC_INIT,
-                    async (rid, eid, data) => {
-                        this.syncId = data.sync_id;
-                        router.push({
-                            path: this.$route.path,
-                            query: { sync_id: data.sync_id },
-                        });
-                    }
-                );
-                this.duct.send(
-                    this.duct.nextRid(), 
-                    this.duct.EVENT.SYNC_INIT,
-                );
-            });
         }
         this.duct.invokeOnOpen(async () => {
             this.duct.setEventHandler(
